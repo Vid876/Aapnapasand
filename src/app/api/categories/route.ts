@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import { Category } from "@/models/Category";
+import { getPublicCategories } from "@/lib/category-data";
 
 export async function GET() {
   try {
-    await connectDB();
-    const categories = await Category.find({ isActive: true }).sort({ name: 1 }).lean();
+    const categories = await getPublicCategories();
     return NextResponse.json({ categories });
   } catch (error) {
     console.error("Categories fetch error:", error);

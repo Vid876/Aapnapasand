@@ -17,35 +17,41 @@ export function Newsletter() {
   };
 
   return (
-    <section className="py-16 bg-brand-900">
-      <div className="container-app text-center">
-        <Mail className="mx-auto mb-4 text-brand-300" size={32} />
-        <h2 className="text-2xl lg:text-3xl font-display font-bold text-white mb-3">
-          Stay in Style
-        </h2>
-        <p className="text-brand-200 mb-8 max-w-md mx-auto">
-          Subscribe to get exclusive offers, new arrivals, and style tips delivered to your inbox.
-        </p>
-
-        {submitted ? (
-          <p className="text-brand-200 font-medium">
-            Thank you for subscribing! Check your inbox for a welcome offer.
+    <section className="relative overflow-hidden bg-[linear-gradient(135deg,#2f1912_0%,#6b241b_42%,#b5743f_100%)] py-16 text-white lg:py-24">
+      <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.08)_0_1px,transparent_1px_38px)]" />
+      <div className="absolute inset-x-0 top-0 h-px bg-white/25" />
+      <div className="container-app relative">
+        <div className="mx-auto max-w-4xl text-center">
+          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/12 text-brand-100 ring-1 ring-white/20">
+            <Mail size={28} />
+          </div>
+          <h2 className="text-4xl font-display font-bold leading-tight lg:text-6xl">
+            Stay in style
+          </h2>
+          <p className="mx-auto mt-4 mb-8 max-w-2xl text-sm leading-7 text-brand-50 lg:text-base">
+            Subscribe for new arrivals, early sale access, festive edits, and premium styling notes from Aapnapasand.
           </p>
-        ) : (
-          <form onSubmit={handleSubmit} className="flex max-w-md mx-auto gap-3">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-400"
-            />
-            <Button type="submit" className="bg-white text-brand-900 hover:bg-brand-100 shrink-0">
-              Subscribe
-            </Button>
-          </form>
-        )}
+
+          {submitted ? (
+            <p className="font-medium text-brand-50">
+              Thank you for subscribing. Check your inbox for a welcome offer.
+            </p>
+          ) : (
+            <form onSubmit={handleSubmit} className="mx-auto flex max-w-2xl flex-col gap-3 rounded-2xl bg-white/12 p-2 shadow-2xl shadow-brand-950/20 ring-1 ring-white/20 backdrop-blur sm:flex-row">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                className="min-h-12 flex-1 rounded-xl border border-white/10 bg-white px-4 py-3 text-sm text-brand-950 placeholder:text-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+              />
+              <Button type="submit" className="min-h-12 shrink-0 rounded-xl bg-brand-950 px-7 text-white hover:bg-brand-900">
+                Subscribe
+              </Button>
+            </form>
+          )}
+        </div>
       </div>
     </section>
   );

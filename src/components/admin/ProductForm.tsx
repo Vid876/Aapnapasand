@@ -152,9 +152,9 @@ export function ProductForm({
   const specifications = watch("specifications") || [];
 
   useEffect(() => {
-    fetch("/api/categories")
+    fetch("/api/admin/categories")
       .then((res) => res.json())
-      .then((data) => setCategories(data.categories || []));
+      .then((data) => setCategories((data.categories || []).filter((category: Category) => category.isActive)));
   }, []);
 
   const watchImages = watch("images");

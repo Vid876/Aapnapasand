@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Product } from "@/models/Product";
+import { Category } from "@/models/Category";
 
 export async function GET(request: NextRequest) {
   try {
@@ -21,7 +22,14 @@ export async function GET(request: NextRequest) {
 
     const filter: Record<string, unknown> = { isActive: true };
 
-    if (category) filter.category = category;
+    if (category) {
+      if (/^[0-9a-fA-F]{24}$/.test(category)) {
+        filter.category = category;
+      } else {
+        const matchedCategory = await Category.findOne({ slug: category }).select("_id").lean();
+        filter.category = matchedCategory?._id || category;
+      }
+    }
     if (gender) filter.gender = gender;
     if (featured === "true") filter.isFeatured = true;
     if (minPrice || maxPrice) {

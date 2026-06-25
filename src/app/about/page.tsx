@@ -1,34 +1,51 @@
+import { CTASection, InfoBand, PageHero, PUBLIC_IMAGES, PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
+
+const values = [
+  "Premium fabrics selected for comfort in Indian weather",
+  "Contemporary silhouettes that still feel rooted and wearable",
+  "Honest pricing, secure checkout, and dependable support",
+  "Collections for everyday confidence and special occasions",
+];
+
 export default function AboutPage() {
   return (
-    <div className="container-app py-12 lg:py-20">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-display font-bold mb-6">About Aapnapasand</h1>
-        <div className="prose prose-gray max-w-none space-y-6 text-gray-600 leading-relaxed">
-          <p className="text-lg">
-            Aapnapasand is your destination for premium Indian fashion. We believe everyone deserves
-            to express their unique style with quality clothing that fits perfectly and feels amazing.
-          </p>
-          <p>
-            Founded with a vision to make fashion accessible across India, we curate collections for
-            men and women that blend contemporary trends with timeless elegance. From casual everyday
-            wear to elegant ethnic pieces, our range is designed for the modern Indian shopper.
-          </p>
-          <h2 className="text-2xl font-display font-bold text-gray-900 mt-8">Our Mission</h2>
-          <p>
-            To deliver a seamless shopping experience with high-quality products, honest pricing, and
-            exceptional customer service. We are committed to sustainability, ethical sourcing, and
-            supporting local artisans wherever possible.
-          </p>
-          <h2 className="text-2xl font-display font-bold text-gray-900 mt-8">Why Choose Us</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Premium quality fabrics and craftsmanship</li>
-            <li>Free shipping on orders above ₹999</li>
-            <li>7-day easy returns and exchanges</li>
-            <li>Secure payments with multiple options</li>
-            <li>Dedicated customer support</li>
-          </ul>
+    <>
+      <PageHero
+        title="Fashion chosen with feeling"
+        description="Aapnapasand means what you like. We curate Indian fashion for people who want clothes that look polished, feel comfortable, and express their own sense of style."
+        image={PUBLIC_IMAGES.boutique}
+        primaryHref="/collections"
+        primaryLabel="Explore Collections"
+        secondaryHref="/contact"
+        secondaryLabel="Talk to Us"
+      />
+
+      <section className="bg-brand-50/70 py-16 lg:py-24">
+        <div className="container-app">
+          <SectionHeader
+            align="center"
+            title="What guides every collection"
+            description="The store is built around quality, confidence, and practical beauty."
+          />
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {values.map((value) => (
+              <div key={value} className="rounded-xl bg-white p-6 shadow-sm">
+                <p className="text-sm leading-7 text-gray-700">{value}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      <InfoBand
+        title="Made for the modern Indian wardrobe"
+        text="From easy office staples to festive pieces with presence, our selections balance clean design, strong fabric, and styling flexibility."
+        image={PUBLIC_IMAGES.fabric}
+        reverse
+        bullets={["Men's and women's edits", "Ethnic and everyday categories", "Fast delivery across India"]}
+      />
+      <PromiseStrip />
+      <CTASection />
+    </>
   );
 }

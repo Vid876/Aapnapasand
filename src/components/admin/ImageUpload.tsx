@@ -7,9 +7,18 @@ import { Upload, X, Loader2, Star, GripVertical } from "lucide-react";
 interface ImageUploadProps {
   images: string[];
   onChange: (images: string[]) => void;
+  label?: string;
+  helperText?: string;
+  multiple?: boolean;
 }
 
-export function ImageUpload({ images, onChange }: ImageUploadProps) {
+export function ImageUpload({
+  images,
+  onChange,
+  label = "Product Images",
+  helperText = "First image = main product photo",
+  multiple = true,
+}: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadCount, setUploadCount] = useState(0);
   const [error, setError] = useState("");
@@ -90,10 +99,10 @@ export function ImageUpload({ images, onChange }: ImageUploadProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <label className="block text-sm font-semibold text-gray-900">
-          Product Images {images.length > 0 && `(${images.length})`}
+          {label} {images.length > 0 && `(${images.length})`}
         </label>
         {images.length > 0 && (
-          <span className="text-xs text-gray-500">First image = main product photo</span>
+          <span className="text-xs text-gray-500">{helperText}</span>
         )}
       </div>
 
@@ -174,7 +183,7 @@ export function ImageUpload({ images, onChange }: ImageUploadProps) {
         ref={inputRef}
         type="file"
         accept="image/*"
-        multiple
+        multiple={multiple}
         onChange={(e) => e.target.files && handleFiles(e.target.files)}
         className="hidden"
       />

@@ -1,38 +1,64 @@
-const FAQS = [
+import { HelpCircle } from "lucide-react";
+import { PageHero, PUBLIC_IMAGES, SectionHeader } from "@/components/marketing/PublicPage";
+
+const faqs = [
   {
     q: "What is your return policy?",
-    a: "We offer a 7-day easy return policy. Items must be unused, with tags attached, in original packaging.",
+    a: "Eligible unused products can be returned or exchanged within 7 days of delivery with tags and original packaging.",
   },
   {
     q: "How long does shipping take?",
-    a: "Standard delivery takes 3-7 business days. Express delivery (1-3 days) is available in select cities.",
+    a: "Standard delivery usually takes 3 to 7 business days. Express delivery is available in selected cities.",
   },
   {
     q: "Do you offer free shipping?",
-    a: "Yes! Free shipping on all orders above ₹999.",
+    a: "Yes. Orders above Rs. 999 qualify for free standard shipping across India.",
   },
   {
-    q: "What payment methods do you accept?",
-    a: "We accept Cash on Delivery, UPI, credit/debit cards, and net banking.",
+    q: "What payment methods are accepted?",
+    a: "You can pay with UPI, credit cards, debit cards, net banking, wallets, and cash on delivery where available.",
   },
   {
     q: "How do I track my order?",
-    a: "Once shipped, you'll receive a tracking link via email and SMS. You can also check order status in your account.",
+    a: "After dispatch, tracking details are sent by email and SMS. You can also check order status from your account.",
+  },
+  {
+    q: "Can I exchange a size?",
+    a: "Yes, size exchanges are supported for eligible products while stock is available.",
   },
 ];
 
 export default function FAQPage() {
   return (
-    <div className="container-app py-12 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-display font-bold mb-8">Frequently Asked Questions</h1>
-      <div className="space-y-6">
-        {FAQS.map((faq) => (
-          <div key={faq.q} className="border-b border-gray-100 pb-6">
-            <h3 className="font-semibold text-gray-900 mb-2">{faq.q}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">{faq.a}</p>
+    <>
+      <PageHero
+        title="Questions, answered clearly"
+        description="Find quick help for orders, delivery, returns, sizing, payments, and shopping with Aapnapasand."
+        image={PUBLIC_IMAGES.delivery}
+        primaryHref="/contact"
+        primaryLabel="Contact Support"
+        secondaryHref="/size-guide"
+        secondaryLabel="Size Guide"
+      />
+
+      <section className="bg-brand-50/70 py-16 lg:py-24">
+        <div className="container-app">
+          <SectionHeader
+            align="center"
+            title="Frequently asked questions"
+            description="Everything important before and after you place an order."
+          />
+          <div className="mx-auto grid max-w-5xl gap-4 md:grid-cols-2">
+            {faqs.map((faq) => (
+              <div key={faq.q} className="rounded-xl bg-white p-6 shadow-sm">
+                <HelpCircle className="text-brand-700" size={22} />
+                <h3 className="mt-4 font-semibold text-brand-950">{faq.q}</h3>
+                <p className="mt-2 text-sm leading-7 text-gray-600">{faq.a}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
+        </div>
+      </section>
+    </>
   );
 }

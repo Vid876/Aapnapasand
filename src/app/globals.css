@@ -23,12 +23,71 @@
   }
 
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply text-gray-900 antialiased;
+    background-color: #fff4ed;
+    background-image:
+      radial-gradient(circle at 8% 12%, rgba(181, 116, 63, 0.18), transparent 28rem),
+      radial-gradient(circle at 88% 30%, rgba(127, 45, 33, 0.14), transparent 26rem),
+      linear-gradient(135deg, #fff8f2 0%, #ffe8dd 42%, #fff6ef 72%, #ffffff 100%);
+    background-size: 100% 100%;
   }
 }
 
 @layer utilities {
   .container-app {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .premium-surface {
+    background-image:
+      linear-gradient(135deg, rgba(255, 248, 244, 0.96), rgba(255, 236, 228, 0.94)),
+      repeating-linear-gradient(90deg, rgba(86, 50, 37, 0.05) 0 1px, transparent 1px 18px);
+  }
+
+  .home-page-bg {
+    background:
+      linear-gradient(90deg, rgba(86, 50, 37, 0.055) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(181, 116, 63, 0.045) 1px, transparent 1px),
+      radial-gradient(circle at 18% 8%, rgba(255, 196, 148, 0.32), transparent 22rem),
+      radial-gradient(circle at 86% 42%, rgba(122, 40, 29, 0.16), transparent 25rem),
+      radial-gradient(circle at 30% 78%, rgba(246, 212, 168, 0.28), transparent 24rem),
+      linear-gradient(180deg, #fff7f0 0%, #ffe9df 38%, #fff4ec 68%, #fff9f4 100%);
+    background-size: 42px 42px, 42px 42px, auto, auto, auto, auto;
+  }
+
+  .animate-rise {
+    animation: rise-in 720ms ease both;
+  }
+
+  .animate-soft-float {
+    animation: soft-float 7s ease-in-out infinite;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes soft-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .animate-soft-float {
+    animation: none;
   }
 }

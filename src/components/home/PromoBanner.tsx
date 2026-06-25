@@ -1,50 +1,70 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import { InfoBand, PUBLIC_IMAGES } from "@/components/marketing/PublicPage";
 
 export function PromoBanner() {
   return (
-    <section className="py-8">
-      <div className="container-app">
-        <div className="grid md:grid-cols-2 gap-4 lg:gap-6">
+    <>
+      <InfoBand
+        title="A wardrobe built around your plans"
+        text="From workdays to wedding weekends, Aapnapasand brings together breathable fabrics, polished cuts, and colors that feel easy to wear in real life."
+        image={PUBLIC_IMAGES.fabric}
+        bullets={[
+          "Modern Indian silhouettes for men and women",
+          "Occasion edits that pair effortlessly",
+          "Comfort-first fabrics selected for repeat wear",
+        ]}
+      />
+      <section className="pb-16 lg:pb-24">
+        <div className="container-app grid gap-5 md:grid-cols-2">
           <Link
             href="/shop?gender=men"
-            className="group relative h-64 lg:h-80 overflow-hidden rounded-2xl"
+            className="group relative h-72 overflow-hidden rounded-[1.25rem] bg-brand-950 lg:h-96"
           >
             <Image
-              src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&q=80"
+              src={PUBLIC_IMAGES.mens}
               alt="Men's collection"
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="object-cover opacity-85 transition-transform duration-700 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-              <p className="text-sm uppercase tracking-widest mb-2">Collection</p>
-              <h3 className="text-3xl font-display font-bold">Men&apos;s Wear</h3>
-              <span className="mt-4 text-sm underline underline-offset-4">Shop Now</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-950/85 via-brand-950/20 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 text-white lg:p-8">
+              <h3 className="font-display text-4xl font-bold">Men&apos;s wear</h3>
+              <p className="mt-2 max-w-sm text-sm leading-6 text-white/80">
+                Crisp shirts, versatile denim, kurtas, and layers with a refined everyday mood.
+              </p>
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold">
+                Shop men <ArrowRight size={16} />
+              </span>
             </div>
           </Link>
 
           <Link
             href="/shop?gender=women"
-            className="group relative h-64 lg:h-80 overflow-hidden rounded-2xl"
+            className="group relative h-72 overflow-hidden rounded-[1.25rem] bg-brand-950 lg:h-96"
           >
             <Image
-              src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80"
+              src={PUBLIC_IMAGES.boutique}
               alt="Women's collection"
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="object-cover opacity-85 transition-transform duration-700 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-              <p className="text-sm uppercase tracking-widest mb-2">Collection</p>
-              <h3 className="text-3xl font-display font-bold">Women&apos;s Wear</h3>
-              <span className="mt-4 text-sm underline underline-offset-4">Shop Now</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-950/85 via-brand-950/20 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 text-white lg:p-8">
+              <h3 className="font-display text-4xl font-bold">Women&apos;s wear</h3>
+              <p className="mt-2 max-w-sm text-sm leading-6 text-white/80">
+                Dresses, sarees, tops, and ethnic staples for quiet elegance and celebration.
+              </p>
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold">
+                Shop women <ArrowRight size={16} />
+              </span>
             </div>
           </Link>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

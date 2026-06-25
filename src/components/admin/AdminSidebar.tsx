@@ -10,12 +10,14 @@ import {
   Store,
   MessageSquare,
   Tag,
+  FolderTree,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/products", label: "Products", icon: Package },
+  { href: "/admin/categories", label: "Categories", icon: FolderTree },
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
   { href: "/admin/coupons", label: "Offers", icon: Tag },
   { href: "/admin/reviews", label: "Reviews", icon: MessageSquare },

@@ -6,7 +6,7 @@ import { ProductCard } from "@/components/products/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { SlidersHorizontal, X } from "lucide-react";
 import { CATEGORIES, SIZES, COLORS } from "@/lib/constants";
-import type { Product } from "@/types";
+import type { Category, Product } from "@/types";
 
 function ShopContent() {
   const searchParams = useSearchParams();
@@ -15,13 +15,16 @@ function ShopContent() {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [categoryOptions, setCategoryOptions] = useState<Pick<Category, "name" | "slug">[]>(
+    CATEGORIES.map((category) => ({ name: category.name, slug: category.slug }))
+  );
 
   const [filters, setFilters] = useState({
     gender: searchParams.get("gender") || "",
     category: searchParams.get("category") || "",
     sort: searchParams.get("sort") || "newest",
-    minPrice: "",
-    maxPrice: "",
+    minPrice: searchParams.get("minPrice") || "",
+    maxPrice: searchParams.get("maxPrice") || "",
     size: "",
     color: "",
     search: searchParams.get("search") || "",
@@ -51,6 +54,22 @@ function ShopContent() {
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data.categories) && data.categories.length > 0) {
+          setCategoryOptions(
+            data.categories.map((category: Category) => ({
+              name: category.name,
+              slug: category.slug,
+            }))
+          );
+        }
+      })
+      .catch(() => undefined);
+  }, []);
 
   const updateFilter = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -95,7 +114,7 @@ function ShopContent() {
       <div>
         <h3 className="font-semibold text-sm uppercase tracking-wider mb-3">Category</h3>
         <div className="space-y-2 max-h-48 overflow-y-auto">
-          {CATEGORIES.map((cat) => (
+          {categoryOptions.map((cat) => (
             <label key={cat.slug} className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"
