@@ -2,23 +2,37 @@
 
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+
+const ADMIN_AUTH_ROUTES = new Set(["/admin/login", "/admin/signup"]);
 
 export function AdminGuard({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
+  const pathname = usePathname();
   const router = useRouter();
+  const isAuthRoute = ADMIN_AUTH_ROUTES.has(pathname);
 
   useEffect(() => {
     if (status === "loading") return;
+    if (isAuthRoute) {
+      if (session?.user.role === "admin") {
+        router.replace("/admin");
+      }
+      return;
+    }
     if (!session) {
-      router.push("/login?callbackUrl=/admin");
+      router.replace("/admin/login");
       return;
     }
     if (session.user.role !== "admin") {
-      router.push("/");
+      router.replace("/");
     }
-  }, [session, status, router]);
+  }, [isAuthRoute, session, status, router]);
+
+  if (isAuthRoute) {
+    return <>{children}</>;
+  }
 
   if (status === "loading") {
     return (

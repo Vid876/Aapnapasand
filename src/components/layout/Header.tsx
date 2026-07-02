@@ -2,30 +2,63 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { Search, ShoppingBag, Heart, User, Menu, X } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useTranslation } from "@/store/localeStore";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { CATEGORIES } from "@/lib/constants";
+import type { Category } from "@/types";
+
+type CategoryMenu = "all" | "men" | "women";
+
+const FALLBACK_CATEGORIES: Category[] = CATEGORIES.map((category) => ({
+  _id: category.slug,
+  name: category.name,
+  slug: category.slug,
+  gender: category.gender,
+  image: category.image,
+  description: `Shop ${category.name} collection`,
+  isActive: true,
+}));
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [categories, setCategories] = useState<Category[]>(FALLBACK_CATEGORIES);
 
   const { data: session } = useSession();
   const itemCount = useCartStore((s) => s.getItemCount());
   const { t } = useTranslation();
 
   const NAV_LINKS = [
-    { label: "Shop", href: "/shop" },
-    { label: t.nav.men, href: "/shop?gender=men" },
-    { label: t.nav.women, href: "/shop?gender=women" },
-    { label: "Collections", href: "/collections" },
-    { label: t.nav.newArrivals, href: "/new-arrivals" },
-    { label: t.nav.sale, href: "/sale" },
+    { label: "Shop", href: "/shop", menu: "all" as CategoryMenu },
+    { label: t.nav.men, href: "/shop?gender=men", menu: "men" as CategoryMenu },
+    { label: t.nav.women, href: "/shop?gender=women", menu: "women" as CategoryMenu },
+    { label: "Collections", href: "/collections", menu: "all" as CategoryMenu },
+    { label: t.nav.newArrivals, href: "/new-arrivals", menu: null },
+    { label: t.nav.sale, href: "/sale", menu: null },
   ];
+
+  const getMenuCategories = (menu: CategoryMenu) => {
+    if (menu === "all") return categories;
+    return categories.filter(
+      (category) => category.gender === menu || category.gender === "unisex"
+    );
+  };
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data.categories) && data.categories.length > 0) {
+          setCategories(data.categories);
+        }
+      })
+      .catch(() => undefined);
+  }, []);
 
   const closeMobileMenu = () => setMobileOpen(false);
 
@@ -33,9 +66,7 @@ export function Header() {
     e.preventDefault();
 
     if (searchQuery.trim()) {
-      window.location.href = `/shop?search=${encodeURIComponent(
-        searchQuery.trim()
-      )}`;
+      window.location.href = `/shop?search=${encodeURIComponent(searchQuery.trim())}`;
     }
   };
 
@@ -43,9 +74,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
       {/* Top Bar */}
       <div className="bg-brand-900 text-white text-center py-2 text-sm">
-        <p>
-          Free Shipping Above ₹999 | Use Code WELCOME10 For 10% OFF
-        </p>
+        <p>Free Shipping Above ₹999 | Use Code WELCOME10 For 10% OFF</p>
       </div>
 
       <div className="container-app">
@@ -60,10 +89,7 @@ export function Header() {
           </button>
 
           {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center justify-center flex-shrink-0"
-          >
+          <Link href="/" className="flex items-center justify-center flex-shrink-0">
             <Image
               src="/logo.png"
               alt="Apna Pasand"
@@ -76,15 +102,54 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-6">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors uppercase tracking-wide"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const menuCategories = link.menu ? getMenuCategories(link.menu) : [];
+
+              return (
+                <div key={link.href} className="group py-8 -my-8">
+                  <Link
+                    href={link.href}
+                    className="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors uppercase tracking-wide"
+                  >
+                    {link.label}
+                  </Link>
+
+                  {link.menu && menuCategories.length > 0 && (
+                    <div className="absolute left-0 right-0 top-full hidden border-t border-gray-100 bg-white shadow-lg group-hover:block group-focus-within:block">
+                      <div className="container-app py-5">
+                        <div className="mb-4 flex items-center justify-between">
+                          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">
+                            {link.menu === "men"
+                              ? "Men Categories"
+                              : link.menu === "women"
+                                ? "Women Categories"
+                                : "All Categories"}
+                          </p>
+                          <Link
+                            href={link.menu === "all" ? "/shop" : `/shop?gender=${link.menu}`}
+                            className="text-xs font-semibold uppercase tracking-wide text-brand-700 hover:text-brand-900"
+                          >
+                            Shop All
+                          </Link>
+                        </div>
+
+                        <div className="grid grid-cols-4 gap-x-8 gap-y-3">
+                          {menuCategories.map((category) => (
+                            <Link
+                              key={category.slug}
+                              href={`/shop?category=${category.slug}`}
+                              className="text-sm font-medium text-gray-700 transition-colors hover:text-brand-700"
+                            >
+                              {category.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </nav>
 
           {/* Right Actions */}
