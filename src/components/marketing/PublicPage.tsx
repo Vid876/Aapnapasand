@@ -4,22 +4,14 @@ import type { ReactNode } from "react";
 import { ArrowRight, CheckCircle2, Headphones, PackageCheck, RefreshCcw, ShieldCheck, Sparkles, Truck } from "lucide-react";
 
 export const PUBLIC_IMAGES = {
-  hero:
-    "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1600&q=85",
-  boutique:
-    "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400&q=85",
-  mens:
-    "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=1200&q=85",
-  ethnic:
-    "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1200&q=85",
-  fabric:
-    "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200&q=85",
-  studio:
-    "https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200&q=85",
-  delivery:
-    "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=85",
-  wardrobe:
-    "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200&q=85",
+  hero: "/Banner 2.png",
+  boutique: "/uploads/03cd6105-7d88-47a4-a9bd-71e5f5091c0a.jpg",
+  mens: "/uploads/2cb32606-e0ed-4c52-a7bf-9fdd6c611a46.jpg",
+  ethnic: "/uploads/35b92bf7-8b77-4d97-aa17-08c098563992.jpg",
+  fabric: "/uploads/0bc7ea6a-63ec-4f94-b172-cedeeb3e05bb.jpg",
+  studio: "/Banner.png",
+  delivery: "/festive-luxury-banner.png",
+  wardrobe: "/uploads/81df845a-7e09-4d19-8ec9-d2070af19f80.jpg",
 } as const;
 
 type PageHeroProps = {

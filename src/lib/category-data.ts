@@ -1,4 +1,5 @@
 import { connectDB } from "@/lib/db";
+import { CATEGORY_IMAGE_FILTER } from "@/lib/image-utils";
 import { Category } from "@/models/Category";
 import type { Category as CategoryType } from "@/types";
 
@@ -9,7 +10,7 @@ export async function getPublicCategories(): Promise<PublicCategory[]> {
     await connectDB();
     const categories = await Category.find({
       isActive: true,
-      image: { $exists: true, $nin: ["", null] },
+      ...CATEGORY_IMAGE_FILTER,
     })
       .sort({ name: 1 })
       .lean();

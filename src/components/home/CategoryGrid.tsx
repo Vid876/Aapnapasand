@@ -19,12 +19,12 @@ export async function CategoryGrid() {
           description="Explore curated collections across modern essentials, occasion wear, and Indian classics."
         />
 
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6 lg:gap-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {categories.map((category) => (
             <Link
               key={category.slug}
               href={`/shop?category=${category.slug}`}
-              className="group relative aspect-[4/5] overflow-hidden rounded-xl bg-brand-50 shadow-sm transition-transform duration-300 hover:-translate-y-1"
+              className="group relative min-h-[300px] overflow-hidden rounded-xl bg-brand-50 shadow-sm transition-transform duration-300 hover:-translate-y-1 sm:min-h-[340px] lg:min-h-[380px]"
             >
               <CategoryCardMedia alt={category.name} src={category.image} />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-950/75 via-brand-950/10 to-transparent" />

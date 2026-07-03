@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { connectDB } from "@/lib/db";
+import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
 
 const BASE_URL = process.env.NEXTAUTH_URL || "http://localhost:3000";
@@ -15,7 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     await connectDB();
-    const products = await Product.find({ isActive: true }).select("slug updatedAt").lean();
+    const products = await Product.find({ isActive: true, ...PRODUCT_IMAGE_FILTER }).select("slug updatedAt").lean();
 
     const productPages: MetadataRoute.Sitemap = products.map((product) => ({
       url: `${BASE_URL}/product/${product.slug}`,

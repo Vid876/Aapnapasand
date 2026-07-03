@@ -2,23 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/admin";
 import { connectDB } from "@/lib/db";
+import { isValidStoredImage } from "@/lib/image-utils";
 import { slugify } from "@/lib/utils";
 import { Category } from "@/models/Category";
-
-const isValidCategoryImage = (value: string) => {
-  if (!value) return true;
-  try {
-    new URL(value);
-    return true;
-  } catch {
-    return value.startsWith("/uploads/");
-  }
-};
 
 const categorySchema = z.object({
   name: z.string().min(2, "Category name is required"),
   description: z.string().optional(),
-  image: z.string().refine(isValidCategoryImage, "Invalid image URL").optional(),
+  image: z.string().refine((value) => !value || isValidStoredImage(value), "Invalid image URL").optional(),
   gender: z.enum(["men", "women", "kids", "unisex"]),
   isActive: z.boolean().optional(),
 });

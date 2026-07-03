@@ -2,8 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Product } from "@/models/Product";
 import { requireAdmin } from "@/lib/admin";
+import { deleteImagesIfUnused } from "@/lib/image-storage";
 import { slugify } from "@/lib/utils";
 import { isValidStoredImage } from "@/lib/image-utils";
+import { Cart } from "@/models/Cart";
+import { Review } from "@/models/Review";
+import { User } from "@/models/User";
 import { z } from "zod";
 
 const updateSchema = z.object({
@@ -77,6 +81,8 @@ export async function PUT(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
+    const previousImages = [...product.images];
+
     if (data.name && data.name !== product.name) {
       product.slug = slugify(data.name);
     }
@@ -88,6 +94,10 @@ export async function PUT(
     }
 
     await product.save();
+    if (data.images) {
+      const removedImages = previousImages.filter((image) => !data.images?.includes(image));
+      await deleteImagesIfUnused(removedImages);
+    }
 
     return NextResponse.json({ product });
   } catch (error) {
@@ -110,13 +120,23 @@ export async function DELETE(
     await connectDB();
     const { id } = await params;
 
-    const product = await Product.findByIdAndUpdate(id, { isActive: false }, { new: true });
+    const product = await Product.findById(id);
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Product deactivated" });
+    const images = [...product.images];
+
+    await Promise.all([
+      Product.deleteOne({ _id: id }),
+      Review.deleteMany({ product: id }),
+      Cart.updateMany({}, { $pull: { items: { product: id } } }),
+      User.updateMany({}, { $pull: { wishlist: id } }),
+    ]);
+    await deleteImagesIfUnused(images);
+
+    return NextResponse.json({ message: "Product deleted" });
   } catch (error) {
     console.error("Admin product delete error:", error);
     return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });

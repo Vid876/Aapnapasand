@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Check, ImageIcon, Pencil, Plus, X } from "lucide-react";
+import { Check, ImageIcon, Pencil, Plus, Trash2 } from "lucide-react";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import type { Category } from "@/types";
 
@@ -98,9 +98,17 @@ export default function AdminCategoriesPage() {
     }
   };
 
-  const deactivateCategory = async (category: Category) => {
-    if (!confirm(`Deactivate "${category.name}"?`)) return;
-    await fetch(`/api/admin/categories/${category._id}`, { method: "DELETE" });
+  const deleteCategory = async (category: Category) => {
+    if (!confirm(`Permanently delete "${category.name}"?`)) return;
+    setError("");
+
+    const res = await fetch(`/api/admin/categories/${category._id}`, { method: "DELETE" });
+    const data = await res.json();
+    if (!res.ok) {
+      setError(data.error || "Failed to delete category");
+      return;
+    }
+
     await fetchCategories();
   };
 
@@ -252,16 +260,15 @@ export default function AdminCategoriesPage() {
                   >
                     <Pencil size={16} />
                   </button>
-                  {category.isActive && (
-                    <button
-                      type="button"
-                      onClick={() => deactivateCategory(category)}
-                      className="rounded-lg p-2 text-red-600 transition-colors hover:bg-red-50"
-                      aria-label={`Deactivate ${category.name}`}
-                    >
-                      <X size={16} />
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => deleteCategory(category)}
+                    className="rounded-lg p-2 text-red-600 transition-colors hover:bg-red-50"
+                    aria-label={`Delete ${category.name}`}
+                    title="Delete category"
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               </div>
             ))}

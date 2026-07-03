@@ -84,6 +84,7 @@ export function ImageUpload({
   );
 
   const removeImage = (index: number) => {
+    if (!confirm("Delete this image from this item? Save the form to finish the change.")) return;
     onChange(images.filter((_, i) => i !== index));
   };
 
@@ -135,9 +136,12 @@ export function ImageUpload({
                 <button
                   type="button"
                   onClick={() => removeImage(i)}
-                  className="p-1.5 bg-red-500 rounded-full text-white hover:bg-red-600"
+                  title="Delete image"
+                  aria-label="Delete image"
+                  className="flex items-center gap-1 rounded-full bg-red-500 px-2 py-1.5 text-[10px] font-semibold text-white hover:bg-red-600"
                 >
                   <X size={14} />
+                  Delete
                 </button>
               </div>
               <div className="absolute bottom-1 left-1 p-0.5 bg-white/80 rounded opacity-0 group-hover:opacity-100">

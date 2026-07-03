@@ -9,6 +9,21 @@ import { Review } from "../models/Review";
 import { CATEGORIES, COLORS } from "../lib/constants";
 import { slugify } from "../lib/utils";
 
+const PRODUCT_SEED_IMAGES = [
+  "/uploads/28e9410f-0bcc-4ebd-b6d5-9df582f27720.jpg",
+  "/uploads/9ed8c9c0-4cb0-41aa-8461-128f1ae0843b.jpg",
+  "/uploads/b9727a78-e585-4a3c-b912-819f3a348ba9.jpg",
+  "/uploads/5c120738-2c71-4ffc-b4c7-bd5e538832e1.jpg",
+  "/uploads/b71cf9f4-66cf-4689-a5d4-009f550ed2f7.jpg",
+  "/uploads/b1d6c86a-7b4f-4848-83f3-f57d25654b33.jpg",
+  "/uploads/30ef945d-0d6b-4c19-8ad0-888cb12d149e.jpg",
+  "/uploads/805b0cdc-5323-40fd-a383-802163946237.jpg",
+  "/uploads/302aaa5c-c270-4c91-bf78-20eb8fa1c274.jpg",
+  "/uploads/e94e9dce-cde7-4e62-bbd6-167b068f2d59.jpg",
+  "/uploads/70ee3188-1734-42ab-95a4-60cb868174a2.jpg",
+  "/uploads/b810d379-b724-458c-a6c4-20fb82cec7e3.jpg",
+] as const;
+
 const PRODUCTS = [
   {
     name: "Classic Oxford Cotton Shirt",
@@ -18,10 +33,7 @@ const PRODUCTS = [
     compareAtPrice: 1999,
     description: "Premium Oxford cotton shirt with a relaxed fit. Perfect for both casual and semi-formal occasions. Features a button-down collar and chest pocket.",
     shortDescription: "Premium Oxford cotton with relaxed fit",
-    images: [
-      "https://images.unsplash.com/photo-1596755094514-f87e34085b00?w=800&q=80",
-      "https://images.unsplash.com/photo-1602810318383-0e00344e1f7e?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[0], PRODUCT_SEED_IMAGES[1]],
     isFeatured: true,
     rating: 4.5,
     reviewCount: 128,
@@ -34,10 +46,7 @@ const PRODUCTS = [
     compareAtPrice: 2499,
     description: "Stretch denim jeans with a modern slim fit. Comfortable all-day wear with a classic 5-pocket design.",
     shortDescription: "Stretch denim with modern slim fit",
-    images: [
-      "https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&q=80",
-      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[2], PRODUCT_SEED_IMAGES[3]],
     isFeatured: true,
     rating: 4.3,
     reviewCount: 89,
@@ -50,9 +59,7 @@ const PRODUCTS = [
     compareAtPrice: 899,
     description: "100% premium combed cotton t-shirt. Soft, breathable, and durable. Available in multiple colors.",
     shortDescription: "100% premium combed cotton",
-    images: [
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[4]],
     isFeatured: true,
     rating: 4.7,
     reviewCount: 256,
@@ -64,9 +71,7 @@ const PRODUCTS = [
     price: 1499,
     description: "Breathable linen shirt perfect for Indian summers. Relaxed fit with roll-up sleeve option.",
     shortDescription: "Breathable linen for Indian summers",
-    images: [
-      "https://images.unsplash.com/photo-1602810318383-0e00344e1f7e?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[5]],
     rating: 4.2,
     reviewCount: 45,
   },
@@ -78,9 +83,7 @@ const PRODUCTS = [
     compareAtPrice: 2199,
     description: "Classic chino trousers in stretch cotton twill. Versatile enough for office or weekend.",
     shortDescription: "Stretch cotton twill chinos",
-    images: [
-      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[6]],
     isFeatured: true,
     rating: 4.4,
     reviewCount: 67,
@@ -93,9 +96,7 @@ const PRODUCTS = [
     compareAtPrice: 3999,
     description: "Stylish bomber jacket with ribbed cuffs and hem. Lightweight nylon shell with quilted lining.",
     shortDescription: "Lightweight nylon bomber jacket",
-    images: [
-      "https://images.unsplash.com/photo-1551028718-00167b16eac5?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[7]],
     rating: 4.6,
     reviewCount: 34,
   },
@@ -107,9 +108,7 @@ const PRODUCTS = [
     compareAtPrice: 2499,
     description: "Elegant cotton kurta with subtle embroidery. Perfect for festivals and celebrations.",
     shortDescription: "Cotton kurta with subtle embroidery",
-    images: [
-      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[8]],
     isFeatured: true,
     rating: 4.8,
     reviewCount: 112,
@@ -122,9 +121,7 @@ const PRODUCTS = [
     compareAtPrice: 2999,
     description: "Beautiful floral print dress in lightweight fabric. A-line silhouette with adjustable straps.",
     shortDescription: "Floral print A-line summer dress",
-    images: [
-      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[9]],
     isFeatured: true,
     rating: 4.5,
     reviewCount: 78,
@@ -137,9 +134,7 @@ const PRODUCTS = [
     compareAtPrice: 5499,
     description: "Elegant silk blend saree with zari border. Comes with matching blouse piece.",
     shortDescription: "Silk blend with zari border",
-    images: [
-      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[10]],
     isFeatured: true,
     rating: 4.9,
     reviewCount: 56,
@@ -152,9 +147,7 @@ const PRODUCTS = [
     compareAtPrice: 1199,
     description: "Trendy crop top in soft jersey fabric. Perfect pairing with high-waist jeans or skirts.",
     shortDescription: "Soft jersey crop top",
-    images: [
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[11]],
     rating: 4.3,
     reviewCount: 92,
   },
@@ -165,9 +158,7 @@ const PRODUCTS = [
     price: 1299,
     description: "Flowy palazzo pants with elastic waistband. Comfortable and stylish for any occasion.",
     shortDescription: "Flowy palazzo with elastic waist",
-    images: [
-      "https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[2]],
     rating: 4.1,
     reviewCount: 38,
   },
@@ -179,9 +170,7 @@ const PRODUCTS = [
     compareAtPrice: 4999,
     description: "Stunning Anarkali suit with dupatta. Intricate embroidery on georgette fabric.",
     shortDescription: "Georgette Anarkali with embroidery",
-    images: [
-      "https://images.unsplash.com/photo-1583391733981-5c3d0c0c0b0a?w=800&q=80",
-    ],
+    images: [PRODUCT_SEED_IMAGES[8]],
     isFeatured: true,
     rating: 4.7,
     reviewCount: 43,

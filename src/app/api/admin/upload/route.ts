@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
 import { uploadImage, isCloudinaryConfigured } from "@/lib/cloudinary";
+import { deleteImagesIfUnused } from "@/lib/image-storage";
 import { saveLocalImage } from "@/lib/local-upload";
 
 const ACCEPTED_IMAGE_TYPES = [
@@ -50,5 +51,23 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json({ error: "Upload failed, please try again." }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const auth = await requireAdmin();
+  if (auth.error) return auth.error;
+
+  try {
+    const { url } = await request.json();
+    if (typeof url !== "string" || !url) {
+      return NextResponse.json({ error: "Image URL is required" }, { status: 400 });
+    }
+
+    await deleteImagesIfUnused([url]);
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("Image delete error:", error);
+    return NextResponse.json({ error: "Failed to delete image" }, { status: 500 });
   }
 }

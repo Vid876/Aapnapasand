@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Plus, Search, Pencil, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Search, Pencil, Trash2, X } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/types";
 
@@ -83,8 +83,15 @@ export default function AdminProductsPage() {
   };
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Deactivate "${name}"?`)) return;
-    await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
+    if (!confirm(`Permanently delete "${name}"?`)) return;
+
+    const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
+    const data = await res.json();
+    if (!res.ok) {
+      setError(data.error || "Failed to delete product");
+      return;
+    }
+
     fetchProducts(pagination.page, activeSearch, pagination.limit);
   };
 
@@ -216,9 +223,10 @@ export default function AdminProductsPage() {
                           </Link>
                           <button
                             onClick={() => handleDelete(product._id, product.name)}
-                            className="text-xs text-red-600 hover:underline"
+                            className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50"
                           >
-                            Deactivate
+                            <Trash2 size={14} />
+                            Delete
                           </button>
                         </div>
                       </td>

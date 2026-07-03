@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
+import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
 import { Review } from "@/models/Review";
 
@@ -11,7 +12,7 @@ export async function GET(
     await connectDB();
     const { slug } = await params;
 
-    const product = await Product.findOne({ slug, isActive: true })
+    const product = await Product.findOne({ slug, isActive: true, ...PRODUCT_IMAGE_FILTER })
       .populate("category", "name slug")
       .lean();
 
@@ -31,6 +32,7 @@ export async function GET(
       category: product.category,
       _id: { $ne: product._id },
       isActive: true,
+      ...PRODUCT_IMAGE_FILTER,
     })
       .limit(4)
       .lean();
