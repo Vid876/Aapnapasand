@@ -8,26 +8,15 @@ import { Search, ShoppingBag, Heart, User, Menu, X } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useTranslation } from "@/store/localeStore";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
-import { CATEGORIES } from "@/lib/constants";
 import type { Category } from "@/types";
 
 type CategoryMenu = "all" | "men" | "women";
-
-const FALLBACK_CATEGORIES: Category[] = CATEGORIES.map((category) => ({
-  _id: category.slug,
-  name: category.name,
-  slug: category.slug,
-  gender: category.gender,
-  image: category.image,
-  description: `Shop ${category.name} collection`,
-  isActive: true,
-}));
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [categories, setCategories] = useState<Category[]>(FALLBACK_CATEGORIES);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const { data: session } = useSession();
   const itemCount = useCartStore((s) => s.getItemCount());
@@ -93,8 +82,8 @@ export function Header() {
             <Image
               src="/logo.png"
               alt="Apna Pasand"
-              width={280}
-              height={120}
+              width={300}
+              height={140}
               priority
               className="h-12 w-auto lg:h-16 object-contain"
             />

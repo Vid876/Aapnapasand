@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { ProductCard } from "@/components/products/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { SlidersHorizontal, X } from "lucide-react";
-import { CATEGORIES, SIZES, COLORS } from "@/lib/constants";
+import { SIZES, COLORS } from "@/lib/constants";
 import type { Category, Product } from "@/types";
 
 function ShopContent() {
@@ -15,9 +15,7 @@ function ShopContent() {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [categoryOptions, setCategoryOptions] = useState<Pick<Category, "name" | "slug">[]>(
-    CATEGORIES.map((category) => ({ name: category.name, slug: category.slug }))
-  );
+  const [categoryOptions, setCategoryOptions] = useState<Pick<Category, "name" | "slug">[]>([]);
 
   const [filters, setFilters] = useState({
     gender: searchParams.get("gender") || "",

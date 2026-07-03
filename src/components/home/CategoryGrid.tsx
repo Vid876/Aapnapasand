@@ -6,6 +6,10 @@ import { CategoryCardMedia } from "./CategoryCardMedia";
 export async function CategoryGrid() {
   const categories = await getPublicCategories();
 
+  if (categories.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-16 lg:py-24">
       <div className="container-app">

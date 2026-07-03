@@ -1,8 +1,7 @@
 import { HeroBanner } from "@/components/home/HeroBanner";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
-import { FestiveEdit } from "@/components/home/FestiveEdit";
-import { PromoBanner } from "@/components/home/PromoBanner";
+import { LuxuryFestiveBanner } from "@/components/home/LuxuryFestiveBanner";
 import { TrendingSection } from "@/components/home/TrendingSection";
 import { Newsletter } from "@/components/home/Newsletter";
 
@@ -17,11 +16,9 @@ export default function HomePage() {
 
       <FeaturedProducts />
 
-      <FestiveEdit />
+      <LuxuryFestiveBanner />
 
       <TrendingSection />
-
-      <PromoBanner />
 
       <Newsletter />
     </div>
