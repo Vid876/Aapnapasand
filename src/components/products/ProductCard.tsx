@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Heart, Star } from "lucide-react";
 import { formatPrice, calculateDiscount } from "@/lib/utils";
+import { ProductImage } from "@/components/products/ProductImage";
 import { useWishlistStore } from "@/store/wishlistStore";
 import type { Product } from "@/types";
 
@@ -20,10 +20,9 @@ export function ProductCard({ product }: ProductCardProps) {
     <div className="group relative">
       <Link href={`/product/${product.slug}`} className="block">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 rounded-lg">
-          <Image
+          <ProductImage
             src={product.images[0]}
             alt={product.name}
-            fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />

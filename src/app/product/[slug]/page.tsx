@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -17,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/products/ProductCard";
+import { ProductImage } from "@/components/products/ProductImage";
 import { formatPrice, calculateDiscount } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
@@ -130,10 +130,9 @@ export default function ProductDetailPage() {
       <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
         <div>
           <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-gray-100 mb-4">
-            <Image
+            <ProductImage
               src={product.images[selectedImage]}
               alt={product.name}
-              fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
               priority
@@ -149,7 +148,7 @@ export default function ProductDetailPage() {
                     selectedImage === i ? "border-brand-600" : "border-transparent"
                   }`}
                 >
-                  <Image src={img} alt="" fill className="object-cover" sizes="80px" />
+                  <ProductImage src={img} alt={product.name} className="object-cover" sizes="80px" />
                 </button>
               ))}
             </div>

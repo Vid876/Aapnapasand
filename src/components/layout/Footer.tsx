@@ -42,7 +42,7 @@ export function Footer() {
           <div>
             <Link href="/" className="inline-block mb-6">
               <Image
-                src="/logo.png"
+                src="/Logo.png"
                 alt="Manisha Exports"
                 width={1000}
                 height={450}

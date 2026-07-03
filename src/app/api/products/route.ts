@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
+import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
 import { Category } from "@/models/Category";
 
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     const filter: Record<string, unknown> = {
       isActive: true,
-      "images.0": { $regex: "^/uploads/" },
+      ...PRODUCT_IMAGE_FILTER,
     };
 
     if (category) {

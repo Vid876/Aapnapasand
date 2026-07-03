@@ -3,6 +3,7 @@ import { LuxuryTextBand } from "@/components/home/LuxuryTextBand";
 import { ProductCard } from "@/components/products/ProductCard";
 import { PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
 import { connectDB } from "@/lib/db";
+import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
 import type { Product as ProductType } from "@/types";
 
@@ -11,7 +12,7 @@ async function getTrendingProducts(): Promise<ProductType[]> {
     await connectDB();
     const products = await Product.find({
       isActive: true,
-      "images.0": { $regex: "^/uploads/" },
+      ...PRODUCT_IMAGE_FILTER,
     })
       .sort({ reviewCount: -1, rating: -1 })
       .limit(4)

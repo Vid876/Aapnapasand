@@ -8,6 +8,7 @@ import { z } from "zod";
 import { COLORS, SIZES } from "@/lib/constants";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { calculateDiscount } from "@/lib/utils";
+import { isValidStoredImage } from "@/lib/image-utils";
 import type { Category, ProductVariant } from "@/types";
 
 type ProductVariantForm = Omit<ProductVariant, "stock" | "price"> & {
@@ -22,15 +23,6 @@ const DEFAULT_VARIANT: ProductVariantForm = {
   sku: "",
   stock: "10",
   price: "",
-};
-
-const isValidProductImage = (value: string) => {
-  try {
-    new URL(value);
-    return true;
-  } catch {
-    return value.startsWith("/uploads/");
-  }
 };
 
 export interface ProductFormData {
@@ -93,7 +85,7 @@ const productFormSchema = z.object({
     .min(1, "Add at least one product variant"),
   isFeatured: z.boolean(),
   isActive: z.boolean(),
-  images: z.array(z.string().refine(isValidProductImage, "Invalid image URL")).min(1, "Upload at least one image"),
+  images: z.array(z.string().refine(isValidStoredImage, "Invalid image URL")).min(1, "Upload at least one image"),
 });
 
 interface ProductFormProps {

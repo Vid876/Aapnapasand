@@ -3,16 +3,8 @@ import { connectDB } from "@/lib/db";
 import { Product } from "@/models/Product";
 import { requireAdmin } from "@/lib/admin";
 import { slugify } from "@/lib/utils";
+import { isValidStoredImage } from "@/lib/image-utils";
 import { z } from "zod";
-
-const isValidProductImage = (value: string) => {
-  try {
-    new URL(value);
-    return true;
-  } catch {
-    return value.startsWith("/uploads/");
-  }
-};
 
 const productSchema = z.object({
   name: z.string().min(2),
@@ -20,7 +12,7 @@ const productSchema = z.object({
   shortDescription: z.string().optional(),
   price: z.number().min(0),
   compareAtPrice: z.number().min(0).optional(),
-  images: z.array(z.string().refine(isValidProductImage, "Invalid image URL")).min(1),
+  images: z.array(z.string().refine(isValidStoredImage, "Invalid image URL")).min(1),
   category: z.string(),
   subcategory: z.string().optional(),
   gender: z.enum(["men", "women", "kids", "unisex"]),

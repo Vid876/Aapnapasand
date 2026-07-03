@@ -1,6 +1,7 @@
 import { ProductCard } from "@/components/products/ProductCard";
 import { SectionHeader } from "@/components/marketing/PublicPage";
 import { connectDB } from "@/lib/db";
+import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
 import type { Product as ProductType } from "@/types";
 
@@ -10,7 +11,7 @@ async function getFeaturedProducts(): Promise<ProductType[]> {
     const products = await Product.find({
       isFeatured: true,
       isActive: true,
-      "images.0": { $regex: "^/uploads/" },
+      ...PRODUCT_IMAGE_FILTER,
     })
       .populate("category", "name slug")
       .limit(8)
