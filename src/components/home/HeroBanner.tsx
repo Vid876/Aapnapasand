@@ -53,105 +53,138 @@ export function HeroBanner() {
     setActive(index);
   };
 
+  const activeSlide = SLIDES[active];
+
   return (
     <section className="relative w-full overflow-hidden bg-white">
-      {/* Banner Container */}
-      <div className="relative w-full aspect-[2500/1050] min-h-[350px] sm:min-h-[450px] lg:min-h-[550px] xl:min-h-[650px] overflow-hidden">
+      <div className="relative w-full overflow-hidden">
+        {/* Banner Image Area */}
+        <div className="relative w-full aspect-[2500/1050] overflow-hidden bg-white sm:min-h-[450px] lg:min-h-[550px] xl:min-h-[650px]">
+          {SLIDES.map((slide, index) => {
+            const isActive = index === active;
 
-        {SLIDES.map((slide, index) => {
-          const isActive = index === active;
+            return (
+              <div
+                key={slide.image}
+                className={`absolute inset-0 transition-opacity duration-700 ${
+                  isActive ? "opacity-100 z-10" : "opacity-0 z-0"
+                }`}
+              >
+                <Image
+                  src={slide.image}
+                  alt={slide.title}
+                  fill
+                  priority={index === 0}
+                  sizes="100vw"
+                  className="object-contain object-center sm:object-cover"
+                />
 
-          return (
-            <div
-              key={slide.image}
-              className={`absolute inset-0 transition-opacity duration-700 ${
-                isActive ? "opacity-100 z-10" : "opacity-0 z-0"
-              }`}
-            >
-              {/* Banner Image */}
-              <Image
-                src={slide.image}
-                alt={slide.title}
-                fill
-                priority={index === 0}
-                sizes="100vw"
-                className="object-cover object-center"
-              />
-
-              {/* Content */}
-              <div className="absolute inset-0 flex items-center">
-                <div className="container mx-auto px-4">
-                  <div
-                    className={`max-w-[560px] text-white drop-shadow-[0_3px_18px_rgba(0,0,0,0.72)] ${
-                      slide.align === "center"
-                        ? "mx-auto text-center"
-                        : "mr-auto text-left"
-                    }`}
-                  >
-                    <h1 className="text-2xl font-bold leading-tight sm:text-4xl lg:text-6xl">
-                      {slide.title}
-                    </h1>
-
-                    <p className="mt-3 max-w-xl text-xs font-medium leading-relaxed text-white/95 sm:text-base lg:mt-4 lg:text-lg">
-                      {slide.text}
-                    </p>
-
+                {/* Desktop Content Only */}
+                <div className="absolute inset-0 hidden items-center sm:flex">
+                  <div className="container mx-auto px-4">
                     <div
-                      className={`mt-5 flex flex-wrap gap-4 sm:mt-6 ${
+                      className={`max-w-[560px] text-white drop-shadow-[0_3px_18px_rgba(0,0,0,0.72)] ${
                         slide.align === "center"
-                          ? "justify-center"
-                          : "justify-start"
+                          ? "mx-auto text-center"
+                          : "mr-auto text-left"
                       }`}
                     >
-                      <Link
-                        href={slide.primaryHref}
-                        className="inline-flex items-center gap-2 text-sm font-semibold text-white underline underline-offset-8 transition hover:text-brand-100 sm:text-base"
-                      >
-                        {slide.primary}
-                        <ArrowRight size={18} />
-                      </Link>
+                      <h1 className="text-4xl font-bold leading-tight lg:text-6xl">
+                        {slide.title}
+                      </h1>
 
-                      <Link
-                        href={slide.secondaryHref}
-                        className="hidden items-center text-sm font-semibold text-white/90 underline underline-offset-8 transition hover:text-white sm:inline-flex sm:text-base"
+                      <p className="mt-4 max-w-xl text-base font-medium leading-relaxed text-white/95 lg:text-lg">
+                        {slide.text}
+                      </p>
+
+                      <div
+                        className={`mt-6 flex flex-wrap gap-4 ${
+                          slide.align === "center"
+                            ? "justify-center"
+                            : "justify-start"
+                        }`}
                       >
-                        {slide.secondary}
-                      </Link>
+                        <Link
+                          href={slide.primaryHref}
+                          className="inline-flex items-center gap-2 text-base font-semibold text-white underline underline-offset-8 transition hover:text-brand-100"
+                        >
+                          {slide.primary}
+                          <ArrowRight size={18} />
+                        </Link>
+
+                        <Link
+                          href={slide.secondaryHref}
+                          className="inline-flex items-center text-base font-semibold text-white/90 underline underline-offset-8 transition hover:text-white"
+                        >
+                          {slide.secondary}
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
 
-        {/* Navigation */}
-        <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3 rounded-full bg-white/90 px-4 py-2 shadow-lg backdrop-blur-md">
-          <button
-            onClick={previous}
-            className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100"
-          >
-            <ArrowLeft size={18} />
-          </button>
-
-          {SLIDES.map((_, index) => (
+          {/* Navigation */}
+          <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/90 px-3 py-1.5 shadow-lg backdrop-blur-md sm:bottom-5 sm:gap-3 sm:px-4 sm:py-2">
             <button
-              key={index}
-              onClick={() => goTo(index)}
-              className={`h-2.5 rounded-full transition-all ${
-                index === active
-                  ? "w-8 bg-black"
-                  : "w-2.5 bg-gray-400"
-              }`}
-            />
-          ))}
+              onClick={previous}
+              aria-label="Previous slide"
+              className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100 sm:h-10 sm:w-10"
+            >
+              <ArrowLeft size={16} />
+            </button>
 
-          <button
-            onClick={next}
-            className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100"
-          >
-            <ArrowRight size={18} />
-          </button>
+            {SLIDES.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goTo(index)}
+                aria-label={`Go to slide ${index + 1}`}
+                className={`h-2 rounded-full transition-all sm:h-2.5 ${
+                  index === active
+                    ? "w-7 bg-black sm:w-8"
+                    : "w-2 bg-gray-400 sm:w-2.5"
+                }`}
+              />
+            ))}
+
+            <button
+              onClick={next}
+              aria-label="Next slide"
+              className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100 sm:h-10 sm:w-10"
+            >
+              <ArrowRight size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Content Below Banner */}
+        <div className="block px-4 py-5 text-center sm:hidden">
+          <h1 className="text-2xl font-bold leading-tight text-gray-950">
+            {activeSlide.title}
+          </h1>
+
+          <p className="mx-auto mt-3 max-w-md text-sm font-medium leading-relaxed text-gray-600">
+            {activeSlide.text}
+          </p>
+
+          <div className="mt-4 flex flex-wrap justify-center gap-4">
+            <Link
+              href={activeSlide.primaryHref}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-gray-950 underline underline-offset-8"
+            >
+              {activeSlide.primary}
+              <ArrowRight size={16} />
+            </Link>
+
+            <Link
+              href={activeSlide.secondaryHref}
+              className="inline-flex items-center text-sm font-semibold text-gray-700 underline underline-offset-8"
+            >
+              {activeSlide.secondary}
+            </Link>
+          </div>
         </div>
       </div>
     </section>
