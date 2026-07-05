@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/admin";
 import { connectDB } from "@/lib/db";
@@ -50,6 +51,7 @@ export async function POST(request: NextRequest) {
       isActive: data.isActive ?? true,
     });
 
+    revalidateTag("categories");
     return NextResponse.json({ category }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {

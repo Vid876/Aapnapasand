@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Heart, Star } from "lucide-react";
 import { formatPrice, calculateDiscount } from "@/lib/utils";
 import { ProductImage } from "@/components/products/ProductImage";
@@ -13,13 +14,18 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { toggle, has } = useWishlistStore();
+  const [mounted, setMounted] = useState(false);
   const discount = calculateDiscount(product.price, product.compareAtPrice);
-  const isWishlisted = has(product._id);
+  const isWishlisted = mounted ? has(product._id) : false;
   const alternateImage = product.images[1];
   const displayBrand =
     product.brand?.toUpperCase().includes("BOHOBLOCKPRINTED")
       ? product.brand
       : "BOHOBLOCKPRINTED";
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="group relative rounded-lg transition duration-300 hover:-translate-y-1">

@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { ProductCard } from "@/components/products/ProductCard";
 import { SectionHeader } from "@/components/marketing/PublicPage";
 import { connectDB } from "@/lib/db";
@@ -5,7 +6,7 @@ import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
 import type { Product as ProductType } from "@/types";
 
-async function getFeaturedProducts(): Promise<ProductType[]> {
+async function fetchFeaturedProducts(): Promise<ProductType[]> {
   try {
     await connectDB();
     const products = await Product.find({
@@ -21,6 +22,11 @@ async function getFeaturedProducts(): Promise<ProductType[]> {
     return [];
   }
 }
+
+const getFeaturedProducts = unstable_cache(fetchFeaturedProducts, ["home-featured-products"], {
+  revalidate: 300,
+  tags: ["products"],
+});
 
 export async function FeaturedProducts() {
   const products = await getFeaturedProducts();

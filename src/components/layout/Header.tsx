@@ -37,9 +37,13 @@ export function Header() {
   const [accountError, setAccountError] = useState("");
   const [accountSuccess, setAccountSuccess] = useState("");
   const [accountLoading, setAccountLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const { data: session } = useSession();
-  const itemCount = useCartStore((s) => s.getItemCount());
+  const cartItems = useCartStore((s) => s.items);
+  const itemCount = mounted
+    ? cartItems.reduce((sum, item) => sum + item.quantity, 0)
+    : 0;
   const { t } = useTranslation();
 
   const NAV_LINKS = [
@@ -57,6 +61,10 @@ export function Header() {
       (category) => category.gender === menu || category.gender === "unisex"
     );
   };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     fetch("/api/categories")

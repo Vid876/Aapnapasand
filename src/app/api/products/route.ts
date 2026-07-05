@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { publicJson } from "@/lib/api-response";
 import { connectDB } from "@/lib/db";
 import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
     const sort = searchParams.get("sort") || "newest";
     const featured = searchParams.get("featured");
     const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "12");
+    const limit = Math.min(parseInt(searchParams.get("limit") || "12"), 50);
 
     const filter: Record<string, unknown> = {
       isActive: true,
@@ -74,7 +75,7 @@ export async function GET(request: NextRequest) {
       Product.countDocuments(filter),
     ]);
 
-    return NextResponse.json({
+    return publicJson({
       products,
       pagination: {
         page,
@@ -82,7 +83,7 @@ export async function GET(request: NextRequest) {
         total,
         pages: Math.ceil(total / limit),
       },
-    });
+    }, search ? 30 : 60);
   } catch (error) {
     console.error("Products fetch error:", error);
     return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });

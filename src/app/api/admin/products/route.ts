@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/db";
 import { Product } from "@/models/Product";
 import { requireAdmin } from "@/lib/admin";
@@ -100,6 +101,7 @@ export async function POST(request: NextRequest) {
       reviewCount: 0,
     });
 
+    revalidateTag("products");
     return NextResponse.json({ product }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {

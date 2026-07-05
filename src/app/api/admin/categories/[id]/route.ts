@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/admin";
 import { connectDB } from "@/lib/db";
@@ -52,6 +53,7 @@ export async function PATCH(
       await deleteImagesIfUnused([previousImage]);
     }
 
+    revalidateTag("categories");
     return NextResponse.json({ category });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -90,6 +92,7 @@ export async function DELETE(
       await deleteImagesIfUnused([category.image]);
     }
 
+    revalidateTag("categories");
     return NextResponse.json({ message: "Category deleted" });
   } catch (error) {
     console.error("Admin category delete error:", error);

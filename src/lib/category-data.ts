@@ -1,10 +1,11 @@
+import { unstable_cache } from "next/cache";
 import { connectDB } from "@/lib/db";
 import { Category } from "@/models/Category";
 import type { Category as CategoryType } from "@/types";
 
 type PublicCategory = Pick<CategoryType, "_id" | "name" | "slug" | "description" | "image" | "gender" | "isActive">;
 
-export async function getPublicCategories(): Promise<PublicCategory[]> {
+async function fetchPublicCategories(): Promise<PublicCategory[]> {
   try {
     await connectDB();
     const categories = await Category.find({
@@ -18,3 +19,8 @@ export async function getPublicCategories(): Promise<PublicCategory[]> {
     return [];
   }
 }
+
+export const getPublicCategories = unstable_cache(fetchPublicCategories, ["public-categories"], {
+  revalidate: 300,
+  tags: ["categories"],
+});

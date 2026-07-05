@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/db";
 import { Product } from "@/models/Product";
 import { requireAdmin } from "@/lib/admin";
@@ -100,6 +101,7 @@ export async function PUT(
       await deleteImagesIfUnused(removedImages);
     }
 
+    revalidateTag("products");
     return NextResponse.json({ product });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -137,6 +139,7 @@ export async function DELETE(
     ]);
     await deleteImagesIfUnused(images);
 
+    revalidateTag("products");
     return NextResponse.json({ message: "Product deleted" });
   } catch (error) {
     console.error("Admin product delete error:", error);

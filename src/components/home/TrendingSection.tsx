@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import { LuxuryTextBand } from "@/components/home/LuxuryTextBand";
 import { ProductCard } from "@/components/products/ProductCard";
@@ -7,7 +8,7 @@ import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
 import type { Product as ProductType } from "@/types";
 
-async function getTrendingProducts(): Promise<ProductType[]> {
+async function fetchTrendingProducts(): Promise<ProductType[]> {
   try {
     await connectDB();
     const products = await Product.find({
@@ -22,6 +23,11 @@ async function getTrendingProducts(): Promise<ProductType[]> {
     return [];
   }
 }
+
+const getTrendingProducts = unstable_cache(fetchTrendingProducts, ["home-trending-products"], {
+  revalidate: 300,
+  tags: ["products"],
+});
 
 export async function TrendingSection() {
   const products = await getTrendingProducts();

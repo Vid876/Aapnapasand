@@ -1,4 +1,4 @@
-# Aapnapasand E-Commerce Store
+# BOHOBLOCKPRINTED E-Commerce Store
 
 A full-featured clothing e-commerce platform built with Next.js, React, and MongoDB. Inspired by modern Indian fashion retailers like Snitch, Myntra, and Ajio.
 
@@ -38,8 +38,8 @@ A full-featured clothing e-commerce platform built with Next.js, React, and Mong
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/aapnapasand.git
-cd aapnapasand
+git clone https://github.com/yourusername/bohoblockprinted.git
+cd bohoblockprinted
 
 # Install dependencies
 npm install
@@ -79,7 +79,7 @@ SMTP_HOST=smtp.sendgrid.net
 SMTP_PORT=587
 SMTP_USER=apikey
 SMTP_PASS=your-sendgrid-api-key
-FROM_EMAIL=support@aapnapasand.com
+FROM_EMAIL=support@bohoblockprinted.com
 ```
 
 Without SMTP, orders still work — emails are logged to the console in dev.
@@ -124,7 +124,7 @@ Click **हिं / EN** in the header to switch between Hindi and English acros
 
 | Role     | Email                    | Password     |
 |----------|--------------------------|--------------|
-| Admin    | admin@aapnapasand.com    | admin123     |
+| Admin    | admin@bohoblockprinted.com | admin123     |
 | Customer | customer@example.com     | customer123  |
 
 ### Demo Coupons

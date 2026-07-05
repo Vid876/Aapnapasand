@@ -78,6 +78,11 @@ const ProductSchema = new Schema<IProduct>(
 
 ProductSchema.index({ name: "text", description: "text", tags: "text" });
 ProductSchema.index({ category: 1, gender: 1, price: 1 });
+ProductSchema.index({ isActive: 1, createdAt: -1 });
+ProductSchema.index({ isActive: 1, isFeatured: 1, createdAt: -1 });
+ProductSchema.index({ isActive: 1, reviewCount: -1, rating: -1 });
+ProductSchema.index({ slug: 1, isActive: 1 });
+ProductSchema.index({ "variants.size": 1, "variants.color": 1 });
 
 export const Product: Model<IProduct> =
   mongoose.models.Product || mongoose.model<IProduct>("Product", ProductSchema);

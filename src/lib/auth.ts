@@ -18,7 +18,8 @@ export const authOptions: NextAuthOptions = {
         }
 
         await connectDB();
-        const user = await User.findOne({ email: credentials.email });
+        const email = credentials.email.trim().toLowerCase();
+        const user = await User.findOne({ email }).select("name email password role isActive");
 
         if (!user || !user.isActive) {
           throw new Error("Invalid email or password");
