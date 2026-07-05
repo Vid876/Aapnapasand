@@ -74,33 +74,37 @@ export function HeroBanner() {
                   className="object-contain object-center sm:object-cover"
                 />
 
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/10 sm:bg-black/25" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/25 sm:bg-gradient-to-r sm:from-black/40 sm:via-black/15 sm:to-transparent" />
+                {/* Overlay - Only Desktop */}
+                <div className="absolute inset-0 hidden bg-black/25 sm:block" />
+                <div className="absolute inset-0 hidden sm:block sm:bg-gradient-to-r sm:from-black/40 sm:via-black/15 sm:to-transparent" />
 
                 {/* Content */}
                 <div className="absolute inset-0 flex items-center">
                   <div className="container mx-auto px-3 sm:px-4">
                     <div
-                      className={`mx-auto max-w-[245px] rounded-xl border border-white/35 bg-black/25 px-3 py-2 text-center text-white shadow-lg backdrop-blur-[2px] sm:max-w-[560px] sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-0 ${
+                      className={`max-w-[245px] rounded-xl border border-white/35 bg-black/25 px-3 py-2 text-white shadow-lg backdrop-blur-[2px] sm:max-w-[560px] sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-0 ${
                         slide.align === "center"
-                          ? "sm:mx-auto sm:text-center"
-                          : "sm:mr-auto sm:ml-0 sm:text-left"
+                          ? "mx-auto text-center"
+                          : "mr-auto ml-0 text-left"
                       }`}
                     >
                       <h1 className="text-[15px] font-bold leading-[1.12] sm:text-4xl lg:text-6xl">
                         {slide.title}
                       </h1>
 
-                      <p className="mx-auto mt-1.5 max-w-[220px] text-[8.5px] font-medium leading-[1.35] text-white/95 sm:mx-0 sm:mt-4 sm:max-w-xl sm:text-base sm:leading-relaxed lg:text-lg">
+                      <p
+                        className={`mt-1.5 max-w-[220px] text-[8.5px] font-medium leading-[1.35] text-white/95 sm:mt-4 sm:max-w-xl sm:text-base sm:leading-relaxed lg:text-lg ${
+                          slide.align === "center" ? "mx-auto" : "mx-0"
+                        }`}
+                      >
                         {slide.text}
                       </p>
 
                       <div
-                        className={`mt-2 flex flex-wrap justify-center gap-1.5 sm:mt-7 sm:gap-4 ${
+                        className={`mt-2 flex flex-wrap gap-1.5 sm:mt-7 sm:gap-4 ${
                           slide.align === "center"
-                            ? "sm:justify-center"
-                            : "sm:justify-start"
+                            ? "justify-center"
+                            : "justify-start"
                         }`}
                       >
                         <Link
