@@ -1,29 +1,39 @@
-const { spawn } = require("node:child_process");
+const fs = require("node:fs");
+const http = require("node:http");
 const path = require("node:path");
+const next = require("next");
 
-const port = process.env.PORT || "3000";
-const hostname = process.env.HOSTNAME || "0.0.0.0";
-const nextBin = path.join(__dirname, "node_modules", "next", "dist", "bin", "next");
+const port = Number(process.env.PORT || 3000);
+const hostname = process.env.HOST || process.env.NEXT_HOST || "0.0.0.0";
+const buildIdPath = path.join(__dirname, ".next", "BUILD_ID");
 
-const child = spawn(
-  process.execPath,
-  [nextBin, "start", "--hostname", hostname, "--port", port],
-  {
-    stdio: "inherit",
-    env: {
-      ...process.env,
-      NODE_ENV: "production",
-      PORT: port,
-      HOSTNAME: hostname,
-    },
-  }
-);
+if (!fs.existsSync(buildIdPath)) {
+  console.error(
+    ".next build not found. Run `npm install && npm run build` before starting the Hostinger app."
+  );
+  process.exit(1);
+}
 
-child.on("exit", (code, signal) => {
-  if (signal) {
-    process.kill(process.pid, signal);
-    return;
-  }
-
-  process.exit(code || 0);
+const app = next({
+  dev: false,
+  hostname,
+  port,
 });
+
+const handle = app.getRequestHandler();
+
+app
+  .prepare()
+  .then(() => {
+    http
+      .createServer((req, res) => {
+        handle(req, res);
+      })
+      .listen(port, hostname, () => {
+        console.log(`BOHOBLOCKPRINTED ready on http://${hostname}:${port}`);
+      });
+  })
+  .catch((error) => {
+    console.error("Failed to start BOHOBLOCKPRINTED:", error);
+    process.exit(1);
+  });
