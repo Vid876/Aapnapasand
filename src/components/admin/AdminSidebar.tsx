@@ -30,7 +30,7 @@ export function AdminSidebar() {
     <aside className="w-64 bg-gray-900 text-gray-300 min-h-screen flex flex-col shrink-0">
       <div className="p-6 border-b border-gray-800">
         <Link href="/admin" className="text-xl font-display font-bold text-white">
-          Aapnapasand
+          BOHOBLOCKPRINTED
         </Link>
         <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider">Admin Panel</p>
       </div>
@@ -79,3 +79,4 @@ export function AdminSidebar() {
     </aside>
   );
 }
+

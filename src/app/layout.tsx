@@ -16,11 +16,11 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "Aapnapasand | Premium Indian Fashion",
-    template: "%s | Aapnapasand",
+    default: "BOHOBLOCKPRINTED | Premium Indian Fashion",
+    template: "%s | BOHOBLOCKPRINTED",
   },
   description:
-    "Shop premium men's and women's clothing at Aapnapasand. Discover shirts, jeans, kurtas, sarees, and more with fast delivery across India.",
+    "Shop premium men's and women's clothing at BOHOBLOCKPRINTED. Discover shirts, jeans, kurtas, sarees, and more with fast delivery across India.",
   keywords: ["fashion", "clothing", "india", "mens wear", "womens wear", "online shopping"],
 };
 
@@ -39,3 +39,4 @@ export default function RootLayout({
     </html>
   );
 }
+

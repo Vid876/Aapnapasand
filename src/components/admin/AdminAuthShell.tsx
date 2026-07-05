@@ -30,7 +30,7 @@ export function AdminAuthShell({
             Admin portal
           </div>
           <h1 className="max-w-xl font-display text-5xl font-bold leading-tight">
-            Manage Aapnapasand with a calm, focused workspace.
+            Manage BOHOBLOCKPRINTED with a calm, focused workspace.
           </h1>
           <p className="mt-5 max-w-lg text-base leading-7 text-white/75">
             Products, orders, offers, reviews, and categories stay behind an admin-only login.
@@ -50,7 +50,7 @@ export function AdminAuthShell({
             <Link href="/" className="mx-auto mb-5 flex h-16 w-24 items-center justify-center rounded-2xl bg-brand-50">
               <Image
                 src="/Logo.png"
-                alt="Aapnapasand"
+                alt="BOHOBLOCKPRINTED"
                 width={96}
                 height={48}
                 className="object-contain"
@@ -76,3 +76,4 @@ export function AdminAuthShell({
     </main>
   );
 }
+

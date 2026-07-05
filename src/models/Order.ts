@@ -9,6 +9,7 @@ export interface IOrderItem {
   size: string;
   color: string;
   price: number;
+  currency?: "INR" | "USD";
 }
 
 export interface IShippingAddress {
@@ -32,6 +33,7 @@ export interface IOrder extends Document {
   discount: number;
   tax: number;
   total: number;
+  currency?: "INR" | "USD";
   couponCode?: string;
   status: OrderStatus;
   paymentMethod: string;
@@ -52,6 +54,7 @@ const OrderItemSchema = new Schema<IOrderItem>(
     size: { type: String, required: true },
     color: { type: String, required: true },
     price: { type: Number, required: true },
+    currency: { type: String, enum: ["INR", "USD"], default: "INR" },
   },
   { _id: false }
 );
@@ -81,6 +84,7 @@ const OrderSchema = new Schema<IOrder>(
     discount: { type: Number, default: 0 },
     tax: { type: Number, default: 0 },
     total: { type: Number, required: true },
+    currency: { type: String, enum: ["INR", "USD"], default: "INR" },
     couponCode: { type: String },
     status: {
       type: String,

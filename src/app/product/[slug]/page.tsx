@@ -13,6 +13,10 @@ import {
   RotateCcw,
   Shield,
   ChevronLeft,
+  BadgePercent,
+  CheckCircle2,
+  Ruler,
+  Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/products/ProductCard";
@@ -100,6 +104,27 @@ export default function ProductDetailPage() {
     (v) => v.size === selectedSize && v.color === selectedColor
   );
   const inStock = selectedVariant ? selectedVariant.stock > 0 : product.totalStock > 0;
+  const displayPrice = selectedVariant?.price || product.price;
+  const offerCards = [
+    {
+      title: "WELCOME10",
+      text: "Extra 10% off for new customers. Apply this coupon at checkout.",
+    },
+    {
+      title: "Best Offer",
+      text: "Selected styles include free shipping and limited period pricing.",
+    },
+  ];
+  const trustPoints = [
+    { icon: RotateCcw, label: "Free returns" },
+    { icon: Truck, label: "Fast shipping" },
+    { icon: CheckCircle2, label: "Best quality" },
+    { icon: Shield, label: "Secure checkout" },
+  ];
+  const displayBrand =
+    product.brand?.toUpperCase().includes("BOHOBLOCKPRINTED")
+      ? product.brand
+      : "BOHOBLOCKPRINTED";
 
   const handleAddToCart = () => {
     if (!selectedSize || !selectedColor) return;
@@ -108,7 +133,8 @@ export default function ProductDetailPage() {
       name: product.name,
       image: product.images[0],
       slug: product.slug,
-      price: selectedVariant?.price || product.price,
+      price: displayPrice,
+      currency: product.currency || "INR",
       quantity,
       size: selectedSize,
       color: selectedColor,
@@ -155,19 +181,21 @@ export default function ProductDetailPage() {
           )}
         </div>
 
-        <div>
-          <p className="text-sm text-gray-500 uppercase tracking-wide mb-2">{product.brand}</p>
-          <h1 className="text-2xl lg:text-3xl font-display font-bold text-gray-900 mb-3">
+        <div className="lg:sticky lg:top-32 lg:self-start">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-brand-600">
+            {displayBrand}
+          </p>
+          <h1 className="mb-3 font-display text-3xl font-bold leading-tight text-gray-950 lg:text-4xl">
             {product.name}
           </h1>
 
           {product.rating > 0 && (
-            <div className="flex items-center gap-2 mb-4">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2">
               <div className="flex">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
-                    size={16}
+                    size={15}
                     className={
                       i < Math.round(product.rating)
                         ? "fill-yellow-400 text-yellow-400"
@@ -176,36 +204,61 @@ export default function ProductDetailPage() {
                   />
                 ))}
               </div>
-              <span className="text-sm text-gray-500">
+              <span className="text-xs font-medium text-gray-600">
                 {product.rating.toFixed(1)} ({product.reviewCount} reviews)
               </span>
             </div>
           )}
 
-          <div className="flex items-center gap-3 mb-6">
-            <span className="text-2xl font-bold text-gray-900">
-              {formatPrice(selectedVariant?.price || product.price)}
-            </span>
-            {product.compareAtPrice && product.compareAtPrice > product.price && (
-              <>
-                <span className="text-lg text-gray-400 line-through">
-                  {formatPrice(product.compareAtPrice)}
-                </span>
-                <span className="text-sm font-semibold text-red-500">{discount}% OFF</span>
-              </>
-            )}
+          <div className="mb-6 border-y border-gray-100 py-5">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-3xl font-bold text-gray-950">
+                {formatPrice(displayPrice, product.currency)}
+              </span>
+              {product.compareAtPrice && product.compareAtPrice > product.price && (
+                <>
+                  <span className="text-lg text-gray-400 line-through">
+                    {formatPrice(product.compareAtPrice, product.currency)}
+                  </span>
+                  <span className="rounded-full bg-red-50 px-3 py-1 text-sm font-semibold text-red-600">
+                    {discount}% OFF
+                  </span>
+                </>
+              )}
+            </div>
+            <p className="mt-2 text-xs font-medium text-gray-500">
+              Inclusive of all taxes. Shipping and coupon benefits are calculated at checkout.
+            </p>
           </div>
 
-          <p className="text-gray-600 leading-relaxed mb-8">
+          <p className="mb-7 text-sm leading-7 text-gray-600 sm:text-base">
             {product.shortDescription || product.description}
           </p>
 
+          <div className="mb-7 rounded-xl border border-brand-100 bg-white p-4 shadow-sm">
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-brand-950">
+              <BadgePercent size={18} className="text-brand-600" />
+              Best Offers
+            </div>
+            <div className="space-y-3">
+              {offerCards.map((offer) => (
+                <div key={offer.title} className="flex gap-3 rounded-lg bg-brand-50/70 p-3">
+                  <Tag size={16} className="mt-0.5 shrink-0 text-brand-700" />
+                  <div>
+                    <p className="text-sm font-semibold text-brand-950">{offer.title}</p>
+                    <p className="mt-0.5 text-xs leading-5 text-gray-600">{offer.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {colors.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold mb-3">
+              <h3 className="mb-3 text-sm font-semibold">
                 Color: <span className="font-normal">{selectedColor}</span>
               </h3>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {colors.map((color) => {
                   const variant = product.variants.find((v) => v.color === color);
                   return (
@@ -213,10 +266,11 @@ export default function ProductDetailPage() {
                       key={color}
                       onClick={() => setSelectedColor(color)}
                       title={color}
-                      className={`w-10 h-10 rounded-full border-2 transition-all ${
+                      aria-pressed={selectedColor === color}
+                      className={`h-10 w-10 rounded-full border-2 ring-offset-2 transition-all ${
                         selectedColor === color
-                          ? "border-brand-600 scale-110"
-                          : "border-gray-200"
+                          ? "border-white ring-2 ring-brand-700"
+                          : "border-gray-200 hover:border-brand-500"
                       }`}
                       style={{ backgroundColor: variant?.colorHex || "#ccc" }}
                     />
@@ -228,9 +282,18 @@ export default function ProductDetailPage() {
 
           {sizes.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold mb-3">
-                Size: <span className="font-normal">{selectedSize}</span>
-              </h3>
+              <div className="mb-3 flex items-center justify-between gap-4">
+                <h3 className="text-sm font-semibold">
+                  Size: <span className="font-normal">{selectedSize}</span>
+                </h3>
+                <Link
+                  href="/size-guide"
+                  className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-brand-700 hover:text-brand-950"
+                >
+                  <Ruler size={14} />
+                  Size Chart
+                </Link>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {sizes.map((size) => {
                   const variant = product.variants.find(
@@ -242,11 +305,11 @@ export default function ProductDetailPage() {
                       key={size}
                       onClick={() => available && setSelectedSize(size)}
                       disabled={!available}
-                      className={`min-w-[48px] px-4 py-2.5 text-sm border rounded-lg transition-colors ${
+                      className={`min-w-[52px] rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors ${
                         selectedSize === size
                           ? "bg-brand-900 text-white border-brand-900"
                           : available
-                            ? "border-gray-300 hover:border-brand-600"
+                            ? "border-gray-300 bg-white hover:border-brand-600"
                             : "border-gray-200 text-gray-300 cursor-not-allowed line-through"
                       }`}
                     >
@@ -255,38 +318,58 @@ export default function ProductDetailPage() {
                   );
                 })}
               </div>
+
+              <div className="mt-4 rounded-xl border border-brand-100 bg-brand-50/70 p-4">
+                <div className="flex items-center gap-2 text-sm font-semibold text-brand-950">
+                  <Ruler size={17} className="text-brand-700" />
+                  Quick Size Chart
+                </div>
+                <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs sm:grid-cols-6">
+                  {sizes.slice(0, 6).map((size) => (
+                    <div key={size} className="rounded-lg bg-white px-2 py-2 text-gray-700">
+                      <span className="block font-semibold text-gray-950">{size}</span>
+                      <span>Regular fit</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
 
-          <div className="flex items-center gap-4 mb-8">
-            <div className="flex items-center border border-gray-300 rounded-lg">
+          <div className="mb-8 flex flex-wrap items-center gap-4">
+            <div className="flex items-center rounded-lg border border-gray-300 bg-white">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="p-3 hover:bg-gray-50 transition-colors"
+                className="p-3 transition-colors hover:bg-gray-50"
+                aria-label="Decrease quantity"
               >
                 <Minus size={16} />
               </button>
-              <span className="px-4 font-medium">{quantity}</span>
+              <span className="min-w-10 px-2 text-center font-medium">{quantity}</span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="p-3 hover:bg-gray-50 transition-colors"
+                className="p-3 transition-colors hover:bg-gray-50"
+                aria-label="Increase quantity"
               >
                 <Plus size={16} />
               </button>
             </div>
             <span className="text-sm text-gray-500">
               {inStock ? (
-                <span className="text-green-600 font-medium">{t.product.inStock}</span>
+                <span className="font-medium text-green-600">
+                  {t.product.inStock}
+                  {selectedVariant?.stock ? ` (${selectedVariant.stock} left)` : ""}
+                </span>
               ) : (
-                <span className="text-red-500 font-medium">{t.product.outOfStock}</span>
+                <span className="font-medium text-red-500">{t.product.outOfStock}</span>
               )}
             </span>
           </div>
 
-          <div className="flex gap-3 mb-8">
+          <div className="mb-8 grid gap-3 sm:grid-cols-[1fr_auto]">
             <Button
               size="lg"
-              className="flex-1"
+              className="min-h-12"
               onClick={handleAddToCart}
               disabled={!inStock}
             >
@@ -295,7 +378,7 @@ export default function ProductDetailPage() {
             </Button>
             <button
               onClick={() => toggle(product._id)}
-              className="p-3.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-gray-300 px-5 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-50"
             >
               <Heart
                 size={20}
@@ -303,22 +386,39 @@ export default function ProductDetailPage() {
                   has(product._id) ? "fill-red-500 text-red-500" : "text-gray-600"
                 }
               />
+              Wishlist
             </button>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 py-6 border-t border-gray-100">
-            <div className="text-center">
-              <Truck className="mx-auto mb-2 text-brand-600" size={20} />
-              <p className="text-xs text-gray-600">{t.product.freeShipping}</p>
+          <div className="grid grid-cols-2 gap-3 border-y border-gray-100 py-5 sm:grid-cols-4">
+            {trustPoints.map((point) => (
+              <div key={point.label} className="text-center">
+                <point.icon className="mx-auto mb-2 text-brand-600" size={20} />
+                <p className="text-xs font-medium text-gray-600">{point.label}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-7 space-y-4">
+            <div>
+              <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-gray-900">
+                Product Details
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-gray-600">{product.description}</p>
             </div>
-            <div className="text-center">
-              <RotateCcw className="mx-auto mb-2 text-brand-600" size={20} />
-              <p className="text-xs text-gray-600">{t.product.returns}</p>
-            </div>
-            <div className="text-center">
-              <Shield className="mx-auto mb-2 text-brand-600" size={20} />
-              <p className="text-xs text-gray-600">{t.product.authentic}</p>
-            </div>
+            {product.specifications && product.specifications.length > 0 && (
+              <div className="grid gap-2 sm:grid-cols-2">
+                {product.specifications.map((spec) => (
+                  <div
+                    key={spec}
+                    className="flex items-start gap-2 rounded-lg bg-white px-3 py-2 text-sm text-gray-700"
+                  >
+                    <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-brand-600" />
+                    <span>{spec}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

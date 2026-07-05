@@ -218,7 +218,7 @@ async function seed() {
       slug: cat.slug,
       gender: cat.gender,
       image: cat.image,
-      description: `Shop ${cat.name} collection at Aapnapasand`,
+      description: `Shop ${cat.name} collection at BOHOBLOCKPRINTED`,
     });
     categoryMap[cat.slug] = category._id;
   }
@@ -242,7 +242,7 @@ async function seed() {
   const hashedPassword = await bcrypt.hash("admin123", 12);
   const admin = await User.create({
     name: "Admin",
-    email: "admin@aapnapasand.com",
+    email: "admin@bohoblockprinted.com",
     password: hashedPassword,
     role: "admin",
   });
@@ -267,7 +267,7 @@ async function seed() {
     },
     {
       code: "FLAT200",
-      description: "Flat ₹200 off",
+      description: "Flat INR 200 off",
       discountType: "fixed",
       discountValue: 200,
       minOrderAmount: 1500,
@@ -290,9 +290,9 @@ async function seed() {
 
   console.log("\nSeed completed successfully!");
   console.log("\nDemo accounts:");
-  console.log("  Admin: admin@aapnapasand.com / admin123");
+  console.log("  Admin: admin@bohoblockprinted.com / admin123");
   console.log("  Customer: customer@example.com / customer123");
-  console.log("\nCoupons: WELCOME10 (10% off), FLAT200 (₹200 off)");
+  console.log("\nCoupons: WELCOME10 (10% off), FLAT200 (INR 200 off)");
 
   await mongoose.disconnect();
 }
@@ -301,3 +301,4 @@ seed().catch((err) => {
   console.error("Seed failed:", err);
   process.exit(1);
 });
+

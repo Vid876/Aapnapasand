@@ -33,7 +33,7 @@ export default function FAQPage() {
     <>
       <PageHero
         title="Questions, answered clearly"
-        description="Find quick help for orders, delivery, returns, sizing, payments, and shopping with Aapnapasand."
+        description="Find quick help for orders, delivery, returns, sizing, payments, and shopping with BOHOBLOCKPRINTED."
         image={PUBLIC_IMAGES.delivery}
         primaryHref="/contact"
         primaryLabel="Contact Support"
@@ -62,3 +62,4 @@ export default function FAQPage() {
     </>
   );
 }
+

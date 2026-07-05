@@ -30,6 +30,7 @@ export default function EditProductPage() {
         shortDescription: data.shortDescription || undefined,
         price: parseFloat(data.price),
         compareAtPrice: data.compareAtPrice ? parseFloat(data.compareAtPrice) : null,
+        currency: data.currency,
         images: data.images,
         category: data.category,
         gender: data.gender,
@@ -65,9 +66,10 @@ export default function EditProductPage() {
         shortDescription: product.shortDescription || "",
         price: String(product.price),
         compareAtPrice: product.compareAtPrice ? String(product.compareAtPrice) : "",
+        currency: product.currency || "INR",
         category: typeof product.category === "object" ? product.category._id : product.category,
         gender: product.gender,
-        brand: product.brand || "Aapnapasand",
+        brand: product.brand || "BOHOBLOCKPRINTED",
         isFeatured: product.isFeatured,
         isActive: product.isActive,
         variants: product.variants.map((variant) => ({
@@ -81,3 +83,4 @@ export default function EditProductPage() {
     />
   );
 }
+

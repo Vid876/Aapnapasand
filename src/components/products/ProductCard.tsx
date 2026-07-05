@@ -15,17 +15,32 @@ export function ProductCard({ product }: ProductCardProps) {
   const { toggle, has } = useWishlistStore();
   const discount = calculateDiscount(product.price, product.compareAtPrice);
   const isWishlisted = has(product._id);
+  const alternateImage = product.images[1];
+  const displayBrand =
+    product.brand?.toUpperCase().includes("BOHOBLOCKPRINTED")
+      ? product.brand
+      : "BOHOBLOCKPRINTED";
 
   return (
-    <div className="group relative">
+    <div className="group relative rounded-lg transition duration-300 hover:-translate-y-1">
       <Link href={`/product/${product.slug}`} className="block">
-        <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 rounded-lg">
+        <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 rounded-lg shadow-sm transition-shadow duration-300 group-hover:shadow-xl group-hover:shadow-brand-950/10">
           <ProductImage
             src={product.images[0]}
             alt={product.name}
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className={`object-cover transition duration-700 group-hover:scale-105 ${
+              alternateImage ? "group-hover:opacity-0" : ""
+            }`}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
+          {alternateImage && (
+            <ProductImage
+              src={alternateImage}
+              alt={product.name}
+              className="object-cover opacity-0 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            />
+          )}
           {discount > 0 && (
             <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
               {discount}% OFF
@@ -46,7 +61,7 @@ export function ProductCard({ product }: ProductCardProps) {
           e.preventDefault();
           toggle(product._id);
         }}
-        className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+        className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm transition duration-300 hover:bg-white hover:scale-105 sm:opacity-0 sm:translate-y-1 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100"
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
       >
         <Heart
@@ -56,7 +71,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </button>
 
       <div className="mt-3 space-y-1">
-        <p className="text-xs text-gray-500 uppercase tracking-wide">{product.brand}</p>
+        <p className="text-xs text-gray-500 uppercase tracking-wide">{displayBrand}</p>
         <Link href={`/product/${product.slug}`}>
           <h3 className="text-sm font-medium text-gray-900 line-clamp-1 hover:text-brand-600 transition-colors">
             {product.name}
@@ -64,11 +79,11 @@ export function ProductCard({ product }: ProductCardProps) {
         </Link>
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-900">
-            {formatPrice(product.price)}
+            {formatPrice(product.price, product.currency)}
           </span>
           {product.compareAtPrice && product.compareAtPrice > product.price && (
             <span className="text-xs text-gray-400 line-through">
-              {formatPrice(product.compareAtPrice)}
+              {formatPrice(product.compareAtPrice, product.currency)}
             </span>
           )}
         </div>

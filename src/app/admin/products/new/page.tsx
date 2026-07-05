@@ -16,6 +16,7 @@ export default function NewProductPage() {
         shortDescription: data.shortDescription || undefined,
         price: parseFloat(data.price),
         compareAtPrice: data.compareAtPrice ? parseFloat(data.compareAtPrice) : undefined,
+        currency: data.currency,
         images: data.images,
         category: data.category,
         gender: data.gender,

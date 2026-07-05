@@ -74,7 +74,7 @@ export async function openRazorpayCheckout(
     key: data.keyId,
     amount: data.amount,
     currency: data.currency,
-    name: "Aapnapasand",
+    name: "BOHOBLOCKPRINTED",
     description: `Order ${data.orderNumber}`,
     order_id: data.razorpayOrderId,
     prefill: {
@@ -117,3 +117,4 @@ export async function openRazorpayCheckout(
   });
   razorpay.open();
 }
+

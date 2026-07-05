@@ -24,6 +24,7 @@ export const useWishlistStore = create<WishlistState>()(
 
       has: (productId) => get().items.includes(productId),
     }),
-    { name: "aapnapasand-wishlist" }
+    { name: "bohoblockprinted-wishlist" }
   )
 );
+

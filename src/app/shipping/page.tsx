@@ -12,7 +12,7 @@ export default function ShippingPage() {
     <>
       <PageHero
         title="Shipping that keeps you updated"
-        description="Aapnapasand ships across India with clear order updates, careful packaging, and free standard shipping above Rs. 999."
+        description="BOHOBLOCKPRINTED ships across India with clear order updates, careful packaging, and free standard shipping above Rs. 999."
         image={PUBLIC_IMAGES.delivery}
         primaryHref="/shop"
         primaryLabel="Continue Shopping"
@@ -42,3 +42,4 @@ export default function ShippingPage() {
     </>
   );
 }
+

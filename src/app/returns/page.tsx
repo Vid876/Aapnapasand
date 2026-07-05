@@ -13,7 +13,7 @@ export default function ReturnsPage() {
     <>
       <PageHero
         title="Easy returns and exchanges"
-        description="Shopping online should feel comfortable. Eligible Aapnapasand orders can be returned or exchanged with a simple support process."
+        description="Shopping online should feel comfortable. Eligible BOHOBLOCKPRINTED orders can be returned or exchanged with a simple support process."
         image={PUBLIC_IMAGES.studio}
         primaryHref="/contact"
         primaryLabel="Start a Request"
@@ -55,3 +55,4 @@ export default function ReturnsPage() {
     </>
   );
 }
+

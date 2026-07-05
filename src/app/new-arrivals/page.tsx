@@ -14,7 +14,7 @@ export default function NewArrivalsPage() {
     <>
       <PageHero
         title="New arrivals just landed"
-        description="The latest Aapnapasand edits bring in fresh colors, updated fits, polished staples, and celebration-ready pieces."
+        description="The latest BOHOBLOCKPRINTED edits bring in fresh colors, updated fits, polished staples, and celebration-ready pieces."
         image={PUBLIC_IMAGES.studio}
         primaryHref="/shop?sort=newest"
         primaryLabel="Shop Latest"
@@ -63,3 +63,4 @@ export default function NewArrivalsPage() {
     </>
   );
 }
+

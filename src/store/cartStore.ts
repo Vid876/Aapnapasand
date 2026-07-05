@@ -9,6 +9,12 @@ interface CartState {
   addItem: (item: CartItem) => void;
   removeItem: (productId: string, size: string, color: string) => void;
   updateQuantity: (productId: string, size: string, color: string, quantity: number) => void;
+  updateItemOptions: (
+    productId: string,
+    currentSize: string,
+    currentColor: string,
+    next: { size: string; color: string; price?: number }
+  ) => void;
   clearCart: () => void;
   getItemCount: () => number;
   getSubtotal: () => number;
@@ -63,6 +69,51 @@ export const useCartStore = create<CartState>()(
         }));
       },
 
+      updateItemOptions: (productId, currentSize, currentColor, next) => {
+        set((state) => {
+          const currentIndex = state.items.findIndex(
+            (i) =>
+              i.productId === productId &&
+              i.size === currentSize &&
+              i.color === currentColor
+          );
+
+          if (currentIndex === -1) return state;
+
+          const items = [...state.items];
+          const currentItem = items[currentIndex];
+          const nextSize = next.size || currentItem.size;
+          const nextColor = next.color || currentItem.color;
+          const nextPrice = next.price ?? currentItem.price;
+
+          const duplicateIndex = items.findIndex(
+            (i, index) =>
+              index !== currentIndex &&
+              i.productId === productId &&
+              i.size === nextSize &&
+              i.color === nextColor
+          );
+
+          if (duplicateIndex > -1) {
+            items[duplicateIndex] = {
+              ...items[duplicateIndex],
+              price: nextPrice,
+              quantity: items[duplicateIndex].quantity + currentItem.quantity,
+            };
+            items.splice(currentIndex, 1);
+            return { items };
+          }
+
+          items[currentIndex] = {
+            ...currentItem,
+            size: nextSize,
+            color: nextColor,
+            price: nextPrice,
+          };
+          return { items };
+        });
+      },
+
       clearCart: () => set({ items: [] }),
 
       getItemCount: () => get().items.reduce((sum, item) => sum + item.quantity, 0),
@@ -70,6 +121,7 @@ export const useCartStore = create<CartState>()(
       getSubtotal: () =>
         get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
     }),
-    { name: "aapnapasand-cart" }
+    { name: "bohoblockprinted-cart" }
   )
 );
+

@@ -12,6 +12,7 @@ const productSchema = z.object({
   shortDescription: z.string().optional(),
   price: z.number().min(0),
   compareAtPrice: z.number().min(0).optional(),
+  currency: z.enum(["INR", "USD"]).optional(),
   images: z.array(z.string().refine(isValidStoredImage, "Invalid image URL")).min(1),
   category: z.string(),
   subcategory: z.string().optional(),

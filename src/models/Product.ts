@@ -16,6 +16,7 @@ export interface IProduct extends Document {
   shortDescription?: string;
   price: number;
   compareAtPrice?: number;
+  currency: "INR" | "USD";
   images: string[];
   category: mongoose.Types.ObjectId;
   subcategory?: string;
@@ -53,6 +54,7 @@ const ProductSchema = new Schema<IProduct>(
     shortDescription: { type: String },
     price: { type: Number, required: true, min: 0 },
     compareAtPrice: { type: Number, min: 0 },
+    currency: { type: String, enum: ["INR", "USD"], default: "INR" },
     images: [{ type: String, required: true }],
     category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     gender: {
@@ -60,7 +62,7 @@ const ProductSchema = new Schema<IProduct>(
       enum: ["men", "women", "kids", "unisex"],
       default: "unisex",
     },
-    brand: { type: String, default: "Aapnapasand" },
+    brand: { type: String, default: "BOHOBLOCKPRINTED" },
     subcategory: { type: String },
     specifications: [{ type: String }],
     tags: [{ type: String }],
@@ -79,3 +81,4 @@ ProductSchema.index({ category: 1, gender: 1, price: 1 });
 
 export const Product: Model<IProduct> =
   mongoose.models.Product || mongoose.model<IProduct>("Product", ProductSchema);
+

@@ -9,9 +9,10 @@ export function LuxuryTextBand() {
           Premium styles for every occasion, selected with comfort, detail, and timeless Indian elegance.
         </h2>
         <p className="mx-auto mt-5 max-w-3xl text-sm leading-7 text-gray-600 sm:text-base">
-          From festive moments to everyday grace, Aapnapasand brings refined pieces that feel special without losing the ease of daily wear.
+          From festive moments to everyday grace, BOHOBLOCKPRINTED brings refined pieces that feel special without losing the ease of daily wear.
         </p>
       </div>
     </section>
   );
 }
+

@@ -33,96 +33,68 @@ const FOOTER_LINKS = {
   ],
 };
 
+const SOCIAL_LINKS = [
+  { label: "Instagram", href: "#", icon: Instagram },
+  { label: "Facebook", href: "#", icon: Facebook },
+  { label: "Twitter", href: "#", icon: Twitter },
+  { label: "LinkedIn", href: "#", icon: Linkedin },
+  { label: "YouTube", href: "#", icon: Youtube },
+];
+
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="container-app py-14 lg:py-20">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-14">
-          {/* Brand */}
+    <footer className="relative overflow-hidden bg-brand-950 text-brand-50">
+      <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.055)_0_1px,transparent_1px_42px),linear-gradient(135deg,rgba(181,116,63,0.28),transparent_42%,rgba(255,255,255,0.06))]" />
+      <div className="relative container-app py-14 lg:py-20">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[1.35fr_0.8fr_0.8fr_0.8fr_1.1fr] lg:gap-10">
           <div>
-            <Link href="/" className="inline-block mb-6">
+            <Link
+              href="/"
+              className="mb-6 inline-flex rounded-xl bg-white/95 p-3 shadow-lg shadow-black/15"
+            >
               <Image
                 src="/Logo.png"
-                alt="Manisha Exports"
-                width={1000}
-                height={450}
+                alt="BOHOBLOCKPRINTED"
+                width={360}
+                height={160}
                 priority
-                className="h-44 md:h-48 lg:h-52 w-auto object-contain"
+                className="h-24 w-auto object-contain sm:h-28"
               />
             </Link>
 
             <h3 className="mb-3 text-2xl font-bold text-white">
-              Manisha Exports
+              BOHOBLOCKPRINTED
             </h3>
+            <p className="max-w-sm text-sm leading-7 text-brand-100">
+              Premium block printed fashion with refined colors, thoughtful fits, and everyday comfort.
+            </p>
 
-            
-
-            {/* Social Media */}
-            <div className="flex items-center gap-4">
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-gray-800 p-3 transition duration-300 hover:bg-brand-600 hover:text-white"
-                aria-label="Instagram"
-              >
-                <Instagram size={20} />
-              </a>
-
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-gray-800 p-3 transition duration-300 hover:bg-brand-600 hover:text-white"
-                aria-label="Facebook"
-              >
-                <Facebook size={20} />
-              </a>
-
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-gray-800 p-3 transition duration-300 hover:bg-brand-600 hover:text-white"
-                aria-label="Twitter"
-              >
-                <Twitter size={20} />
-              </a>
-
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-gray-800 p-3 transition duration-300 hover:bg-brand-600 hover:text-white"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={20} />
-              </a>
-
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-gray-800 p-3 transition duration-300 hover:bg-brand-600 hover:text-white"
-                aria-label="YouTube"
-              >
-                <Youtube size={20} />
-              </a>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              {SOCIAL_LINKS.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-white/10 p-3 text-brand-50 ring-1 ring-white/10 transition duration-300 hover:bg-brand-400 hover:text-brand-950"
+                  aria-label={link.label}
+                >
+                  <link.icon size={19} />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Shop */}
           <div>
             <h4 className="mb-6 text-sm font-semibold uppercase tracking-widest text-white">
               Shop
             </h4>
-
             <ul className="space-y-3">
               {FOOTER_LINKS.shop.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-gray-400 transition hover:text-white"
+                    className="text-sm text-brand-100 transition hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -131,18 +103,16 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Help */}
           <div>
             <h4 className="mb-6 text-sm font-semibold uppercase tracking-widest text-white">
               Help
             </h4>
-
             <ul className="space-y-3">
               {FOOTER_LINKS.help.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-gray-400 transition hover:text-white"
+                    className="text-sm text-brand-100 transition hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -151,7 +121,24 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          <div>
+            <h4 className="mb-6 text-sm font-semibold uppercase tracking-widest text-white">
+              Company
+            </h4>
+            <ul className="space-y-3">
+              {FOOTER_LINKS.company.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-brand-100 transition hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <div>
             <h4 className="mb-6 text-sm font-semibold uppercase tracking-widest text-white">
               Contact Us
@@ -159,39 +146,29 @@ export function Footer() {
 
             <div className="space-y-5">
               <div className="flex items-start gap-3">
-                <Mail
-                  size={20}
-                  className="mt-1 text-brand-400 flex-shrink-0"
-                />
-
+                <Mail size={20} className="mt-1 flex-shrink-0 text-brand-300" />
                 <div>
-                  <p className="text-xs uppercase tracking-wide text-gray-500">
+                  <p className="text-xs uppercase tracking-wide text-brand-300">
                     Email
                   </p>
-
                   <a
-                    href="mailto:gothwaldinesh1999@gmail.com"
-                    className="text-sm text-gray-300 transition hover:text-white break-all"
+                    href="mailto:support@bohoblockprinted.com"
+                    className="text-sm text-brand-50 transition hover:text-white break-all"
                   >
-                    gothwaldinesh1999@gmail.com
+                    support@bohoblockprinted.com
                   </a>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Phone
-                  size={20}
-                  className="mt-1 text-brand-400 flex-shrink-0"
-                />
-
+                <Phone size={20} className="mt-1 flex-shrink-0 text-brand-300" />
                 <div>
-                  <p className="text-xs uppercase tracking-wide text-gray-500">
+                  <p className="text-xs uppercase tracking-wide text-brand-300">
                     Mobile
                   </p>
-
                   <a
                     href="tel:+918955379671"
-                    className="text-sm text-gray-300 transition hover:text-white"
+                    className="text-sm text-brand-50 transition hover:text-white"
                   >
                     +91 89553 79671
                   </a>
@@ -202,32 +179,20 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom Footer */}
-      <div className="border-t border-gray-800">
+      <div className="relative border-t border-white/10">
         <div className="container-app flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
-          <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} Manisha Exports. All Rights Reserved.
+          <p className="text-sm text-brand-200">
+            &copy; {new Date().getFullYear()} BOHOBLOCKPRINTED. All Rights Reserved.
           </p>
 
-          <div className="flex flex-wrap gap-6 text-sm">
-            <Link
-              href="/about"
-              className="text-gray-500 transition hover:text-white"
-            >
+          <div className="flex flex-wrap justify-center gap-6 text-sm">
+            <Link href="/about" className="text-brand-200 transition hover:text-white">
               About Us
             </Link>
-
-            <Link
-              href="/privacy"
-              className="text-gray-500 transition hover:text-white"
-            >
+            <Link href="/privacy" className="text-brand-200 transition hover:text-white">
               Privacy Policy
             </Link>
-
-            <Link
-              href="/terms"
-              className="text-gray-500 transition hover:text-white"
-            >
+            <Link href="/terms" className="text-brand-200 transition hover:text-white">
               Terms & Conditions
             </Link>
           </div>

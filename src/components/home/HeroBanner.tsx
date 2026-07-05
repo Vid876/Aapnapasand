@@ -74,50 +74,30 @@ export function HeroBanner() {
                 alt={slide.title}
                 fill
                 priority={index === 0}
-                quality={100}
                 sizes="100vw"
                 className="object-cover object-center"
-              />
-
-              {/* Overlay */}
-              <div
-                className={`absolute inset-0 ${
-                  slide.tone === "light"
-                    ? "bg-[linear-gradient(90deg,rgba(47,25,18,0.35),rgba(47,25,18,0.05)_25%,rgba(255,255,255,0.55)_50%,rgba(47,25,18,0.05)_75%,rgba(47,25,18,0.25))]"
-                    : "bg-[linear-gradient(90deg,rgba(255,243,235,0.88),rgba(255,243,235,0.70)_35%,rgba(255,243,235,0.10)_60%,rgba(47,25,18,0.12))]"
-                }`}
               />
 
               {/* Content */}
               <div className="absolute inset-0 flex items-center">
                 <div className="container mx-auto px-4">
                   <div
-                    className={`max-w-[550px] rounded-3xl p-6 sm:p-8 lg:p-10 ${
+                    className={`max-w-[560px] text-white drop-shadow-[0_3px_18px_rgba(0,0,0,0.72)] ${
                       slide.align === "center"
                         ? "mx-auto text-center"
                         : "mr-auto text-left"
-                    } ${
-                      slide.tone === "light"
-                        ? "bg-white/75 text-gray-900 backdrop-blur-md"
-                        : "bg-black/60 text-white backdrop-blur-md"
                     }`}
                   >
-                    <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+                    <h1 className="text-2xl font-bold leading-tight sm:text-4xl lg:text-6xl">
                       {slide.title}
                     </h1>
 
-                    <p
-                      className={`mt-4 text-sm sm:text-base lg:text-lg leading-relaxed ${
-                        slide.tone === "light"
-                          ? "text-gray-700"
-                          : "text-gray-200"
-                      }`}
-                    >
+                    <p className="mt-3 max-w-xl text-xs font-medium leading-relaxed text-white/95 sm:text-base lg:mt-4 lg:text-lg">
                       {slide.text}
                     </p>
 
                     <div
-                      className={`mt-6 flex flex-wrap gap-3 ${
+                      className={`mt-5 flex flex-wrap gap-4 sm:mt-6 ${
                         slide.align === "center"
                           ? "justify-center"
                           : "justify-start"
@@ -125,11 +105,7 @@ export function HeroBanner() {
                     >
                       <Link
                         href={slide.primaryHref}
-                        className={`inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold transition ${
-                          slide.tone === "light"
-                            ? "bg-black text-white hover:bg-gray-800"
-                            : "bg-white text-black hover:bg-gray-100"
-                        }`}
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-white underline underline-offset-8 transition hover:text-brand-100 sm:text-base"
                       >
                         {slide.primary}
                         <ArrowRight size={18} />
@@ -137,11 +113,7 @@ export function HeroBanner() {
 
                       <Link
                         href={slide.secondaryHref}
-                        className={`hidden sm:inline-flex items-center rounded-lg border px-6 py-3 font-semibold transition ${
-                          slide.tone === "light"
-                            ? "border-black text-black hover:bg-black/5"
-                            : "border-white text-white hover:bg-white/10"
-                        }`}
+                        className="hidden items-center text-sm font-semibold text-white/90 underline underline-offset-8 transition hover:text-white sm:inline-flex sm:text-base"
                       >
                         {slide.secondary}
                       </Link>

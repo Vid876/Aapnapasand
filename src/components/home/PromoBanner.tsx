@@ -8,7 +8,7 @@ export function PromoBanner() {
     <>
       <InfoBand
         title="A wardrobe built around your plans"
-        text="From workdays to wedding weekends, Aapnapasand brings together breathable fabrics, polished cuts, and colors that feel easy to wear in real life."
+        text="From workdays to wedding weekends, BOHOBLOCKPRINTED brings together breathable fabrics, polished cuts, and colors that feel easy to wear in real life."
         image={PUBLIC_IMAGES.fabric}
         bullets={[
           "Modern Indian silhouettes for men and women",
@@ -68,3 +68,4 @@ export function PromoBanner() {
     </>
   );
 }
+

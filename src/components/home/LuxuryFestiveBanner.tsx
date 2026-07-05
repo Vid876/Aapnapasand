@@ -26,7 +26,7 @@ export function LuxuryFestiveBanner() {
           <div className="relative z-10 flex min-h-[340px] items-center px-5 py-10 sm:min-h-[380px] sm:px-8 lg:min-h-[430px] lg:px-14">
             <div className="max-w-xl text-white">
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-brand-200">
-                Aapnapasand luxury edit
+                BOHOBLOCKPRINTED luxury edit
               </p>
               <h2 className="mt-4 font-display text-4xl font-bold leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.38)] sm:text-5xl lg:text-6xl">
                 The Festive Edit
@@ -45,3 +45,4 @@ export function LuxuryFestiveBanner() {
     </section>
   );
 }
+

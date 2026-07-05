@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { SectionHeader } from "@/components/marketing/PublicPage";
 import { getPublicCategories } from "@/lib/category-data";
-import { CategoryCardMedia } from "./CategoryCardMedia";
+import { CategoryGridClient } from "./CategoryGridClient";
 
 export async function CategoryGrid() {
   const categories = await getPublicCategories();
@@ -19,24 +18,7 @@ export async function CategoryGrid() {
           description="Explore curated collections across modern essentials, occasion wear, and Indian classics."
         />
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {categories.map((category) => (
-            <Link
-              key={category.slug}
-              href={`/shop?category=${category.slug}`}
-              className="group relative min-h-[300px] overflow-hidden rounded-xl bg-brand-50 shadow-sm transition-transform duration-300 hover:-translate-y-1 sm:min-h-[340px] lg:min-h-[380px]"
-            >
-              <CategoryCardMedia alt={category.name} src={category.image} />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-950/75 via-brand-950/10 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <h3 className="text-sm font-semibold text-white lg:text-base">
-                  {category.name}
-                </h3>
-                <p className="mt-1 text-xs text-white/75">Explore styles</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <CategoryGridClient categories={categories} />
       </div>
     </section>
   );

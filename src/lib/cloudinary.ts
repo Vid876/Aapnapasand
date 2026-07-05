@@ -22,7 +22,7 @@ export function getCloudinary() {
 
 export async function uploadImage(
   fileBuffer: Buffer,
-  folder = "aapnapasand/products"
+  folder = "bohoblockprinted/products"
 ): Promise<string> {
   const cld = getCloudinary();
   if (!cld) throw new Error("Cloudinary not configured");
@@ -38,3 +38,4 @@ export async function uploadImage(
     stream.end(fileBuffer);
   });
 }
+

@@ -12,7 +12,7 @@ export default function AboutPage() {
     <>
       <PageHero
         title="Fashion chosen with feeling"
-        description="Aapnapasand means what you like. We curate Indian fashion for people who want clothes that look polished, feel comfortable, and express their own sense of style."
+        description="BOHOBLOCKPRINTED curates Indian fashion for people who want clothes that look polished, feel comfortable, and express their own sense of style."
         image={PUBLIC_IMAGES.boutique}
         primaryHref="/collections"
         primaryLabel="Explore Collections"
@@ -49,3 +49,4 @@ export default function AboutPage() {
     </>
   );
 }
+

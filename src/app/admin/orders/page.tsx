@@ -63,7 +63,7 @@ export default function AdminOrdersPage() {
                   </td>
                   <td className="p-4">{order.shippingAddress.fullName}</td>
                   <td className="p-4">{order.items.length}</td>
-                  <td className="p-4 font-medium">{formatPrice(order.total)}</td>
+                  <td className="p-4 font-medium">{formatPrice(order.total, order.currency)}</td>
                   <td className="p-4">
                     <span className="px-2 py-1 text-xs rounded-full bg-gray-100 capitalize">
                       {order.status}

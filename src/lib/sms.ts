@@ -70,13 +70,14 @@ export async function sendOrderShippedSMS(
 ): Promise<void> {
   await sendSMS({
     phone,
-    message: `Your Aapnapasand order #${orderNumber} has been shipped! Track: ${trackingNumber}`,
+    message: `Your BOHOBLOCKPRINTED order #${orderNumber} has been shipped! Track: ${trackingNumber}`,
   });
 }
 
 export async function sendOrderConfirmedSMS(phone: string, orderNumber: string): Promise<void> {
   await sendSMS({
     phone,
-    message: `Order #${orderNumber} confirmed at Aapnapasand. We'll notify you when it ships.`,
+    message: `Order #${orderNumber} confirmed at BOHOBLOCKPRINTED. We'll notify you when it ships.`,
   });
 }
+

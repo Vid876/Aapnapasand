@@ -18,7 +18,7 @@ export const useLocaleStore = create<LocaleState>()(
       t: translations.en,
     }),
     {
-      name: "aapnapasand-locale",
+      name: "bohoblockprinted-locale",
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.t = translations[state.locale];
@@ -34,3 +34,4 @@ export function useTranslation() {
   const setLocale = useLocaleStore((s) => s.setLocale);
   return { locale, t, setLocale };
 }
+

@@ -29,7 +29,7 @@ export function Newsletter() {
             Stay in style
           </h2>
           <p className="mx-auto mt-4 mb-8 max-w-2xl text-sm leading-7 text-brand-50 lg:text-base">
-            Subscribe for new arrivals, early sale access, festive edits, and premium styling notes from Aapnapasand.
+            Subscribe for new arrivals, early sale access, festive edits, and premium styling notes from BOHOBLOCKPRINTED.
           </p>
 
           {submitted ? (
@@ -56,3 +56,4 @@ export function Newsletter() {
     </section>
   );
 }
+

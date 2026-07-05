@@ -37,7 +37,7 @@ export default function LoginPage() {
     <div className="container-app py-16 max-w-md mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-display font-bold mb-2">Welcome Back</h1>
-        <p className="text-gray-500">Sign in to your Aapnapasand account</p>
+        <p className="text-gray-500">Sign in to your BOHOBLOCKPRINTED account</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -78,3 +78,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

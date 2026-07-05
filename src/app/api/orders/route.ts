@@ -19,6 +19,7 @@ const orderSchema = z.object({
       size: z.string(),
       color: z.string(),
       price: z.number(),
+      currency: z.enum(["INR", "USD"]).optional(),
     })
   ),
   shippingAddress: z.object({
@@ -56,6 +57,9 @@ export async function POST(request: NextRequest) {
 
     await connectDB();
 
+    const currency = data.items[0]?.currency || "INR";
+    const freeShippingThreshold = currency === "USD" ? 75 : 999;
+    const shippingCharge = currency === "USD" ? 8 : 99;
     const subtotal = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     let discount = 0;
 
@@ -77,7 +81,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const shippingCost = subtotal >= 999 ? 0 : 99;
+    const shippingCost = subtotal >= freeShippingThreshold ? 0 : shippingCharge;
     const tax = Math.round((subtotal - discount) * 0.05);
     const total = subtotal - discount + shippingCost + tax;
 
@@ -93,6 +97,7 @@ export async function POST(request: NextRequest) {
         size: item.size,
         color: item.color,
         price: item.price,
+        currency: item.currency || currency,
       })),
       shippingAddress: data.shippingAddress,
       subtotal,
@@ -100,6 +105,7 @@ export async function POST(request: NextRequest) {
       discount,
       tax,
       total,
+      currency,
       couponCode: data.couponCode,
       paymentMethod: data.paymentMethod,
       paymentStatus: "pending",

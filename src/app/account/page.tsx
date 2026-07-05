@@ -98,7 +98,7 @@ export default function AccountPage() {
                       {order.status}
                     </span>
                   </div>
-                  <p className="text-sm font-semibold">{formatPrice(order.total)}</p>
+                  <p className="text-sm font-semibold">{formatPrice(order.total, order.currency)}</p>
                 </div>
               ))}
             </div>

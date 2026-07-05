@@ -96,6 +96,15 @@
     transform-origin: bottom;
     opacity: 0.26;
   }
+
+  .top-bar-marquee {
+    animation: top-bar-marquee 28s linear infinite;
+    padding-left: max(1rem, calc((100vw - 80rem) / 2 + 1rem));
+  }
+
+  .top-bar-marquee:hover {
+    animation-play-state: paused;
+  }
 }
 
 @keyframes rise-in {
@@ -129,10 +138,20 @@
   }
 }
 
+@keyframes top-bar-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-rise,
   .animate-soft-float,
-  .admin-auth-bg {
+  .admin-auth-bg,
+  .top-bar-marquee {
     animation: none;
   }
 }

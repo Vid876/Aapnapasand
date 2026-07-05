@@ -7,9 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { COLORS, SIZES } from "@/lib/constants";
 import { ImageUpload } from "@/components/admin/ImageUpload";
-import { calculateDiscount } from "@/lib/utils";
+import { calculateDiscount, formatPrice } from "@/lib/utils";
 import { isValidStoredImage } from "@/lib/image-utils";
-import type { Category, ProductVariant } from "@/types";
+import type { Category, CurrencyCode, ProductVariant } from "@/types";
 
 type ProductVariantForm = Omit<ProductVariant, "stock" | "price"> & {
   stock: string;
@@ -31,6 +31,7 @@ export interface ProductFormData {
   shortDescription?: string;
   price: string;
   compareAtPrice?: string;
+  currency: CurrencyCode;
   category: string;
   subcategory?: string;
   gender: string;
@@ -57,6 +58,7 @@ const productFormSchema = z.object({
       (value) => !value || (!Number.isNaN(parseFloat(value)) && parseFloat(value) >= 0),
       "Enter a valid original price"
     ),
+  currency: z.enum(["INR", "USD"]),
   category: z.string().min(1, "Category is required"),
   subcategory: z.string().optional(),
   gender: z.enum(["men", "women", "kids", "unisex"]),
@@ -121,10 +123,11 @@ export function ProductForm({
       shortDescription: initialData?.shortDescription || "",
       price: initialData?.price || "",
       compareAtPrice: initialData?.compareAtPrice || "",
+      currency: initialData?.currency || "INR",
       category: initialData?.category || "",
       subcategory: initialData?.subcategory || "",
       gender: initialData?.gender || "men",
-      brand: initialData?.brand || "Aapnapasand",
+      brand: initialData?.brand || "BOHOBLOCKPRINTED",
       specifications: initialData?.specifications || [],
       variants:
         initialData?.variants?.length
@@ -153,9 +156,11 @@ export function ProductForm({
 
   const watchPrice = watch("price");
   const watchCompareAtPrice = watch("compareAtPrice");
+  const watchCurrency = watch("currency");
   const price = parseFloat(watchPrice) || 0;
   const mrp = watchCompareAtPrice ? parseFloat(watchCompareAtPrice) : 0;
   const discount = mrp > price ? calculateDiscount(price, mrp) : 0;
+  const priceLabel = watchCurrency === "USD" ? "USD / Dollar" : "INR / Rupees";
 
   const addVariant = () => {
     variantFieldArray.append({ ...DEFAULT_VARIANT, sku: `SKU-${Date.now()}-${variantFieldArray.fields.length}` });
@@ -328,25 +333,38 @@ export function ProductForm({
         <section className="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
           <h2 className="text-lg font-semibold">3. Price & Offer</h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1.5">Selling Price (₹) *</label>
+              <label className="block text-sm font-medium mb-1.5">Currency *</label>
+              <select
+                {...register("currency")}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white"
+              >
+                <option value="INR">INR / Rupees</option>
+                <option value="USD">USD / Dollar</option>
+              </select>
+              <p className="text-xs text-gray-400 mt-1">{priceLabel}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1.5">Selling Price ({watchCurrency}) *</label>
               <input
                 {...register("price")}
                 type="number"
                 min="0"
-                placeholder="1299"
+                step={watchCurrency === "USD" ? "0.01" : "1"}
+                placeholder={watchCurrency === "USD" ? "49.99" : "1299"}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg text-lg font-semibold"
               />
               {errors.price && <p className="mt-2 text-sm text-red-600">{errors.price.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1.5">MRP / Original Price (₹)</label>
+              <label className="block text-sm font-medium mb-1.5">MRP / Original Price ({watchCurrency})</label>
               <input
                 {...register("compareAtPrice")}
                 type="number"
                 min="0"
-                placeholder="1999"
+                step={watchCurrency === "USD" ? "0.01" : "1"}
+                placeholder={watchCurrency === "USD" ? "69.99" : "1999"}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg"
               />
               {errors.compareAtPrice && (
@@ -360,8 +378,8 @@ export function ProductForm({
             <div className="flex items-center gap-4 p-4 bg-green-50 border border-green-200 rounded-xl">
               <span className="text-2xl font-bold text-green-600">{discount}% OFF</span>
               <div className="text-sm text-green-700">
-                <p>Customer saves ₹{mrp - price}</p>
-                <p className="line-through text-green-600/60">MRP ₹{mrp}</p>
+                <p>Customer saves {formatPrice(mrp - price, watchCurrency)}</p>
+                <p className="line-through text-green-600/60">MRP {formatPrice(mrp, watchCurrency)}</p>
               </div>
             </div>
           )}
@@ -429,7 +447,7 @@ export function ProductForm({
                       onClick={() => removeVariant(index)}
                       className="px-2 text-red-500 hover:bg-red-50 rounded-lg text-sm"
                     >
-                      ✕
+                      X
                     </button>
                   )}
                 </div>
@@ -479,3 +497,4 @@ export function ProductForm({
     </div>
   );
 }
+

@@ -14,6 +14,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
+import type { CurrencyCode } from "@/types";
 
 interface Stats {
   totalOrders: number;
@@ -44,6 +45,7 @@ interface RecentOrder {
   _id: string;
   orderNumber: string;
   total: number;
+  currency?: CurrencyCode;
   status: string;
   paymentStatus: string;
   createdAt: string;
@@ -220,7 +222,7 @@ export default function AdminDashboard() {
                     </Link>
                   </td>
                   <td className="p-4">{order.shippingAddress.fullName}</td>
-                  <td className="p-4 font-medium">{formatPrice(order.total)}</td>
+                  <td className="p-4 font-medium">{formatPrice(order.total, order.currency)}</td>
                   <td className="p-4">
                     <span className="px-2 py-1 text-xs rounded-full bg-gray-100 capitalize">{order.status}</span>
                   </td>

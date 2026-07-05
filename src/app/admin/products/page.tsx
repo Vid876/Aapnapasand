@@ -201,7 +201,7 @@ export default function AdminProductsPage() {
                         </div>
                       </td>
                       <td className="p-4 text-gray-600">{categoryName}</td>
-                      <td className="p-4 font-medium">{formatPrice(product.price)}</td>
+                      <td className="p-4 font-medium">{formatPrice(product.price, product.currency)}</td>
                       <td className="p-4">{product.totalStock}</td>
                       <td className="p-4">
                         <span

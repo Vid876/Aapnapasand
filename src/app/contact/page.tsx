@@ -2,7 +2,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { PageHero, PUBLIC_IMAGES, PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
 
 const contactCards = [
-  { icon: Mail, title: "Email", text: "support@aapnapasand.com" },
+  { icon: Mail, title: "Email", text: "support@bohoblockprinted.com" },
   { icon: Phone, title: "Phone", text: "+91 98765 43210" },
   { icon: MapPin, title: "Delivery", text: "Shipping across India" },
 ];
@@ -24,7 +24,7 @@ export default function ContactPage() {
         <div className="container-app grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
             <SectionHeader
-              title="Contact Aapnapasand"
+              title="Contact BOHOBLOCKPRINTED"
               description="Use the form for order support, product questions, partnership notes, or feedback."
             />
             <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
@@ -67,3 +67,4 @@ export default function ContactPage() {
     </>
   );
 }
+

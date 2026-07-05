@@ -50,7 +50,7 @@ export default function RegisterPage() {
     <div className="container-app py-16 max-w-md mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-display font-bold mb-2">Create Account</h1>
-        <p className="text-gray-500">Join Aapnapasand for exclusive offers</p>
+        <p className="text-gray-500">Join BOHOBLOCKPRINTED for exclusive offers</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -106,3 +106,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+

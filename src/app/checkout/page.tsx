@@ -17,6 +17,9 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, getSubtotal, clearCart } = useCartStore();
   const subtotal = getSubtotal();
+  const cartCurrency = items[0]?.currency || "INR";
+  const freeShippingThreshold = cartCurrency === "USD" ? 75 : 999;
+  const shippingCharge = cartCurrency === "USD" ? 8 : 99;
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -39,7 +42,7 @@ export default function CheckoutPage() {
     paymentMethod: "cod",
   });
 
-  const shipping = subtotal >= 999 ? 0 : 99;
+  const shipping = subtotal >= freeShippingThreshold ? 0 : shippingCharge;
   const tax = Math.round((subtotal - discount) * 0.05);
   const total = subtotal - discount + shipping + tax;
 
@@ -48,6 +51,12 @@ export default function CheckoutPage() {
       router.push("/cart");
     }
   }, [items.length, orderPlaced, router]);
+
+  useEffect(() => {
+    if (cartCurrency !== "INR" && form.paymentMethod === "razorpay") {
+      setForm((prev) => ({ ...prev, paymentMethod: "cod" }));
+    }
+  }, [cartCurrency, form.paymentMethod]);
 
   if (items.length === 0 && !orderPlaced) {
     return null;
@@ -94,6 +103,7 @@ export default function CheckoutPage() {
             size: item.size,
             color: item.color,
             price: item.price,
+            currency: item.currency || "INR",
           })),
           shippingAddress: {
             fullName: form.fullName,
@@ -116,7 +126,7 @@ export default function CheckoutPage() {
         return;
       }
 
-      if (form.paymentMethod === "razorpay") {
+      if (form.paymentMethod === "razorpay" && cartCurrency === "INR") {
         const paymentRes = await fetch("/api/payments/razorpay/create-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -236,7 +246,15 @@ export default function CheckoutPage() {
               <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
               {[
                 { value: "cod", label: "Cash on Delivery", desc: "Pay when your order arrives" },
-                { value: "razorpay", label: "Pay Online", desc: "UPI, Cards, Net Banking, Wallets via Razorpay" },
+                ...(cartCurrency === "INR"
+                  ? [
+                      {
+                        value: "razorpay",
+                        label: "Pay Online",
+                        desc: "UPI, Cards, Net Banking, Wallets via Razorpay",
+                      },
+                    ]
+                  : []),
               ].map((method) => (
                 <label
                   key={method.value}
@@ -293,7 +311,7 @@ export default function CheckoutPage() {
               <div className="flex gap-4">
                 <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
                 <Button onClick={handlePlaceOrder} size="lg" isLoading={loading}>
-                  Place Order - {formatPrice(total)}
+                  Place Order - {formatPrice(total, cartCurrency)}
                 </Button>
               </div>
             </div>
@@ -305,7 +323,7 @@ export default function CheckoutPage() {
             <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
             <div className="space-y-3 max-h-60 overflow-y-auto mb-4">
               {items.map((item) => (
-                <div key={`${item.productId}-${item.size}`} className="flex gap-3">
+                <div key={`${item.productId}-${item.size}-${item.color}`} className="flex gap-3">
                   <div className="relative w-14 h-18 shrink-0 rounded overflow-hidden bg-gray-200">
                     <Image src={item.image} alt={item.name} fill className="object-cover" sizes="56px" />
                   </div>
@@ -315,7 +333,7 @@ export default function CheckoutPage() {
                       {item.size} | {item.color} x{item.quantity}
                     </p>
                   </div>
-                  <p className="text-sm font-medium">{formatPrice(item.price * item.quantity)}</p>
+                  <p className="text-sm font-medium">{formatPrice(item.price * item.quantity, item.currency)}</p>
                 </div>
               ))}
             </div>
@@ -332,31 +350,31 @@ export default function CheckoutPage() {
             </div>
             {couponError && <p className="text-xs text-red-500 mb-2">{couponError}</p>}
             {discount > 0 && (
-              <p className="text-xs text-green-600 mb-2">Coupon applied! You save {formatPrice(discount)}</p>
+              <p className="text-xs text-green-600 mb-2">Coupon applied! You save {formatPrice(discount, cartCurrency)}</p>
             )}
 
             <div className="space-y-2 text-sm border-t border-gray-200 pt-4">
               <div className="flex justify-between">
                 <span className="text-gray-600">Subtotal</span>
-                <span>{formatPrice(subtotal)}</span>
+                <span>{formatPrice(subtotal, cartCurrency)}</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-green-600">
                   <span>Discount</span>
-                  <span>-{formatPrice(discount)}</span>
+                  <span>-{formatPrice(discount, cartCurrency)}</span>
                 </div>
               )}
               <div className="flex justify-between">
                 <span className="text-gray-600">Shipping</span>
-                <span>{shipping === 0 ? "FREE" : formatPrice(shipping)}</span>
+                <span>{shipping === 0 ? "FREE" : formatPrice(shipping, cartCurrency)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Tax (5% GST)</span>
-                <span>{formatPrice(tax)}</span>
+                <span>{formatPrice(tax, cartCurrency)}</span>
               </div>
               <div className="flex justify-between font-bold text-base pt-2 border-t">
                 <span>Total</span>
-                <span>{formatPrice(total)}</span>
+                <span>{formatPrice(total, cartCurrency)}</span>
               </div>
             </div>
           </div>

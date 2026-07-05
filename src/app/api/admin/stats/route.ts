@@ -40,7 +40,7 @@ export async function GET() {
       Order.find()
         .sort({ createdAt: -1 })
         .limit(5)
-        .select("orderNumber total status paymentStatus createdAt shippingAddress.fullName")
+        .select("orderNumber total currency status paymentStatus createdAt shippingAddress.fullName")
         .lean(),
       Order.aggregate([
         {

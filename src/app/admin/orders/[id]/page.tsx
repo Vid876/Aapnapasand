@@ -98,7 +98,7 @@ export default function AdminOrderDetailPage() {
                       {item.size} | {item.color} x{item.quantity}
                     </p>
                   </div>
-                  <p className="font-medium">{formatPrice(item.price * item.quantity)}</p>
+                  <p className="font-medium">{formatPrice(item.price * item.quantity, item.currency)}</p>
                 </div>
               ))}
             </div>
@@ -120,13 +120,13 @@ export default function AdminOrderDetailPage() {
           <div className="bg-white rounded-xl border border-gray-100 p-5">
             <h2 className="font-semibold mb-4">Order Summary</h2>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-gray-500">Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Shipping</span><span>{formatPrice(order.shippingCost)}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Subtotal</span><span>{formatPrice(order.subtotal, order.currency)}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Shipping</span><span>{formatPrice(order.shippingCost, order.currency)}</span></div>
               {order.discount > 0 && (
-                <div className="flex justify-between text-green-600"><span>Discount</span><span>-{formatPrice(order.discount)}</span></div>
+                <div className="flex justify-between text-green-600"><span>Discount</span><span>-{formatPrice(order.discount, order.currency)}</span></div>
               )}
-              <div className="flex justify-between"><span className="text-gray-500">Tax</span><span>{formatPrice(order.tax)}</span></div>
-              <div className="flex justify-between font-bold pt-2 border-t"><span>Total</span><span>{formatPrice(order.total)}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Tax</span><span>{formatPrice(order.tax, order.currency)}</span></div>
+              <div className="flex justify-between font-bold pt-2 border-t"><span>Total</span><span>{formatPrice(order.total, order.currency)}</span></div>
             </div>
             <p className="text-xs text-gray-500 mt-3 capitalize">
               Payment: {order.paymentMethod} ({order.paymentStatus})

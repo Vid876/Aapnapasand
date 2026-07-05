@@ -1,3 +1,5 @@
+export type CurrencyCode = "INR" | "USD";
+
 export interface ProductVariant {
   size: string;
   color: string;
@@ -15,6 +17,7 @@ export interface Product {
   shortDescription?: string;
   price: number;
   compareAtPrice?: number;
+  currency?: CurrencyCode;
   images: string[];
   category: Category | string;
   gender: "men" | "women" | "kids" | "unisex";
@@ -48,6 +51,7 @@ export interface CartItem {
   image: string;
   slug: string;
   price: number;
+  currency?: CurrencyCode;
   quantity: number;
   size: string;
   color: string;
@@ -74,6 +78,7 @@ export interface Order {
     size: string;
     color: string;
     price: number;
+    currency?: CurrencyCode;
   }[];
   shippingAddress: {
     fullName: string;
@@ -89,6 +94,7 @@ export interface Order {
   discount: number;
   tax: number;
   total: number;
+  currency?: CurrencyCode;
   status: string;
   paymentMethod: string;
   paymentStatus: string;

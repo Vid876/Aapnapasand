@@ -4,7 +4,7 @@ import { PageHero, PUBLIC_IMAGES, SectionHeader } from "@/components/marketing/P
 const terms = [
   {
     title: "Using the website",
-    text: "You agree to provide accurate account, shipping, and payment information when shopping on Aapnapasand.",
+    text: "You agree to provide accurate account, shipping, and payment information when shopping on BOHOBLOCKPRINTED.",
   },
   {
     title: "Product information",
@@ -25,7 +25,7 @@ export default function TermsPage() {
     <>
       <PageHero
         title="Terms of service"
-        description="The practical terms for browsing, ordering, paying, returning, and using Aapnapasand services."
+        description="The practical terms for browsing, ordering, paying, returning, and using BOHOBLOCKPRINTED services."
         image={PUBLIC_IMAGES.wardrobe}
         primaryHref="/shop"
         primaryLabel="Back to Shop"
@@ -63,3 +63,4 @@ export default function TermsPage() {
     </>
   );
 }
+

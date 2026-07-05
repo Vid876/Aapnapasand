@@ -25,7 +25,7 @@ export default function PrivacyPage() {
     <>
       <PageHero
         title="Privacy, written simply"
-        description="This page explains how Aapnapasand handles customer information while you browse, shop, pay, and contact support."
+        description="This page explains how BOHOBLOCKPRINTED handles customer information while you browse, shop, pay, and contact support."
         image={PUBLIC_IMAGES.fabric}
         primaryHref="/contact"
         primaryLabel="Privacy Question"
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
             </div>
             <div className="flex gap-4">
               <Mail className="shrink-0 text-brand-700" size={22} />
-              <p className="text-sm leading-7 text-gray-700">For privacy requests, contact support@aapnapasand.com.</p>
+              <p className="text-sm leading-7 text-gray-700">For privacy requests, contact support@bohoblockprinted.com.</p>
             </div>
           </div>
         </div>
@@ -63,3 +63,4 @@ export default function PrivacyPage() {
     </>
   );
 }
+

@@ -6,6 +6,7 @@ export interface ICartItem {
   size: string;
   color: string;
   price: number;
+  currency?: "INR" | "USD";
 }
 
 export interface ICart extends Document {
@@ -24,6 +25,7 @@ const CartItemSchema = new Schema<ICartItem>(
     size: { type: String, required: true },
     color: { type: String, required: true },
     price: { type: Number, required: true },
+    currency: { type: String, enum: ["INR", "USD"], default: "INR" },
   },
   { _id: true }
 );
