@@ -15,7 +15,6 @@ const SLIDES = [
     secondary: "Explore Collections",
     secondaryHref: "/collections",
     align: "center" as const,
-    tone: "light" as const,
   },
   {
     image: "/Banner.png",
@@ -26,7 +25,6 @@ const SLIDES = [
     secondary: "View Categories",
     secondaryHref: "/collections",
     align: "left" as const,
-    tone: "warm" as const,
   },
 ];
 
@@ -56,8 +54,7 @@ export function HeroBanner() {
   return (
     <section className="relative w-full overflow-hidden bg-white">
       <div className="relative w-full overflow-hidden">
-        {/* Banner Container */}
-        <div className="relative w-full min-h-[430px] overflow-hidden bg-white sm:aspect-[2500/1050] sm:min-h-[450px] lg:min-h-[550px] xl:min-h-[650px]">
+        <div className="relative w-full aspect-[2500/1050] overflow-hidden bg-[#f7eee9] sm:min-h-[450px] lg:min-h-[550px] xl:min-h-[650px]">
           {SLIDES.map((slide, index) => {
             const isActive = index === active;
 
@@ -68,40 +65,39 @@ export function HeroBanner() {
                   isActive ? "z-10 opacity-100" : "z-0 opacity-0"
                 }`}
               >
-                {/* Banner Image */}
                 <Image
                   src={slide.image}
                   alt={slide.title}
                   fill
                   priority={index === 0}
                   sizes="100vw"
-                  className="object-cover object-center"
+                  className="object-contain object-center sm:object-cover"
                 />
 
-                {/* Overlay for text readability */}
-                <div className="absolute inset-0 bg-black/25 sm:bg-black/10" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/10 to-black/35 sm:bg-gradient-to-r sm:from-black/35 sm:via-black/10 sm:to-transparent" />
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-black/10 sm:bg-black/25" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/25 sm:bg-gradient-to-r sm:from-black/40 sm:via-black/15 sm:to-transparent" />
 
-                {/* Content on Banner */}
+                {/* Content */}
                 <div className="absolute inset-0 flex items-center">
-                  <div className="container mx-auto px-4">
+                  <div className="container mx-auto px-3 sm:px-4">
                     <div
-                      className={`mx-auto max-w-[330px] text-center text-white drop-shadow-[0_3px_18px_rgba(0,0,0,0.75)] sm:max-w-[560px] ${
+                      className={`mx-auto max-w-[245px] rounded-xl border border-white/35 bg-black/25 px-3 py-2 text-center text-white shadow-lg backdrop-blur-[2px] sm:max-w-[560px] sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-0 ${
                         slide.align === "center"
                           ? "sm:mx-auto sm:text-center"
                           : "sm:mr-auto sm:ml-0 sm:text-left"
                       }`}
                     >
-                      <h1 className="text-[24px] font-bold leading-[1.15] sm:text-4xl lg:text-6xl">
+                      <h1 className="text-[15px] font-bold leading-[1.12] sm:text-4xl lg:text-6xl">
                         {slide.title}
                       </h1>
 
-                      <p className="mx-auto mt-3 max-w-[310px] text-[12px] font-medium leading-relaxed text-white/95 sm:mx-0 sm:max-w-xl sm:text-base lg:mt-4 lg:text-lg">
+                      <p className="mx-auto mt-1.5 max-w-[220px] text-[8.5px] font-medium leading-[1.35] text-white/95 sm:mx-0 sm:mt-4 sm:max-w-xl sm:text-base sm:leading-relaxed lg:text-lg">
                         {slide.text}
                       </p>
 
                       <div
-                        className={`mt-4 flex flex-wrap justify-center gap-2 sm:mt-6 sm:gap-4 ${
+                        className={`mt-2 flex flex-wrap justify-center gap-1.5 sm:mt-7 sm:gap-4 ${
                           slide.align === "center"
                             ? "sm:justify-center"
                             : "sm:justify-start"
@@ -109,15 +105,15 @@ export function HeroBanner() {
                       >
                         <Link
                           href={slide.primaryHref}
-                          className="inline-flex items-center justify-center gap-1.5 rounded-full border border-white bg-white px-4 py-2 text-[12px] font-semibold text-black shadow-md transition hover:bg-black hover:text-white sm:gap-2 sm:px-6 sm:py-3 sm:text-sm"
+                          className="inline-flex items-center justify-center gap-1 rounded-full border border-[#3A1D14] bg-[#3A1D14] px-2.5 py-1.5 text-[8.5px] font-semibold text-white shadow-md transition-all duration-300 hover:bg-white hover:text-[#3A1D14] sm:gap-2 sm:px-7 sm:py-3 sm:text-sm lg:text-base"
                         >
                           {slide.primary}
-                          <ArrowRight size={15} />
+                          <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Link>
 
                         <Link
                           href={slide.secondaryHref}
-                          className="inline-flex items-center justify-center rounded-full border border-white/80 bg-black/35 px-4 py-2 text-[12px] font-semibold text-white shadow-md backdrop-blur-sm transition hover:bg-white hover:text-black sm:px-6 sm:py-3 sm:text-sm"
+                          className="inline-flex items-center justify-center rounded-full border border-[#3A1D14] bg-[#F8E7DA] px-2.5 py-1.5 text-[8.5px] font-semibold text-[#3A1D14] shadow-md transition-all duration-300 hover:bg-[#3A1D14] hover:text-white sm:px-7 sm:py-3 sm:text-sm lg:text-base"
                         >
                           {slide.secondary}
                         </Link>
@@ -130,13 +126,13 @@ export function HeroBanner() {
           })}
 
           {/* Navigation */}
-          <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/70 bg-white/90 px-3 py-1.5 shadow-lg backdrop-blur-md sm:bottom-5 sm:gap-3 sm:px-4 sm:py-2">
+          <div className="absolute bottom-1.5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/70 bg-white/90 px-2 py-1 shadow-lg backdrop-blur-md sm:bottom-6 sm:gap-3 sm:px-4 sm:py-2">
             <button
               onClick={previous}
               aria-label="Previous slide"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-black hover:bg-gray-100 sm:h-10 sm:w-10"
+              className="flex h-6 w-6 items-center justify-center rounded-full border border-[#3A1D14]/20 bg-white text-[#3A1D14] hover:bg-[#3A1D14] hover:text-white sm:h-10 sm:w-10"
             >
-              <ArrowLeft size={16} />
+              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </button>
 
             {SLIDES.map((_, index) => (
@@ -144,10 +140,10 @@ export function HeroBanner() {
                 key={index}
                 onClick={() => goTo(index)}
                 aria-label={`Go to slide ${index + 1}`}
-                className={`h-2 rounded-full transition-all sm:h-2.5 ${
+                className={`h-1.5 rounded-full transition-all sm:h-2.5 ${
                   index === active
-                    ? "w-7 bg-black sm:w-8"
-                    : "w-2 bg-gray-400 sm:w-2.5"
+                    ? "w-5 bg-[#3A1D14] sm:w-8"
+                    : "w-1.5 bg-gray-400 sm:w-2.5"
                 }`}
               />
             ))}
@@ -155,9 +151,9 @@ export function HeroBanner() {
             <button
               onClick={next}
               aria-label="Next slide"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-black hover:bg-gray-100 sm:h-10 sm:w-10"
+              className="flex h-6 w-6 items-center justify-center rounded-full border border-[#3A1D14]/20 bg-white text-[#3A1D14] hover:bg-[#3A1D14] hover:text-white sm:h-10 sm:w-10"
             >
-              <ArrowRight size={16} />
+              <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </button>
           </div>
         </div>
