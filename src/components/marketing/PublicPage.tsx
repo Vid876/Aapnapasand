@@ -2,12 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowRight, CheckCircle2, Headphones, PackageCheck, RefreshCcw, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import { BRAND } from "@/lib/brand";
 
 export const PUBLIC_IMAGES = {
   hero: "/Banner 2.png",
   boutique: "/uploads/03cd6105-7d88-47a4-a9bd-71e5f5091c0a.jpg",
-  mens: "/uploads/2cb32606-e0ed-4c52-a7bf-9fdd6c611a46.jpg",
-  ethnic: "/uploads/35b92bf7-8b77-4d97-aa17-08c098563992.jpg",
+  accessories: "/uploads/2cb32606-e0ed-4c52-a7bf-9fdd6c611a46.jpg",
+  tableLinen: "/uploads/35b92bf7-8b77-4d97-aa17-08c098563992.jpg",
   fabric: "/uploads/0bc7ea6a-63ec-4f94-b172-cedeeb3e05bb.jpg",
   studio: "/Banner.png",
   delivery: "/festive-luxury-banner.png",
@@ -72,7 +73,7 @@ export function PageHero({
         <div className="relative min-h-[360px] overflow-hidden rounded-[1.25rem] bg-brand-50 shadow-2xl shadow-brand-950/10 lg:min-h-[520px]">
           <Image
             src={image}
-            alt=""
+            alt={title}
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 52vw"
@@ -104,10 +105,10 @@ export function SectionHeader({ title, description, align = "left" }: SectionHea
 
 export function PromiseStrip() {
   const items = [
-    { icon: Truck, title: "Fast India-wide delivery", text: "Free shipping above Rs. 999 with careful packing." },
-    { icon: RefreshCcw, title: "7-day easy returns", text: "Simple exchanges and return support for eligible items." },
-    { icon: ShieldCheck, title: "Secure checkout", text: "UPI, cards, net banking, wallets, and cash on delivery." },
-    { icon: Headphones, title: "Human support", text: "Style and order help when you need it." },
+    { icon: Truck, title: "Worldwide shipping", text: "International shipping and customs guidance are confirmed before dispatch." },
+    { icon: RefreshCcw, title: "Clear return support", text: "Eligible unused pieces can be reviewed under the return policy." },
+    { icon: ShieldCheck, title: "Secure checkout", text: "UPI, cards, net banking, wallets, and cash on delivery where available." },
+    { icon: Headphones, title: "Custom and wholesale help", text: "Human support for bulk orders, custom sizing, and catalog requests." },
   ];
 
   return (
@@ -142,7 +143,7 @@ export function InfoBand({ title, text, image, reverse, bullets = [] }: InfoBand
     <section className="py-14 lg:py-20">
       <div className="container-app grid gap-10 lg:grid-cols-2 lg:items-center">
         <div className={`relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-brand-50 lg:aspect-[5/4] ${reverse ? "lg:order-2" : ""}`}>
-          <Image src={image} alt="" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+          <Image src={image} alt={title} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
         </div>
         <div className="max-w-xl">
           <h2 className="text-3xl font-display font-bold leading-tight text-brand-950 lg:text-5xl">{title}</h2>
@@ -171,16 +172,18 @@ export function CTASection() {
           <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-white/10 text-brand-200">
             <Sparkles size={20} />
           </div>
-          <h2 className="text-3xl font-display font-bold lg:text-4xl">Ready to refresh your wardrobe?</h2>
+          <h2 className="text-3xl font-display font-bold lg:text-4xl">
+            Ready to explore Jaipur hand block printed textiles?
+          </h2>
           <p className="mt-3 text-sm leading-7 text-brand-100">
-            Explore pieces made for daily confidence, festive plans, gifting, and every mood between.
+            Shop home linen, table linen, fashion, accessories, fabric by yard, and custom wholesale possibilities from {BRAND.name}.
           </p>
         </div>
         <Link
           href="/shop"
           className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-950 transition-colors hover:bg-brand-100"
         >
-          Shop All Styles
+          Shop Collection
           <PackageCheck size={17} />
         </Link>
       </div>

@@ -2,22 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Search, ShoppingBag, Heart, User, Menu, X } from "lucide-react";
+import { ChevronDown, Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
+import { BRAND, PRIMARY_NAV, TOP_BAR_MESSAGES } from "@/lib/brand";
 import { useCartStore } from "@/store/cartStore";
 import { useTranslation } from "@/store/localeStore";
-import type { Category } from "@/types";
-
-type CategoryMenu = "all" | "men" | "women";
-
-const TOP_BAR_MESSAGES = [
-  "New Collection Available",
-  "Premium Block Printed Collection",
-  "Free Shipping on Selected Orders",
-  "Best Offers Available",
-  "Welcome to BOHOBLOCKPRINTED",
-];
 
 const EMPTY_ACCOUNT_FORM = {
   firstName: "",
@@ -31,13 +23,13 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [categories, setCategories] = useState<Category[]>([]);
   const [accountModalOpen, setAccountModalOpen] = useState(false);
   const [accountForm, setAccountForm] = useState(EMPTY_ACCOUNT_FORM);
   const [accountError, setAccountError] = useState("");
   const [accountSuccess, setAccountSuccess] = useState("");
   const [accountLoading, setAccountLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   const { data: session } = useSession();
   const cartItems = useCartStore((s) => s.items);
@@ -46,36 +38,15 @@ export function Header() {
     : 0;
   const { t } = useTranslation();
 
-  const NAV_LINKS = [
-    { label: "Shop", href: "/shop", menu: "all" as CategoryMenu },
-    { label: t.nav.men, href: "/shop?gender=men", menu: "men" as CategoryMenu },
-    { label: t.nav.women, href: "/shop?gender=women", menu: "women" as CategoryMenu },
-    { label: "Collections", href: "/collections", menu: "all" as CategoryMenu },
-    { label: t.nav.newArrivals, href: "/new-arrivals", menu: null },
-    { label: t.nav.sale, href: "/sale", menu: null },
-  ];
-
-  const getMenuCategories = (menu: CategoryMenu) => {
-    if (menu === "all") return categories;
-    return categories.filter(
-      (category) => category.gender === menu || category.gender === "unisex"
-    );
-  };
-
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    fetch("/api/categories")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data.categories) && data.categories.length > 0) {
-          setCategories(data.categories);
-        }
-      })
-      .catch(() => undefined);
-  }, []);
+    setMobileOpen(false);
+    setSearchOpen(false);
+    setAccountModalOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (!accountModalOpen) return;
@@ -168,78 +139,72 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
-      <div className="overflow-hidden bg-brand-950 text-white">
-        <div className="top-bar-marquee flex w-max items-center gap-8 py-2 text-xs font-semibold tracking-wide sm:text-sm">
-          {[...TOP_BAR_MESSAGES, ...TOP_BAR_MESSAGES].map((message, index) => (
-            <span key={`${message}-${index}`} className="whitespace-nowrap">
+    <>
+      <header className="sticky top-0 z-50 border-b border-stone-200 bg-white/96 shadow-sm backdrop-blur">
+      <div className="bg-[#173f4f] text-white">
+        <div className="mx-auto flex w-full flex-wrap items-center justify-center gap-x-6 gap-y-1 px-4 py-2 text-center text-xs font-semibold tracking-wide sm:px-6 sm:text-sm xl:px-8">
+          {TOP_BAR_MESSAGES.map((message) => (
+            <span key={message} className="whitespace-nowrap">
               {message}
             </span>
           ))}
         </div>
       </div>
 
-      <div className="container-app">
-        <div className="flex h-20 items-center justify-between gap-3 lg:h-24">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:max-w-none xl:px-5 2xl:px-8">
+        <div className="flex h-20 items-center justify-between gap-3 lg:h-24 xl:gap-4 2xl:h-28 2xl:gap-6">
           <button
-            className="lg:hidden p-2 -ml-2"
+            className="-ml-2 rounded-full p-2 transition-colors hover:bg-stone-100 xl:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle Menu"
+            aria-label="Toggle menu"
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
 
-          <Link href="/" className="flex flex-shrink-0 items-center justify-center">
+          <Link href="/" className="flex shrink-0 items-center justify-center">
             <Image
               src="/Logo.png"
-              alt="BOHOBLOCKPRINTED"
+              alt={BRAND.name}
               width={360}
               height={160}
               priority
-              className="h-14 max-w-[220px] object-contain sm:h-16 sm:max-w-[280px] lg:h-20"
+              className="h-14 max-w-[190px] object-contain sm:h-16 sm:max-w-[240px] xl:h-20 xl:max-w-[220px] 2xl:h-24 2xl:max-w-[260px]"
             />
           </Link>
 
-          <nav className="hidden items-center gap-5 lg:flex xl:gap-6">
-            {NAV_LINKS.map((link) => {
-              const menuCategories = link.menu ? getMenuCategories(link.menu) : [];
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-2 xl:flex 2xl:gap-4">
+            {PRIMARY_NAV.map((link) => {
+              const children = "children" in link ? link.children : [];
 
               return (
                 <div key={link.href} className="group py-8 -my-8">
                   <Link
                     href={link.href}
-                    className="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors uppercase tracking-wide"
+                    className="inline-flex items-center gap-0.5 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] text-stone-700 transition-colors hover:text-[#173f4f] 2xl:gap-1 2xl:text-xs 2xl:tracking-[0.12em]"
                   >
                     {link.label}
+                    {children.length > 0 && <ChevronDown size={13} />}
                   </Link>
 
-                  {link.menu && menuCategories.length > 0 && (
-                    <div className="absolute left-0 right-0 top-full hidden border-t border-gray-100 bg-white shadow-lg group-hover:block group-focus-within:block">
-                      <div className="container-app py-5">
-                        <div className="mb-4 flex items-center justify-between">
-                          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">
-                            {link.menu === "men"
-                              ? "Men Categories"
-                              : link.menu === "women"
-                                ? "Women Categories"
-                                : "All Categories"}
+                  {children.length > 0 && (
+                    <div className="absolute left-0 right-0 top-full hidden border-t border-stone-200 bg-white shadow-xl shadow-stone-950/10 group-hover:block group-focus-within:block">
+                      <div className="container-app grid gap-8 py-6 xl:grid-cols-[0.72fr_1.28fr]">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#276070]">
+                            {link.label}
                           </p>
-                          <Link
-                            href={link.menu === "all" ? "/shop" : `/shop?gender=${link.menu}`}
-                            className="text-xs font-semibold uppercase tracking-wide text-brand-700 hover:text-brand-900"
-                          >
-                            Shop All
-                          </Link>
+                          <p className="mt-3 max-w-md text-sm leading-7 text-stone-600">
+                            Explore artisan block printed textiles with clear collection paths for shoppers and search engines.
+                          </p>
                         </div>
-
-                        <div className="grid grid-cols-4 gap-x-8 gap-y-3">
-                          {menuCategories.map((category) => (
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-3 xl:grid-cols-3">
+                          {children.map((child) => (
                             <Link
-                              key={category.slug}
-                              href={`/shop?category=${category.slug}`}
-                              className="text-sm font-medium text-gray-700 transition-colors hover:text-brand-700"
+                              key={child.href}
+                              href={child.href}
+                              className="text-sm font-medium text-stone-700 transition-colors hover:text-[#173f4f]"
                             >
-                              {category.name}
+                              {child.label}
                             </Link>
                           ))}
                         </div>
@@ -251,10 +216,10 @@ export function Header() {
             })}
           </nav>
 
-          <div className="flex items-center gap-1 lg:gap-3">
+          <div className="flex shrink-0 items-center justify-end gap-0.5 lg:gap-1 2xl:gap-2">
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="p-2 hover:bg-gray-50 rounded-full transition-colors"
+              className="rounded-full p-2 transition-colors hover:bg-stone-100"
               aria-label="Search"
             >
               <Search size={20} />
@@ -262,7 +227,7 @@ export function Header() {
 
             <Link
               href="/wishlist"
-              className="hidden sm:flex p-2 hover:bg-gray-50 rounded-full transition-colors"
+              className="hidden rounded-full p-2 transition-colors hover:bg-stone-100 sm:flex"
               aria-label="Wishlist"
             >
               <Heart size={20} />
@@ -271,7 +236,7 @@ export function Header() {
             {session ? (
               <Link
                 href="/account"
-                className="p-2 hover:bg-gray-50 rounded-full transition-colors"
+                className="rounded-full p-2 transition-colors hover:bg-stone-100"
                 aria-label="Account"
               >
                 <User size={20} />
@@ -279,7 +244,7 @@ export function Header() {
             ) : (
               <button
                 onClick={openAccountModal}
-                className="p-2 hover:bg-gray-50 rounded-full transition-colors"
+                className="rounded-full p-2 transition-colors hover:bg-stone-100"
                 aria-label="Create account"
               >
                 <User size={20} />
@@ -289,7 +254,7 @@ export function Header() {
             {session?.user?.role === "admin" && (
               <Link
                 href="/admin"
-                className="hidden sm:block px-3 py-1.5 text-xs font-semibold uppercase tracking-wide bg-brand-900 text-white rounded-full hover:bg-brand-800"
+                className="hidden rounded-full bg-[#173f4f] px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-white hover:bg-[#245d70] sm:block"
               >
                 {t.nav.admin}
               </Link>
@@ -297,13 +262,12 @@ export function Header() {
 
             <Link
               href="/cart"
-              className="relative p-2 hover:bg-gray-50 rounded-full transition-colors"
+              className="relative rounded-full p-2 transition-colors hover:bg-stone-100"
               aria-label="Cart"
             >
               <ShoppingBag size={20} />
-
               {itemCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-brand-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#9f2f2f] text-xs font-medium text-white">
                   {itemCount}
                 </span>
               )}
@@ -315,16 +279,15 @@ export function Header() {
           <div className="pb-4">
             <form onSubmit={handleSearch} className="relative">
               <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"
                 size={18}
               />
-
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t.nav.search}
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                className="w-full rounded-full border border-stone-200 bg-stone-50 py-3 pl-12 pr-4 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
                 autoFocus
               />
             </form>
@@ -333,37 +296,48 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden border-t border-gray-100 bg-white">
-          <nav className="container-app py-4 space-y-1">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="block py-3 text-base font-medium text-gray-700 hover:text-brand-600"
-                onClick={closeMobileMenu}
-              >
-                {link.label}
-              </Link>
-            ))}
+        <div className="border-t border-stone-200 bg-white xl:hidden">
+          <nav className="container-app max-h-[calc(100vh-7rem)] space-y-1 overflow-y-auto py-4">
+            {PRIMARY_NAV.map((link) => {
+              const children = "children" in link ? link.children : [];
 
-            <Link
-              href="/shop"
-              className="block py-3 text-base font-medium text-gray-700 hover:text-brand-600"
-              onClick={closeMobileMenu}
-            >
-              {t.nav.shopAll}
-            </Link>
+              return (
+                <div key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="block py-3 text-base font-semibold text-stone-800 hover:text-[#173f4f]"
+                    onClick={closeMobileMenu}
+                  >
+                    {link.label}
+                  </Link>
+                  {children.length > 0 && (
+                    <div className="grid grid-cols-1 gap-1 pb-2 pl-4">
+                      {children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className="py-2 text-sm text-stone-600 hover:text-[#173f4f]"
+                          onClick={closeMobileMenu}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
 
             {session ? (
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="block w-full text-left py-3 text-base font-medium text-red-600"
+                className="block w-full py-3 text-left text-base font-medium text-red-600"
               >
                 {t.nav.signOut}
               </button>
             ) : (
               <button
-                className="block w-full py-3 text-left text-base font-medium text-brand-600"
+                className="block w-full py-3 text-left text-base font-medium text-[#173f4f]"
                 onClick={openAccountModal}
               >
                 Create Account
@@ -373,11 +347,13 @@ export function Header() {
         </div>
       )}
 
-      {accountModalOpen && !session && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center px-4 py-6">
+      </header>
+
+      {mounted && accountModalOpen && !session && createPortal(
+        <div className="fixed inset-0 z-[120] grid place-items-center px-4 py-5 sm:px-6">
           <button
             type="button"
-            className="absolute inset-0 bg-brand-950/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-stone-950/60 backdrop-blur-sm"
             aria-label="Close account form"
             onClick={() => setAccountModalOpen(false)}
           />
@@ -385,16 +361,16 @@ export function Header() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="account-register-title"
-            className="relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl shadow-brand-950/25 sm:p-7"
+            className="relative max-h-[min(90vh,760px)] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl shadow-stone-950/25 sm:p-7"
           >
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600">
-                  BOHOBLOCKPRINTED
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#276070]">
+                  {BRAND.name}
                 </p>
                 <h2
                   id="account-register-title"
-                  className="mt-2 font-display text-2xl font-bold text-brand-950"
+                  className="mt-2 font-display text-2xl font-bold text-stone-950"
                 >
                   Create Account
                 </h2>
@@ -402,7 +378,7 @@ export function Header() {
               <button
                 type="button"
                 onClick={() => setAccountModalOpen(false)}
-                className="rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                className="rounded-full p-2 text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-900"
                 aria-label="Close account form"
               >
                 <X size={20} />
@@ -422,31 +398,31 @@ export function Header() {
               )}
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="space-y-1.5 text-sm font-medium text-gray-700">
+                <label className="space-y-1.5 text-sm font-medium text-stone-700">
                   First Name
                   <input
                     value={accountForm.firstName}
                     onChange={(e) =>
                       setAccountForm((form) => ({ ...form, firstName: e.target.value }))
                     }
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
                     required
                   />
                 </label>
-                <label className="space-y-1.5 text-sm font-medium text-gray-700">
+                <label className="space-y-1.5 text-sm font-medium text-stone-700">
                   Last Name
                   <input
                     value={accountForm.lastName}
                     onChange={(e) =>
                       setAccountForm((form) => ({ ...form, lastName: e.target.value }))
                     }
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
                     required
                   />
                 </label>
               </div>
 
-              <label className="block space-y-1.5 text-sm font-medium text-gray-700">
+              <label className="block space-y-1.5 text-sm font-medium text-stone-700">
                 Email
                 <input
                   type="email"
@@ -454,12 +430,12 @@ export function Header() {
                   onChange={(e) =>
                     setAccountForm((form) => ({ ...form, email: e.target.value }))
                   }
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
                   required
                 />
               </label>
 
-              <label className="block space-y-1.5 text-sm font-medium text-gray-700">
+              <label className="block space-y-1.5 text-sm font-medium text-stone-700">
                 Mobile Number
                 <input
                   type="tel"
@@ -467,12 +443,12 @@ export function Header() {
                   onChange={(e) =>
                     setAccountForm((form) => ({ ...form, mobile: e.target.value }))
                   }
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
                   required
                 />
               </label>
 
-              <label className="block space-y-1.5 text-sm font-medium text-gray-700">
+              <label className="block space-y-1.5 text-sm font-medium text-stone-700">
                 Password
                 <input
                   type="password"
@@ -481,7 +457,7 @@ export function Header() {
                   onChange={(e) =>
                     setAccountForm((form) => ({ ...form, password: e.target.value }))
                   }
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
                   required
                 />
               </label>
@@ -489,25 +465,26 @@ export function Header() {
               <button
                 type="submit"
                 disabled={accountLoading}
-                className="flex min-h-12 w-full items-center justify-center rounded-lg bg-brand-900 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex min-h-12 w-full items-center justify-center rounded-lg bg-[#173f4f] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#245d70] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {accountLoading ? "Creating..." : "Register"}
               </button>
             </form>
 
-            <p className="mt-5 text-center text-sm text-gray-500">
+            <p className="mt-5 text-center text-sm text-stone-500">
               Already registered?{" "}
               <Link
                 href="/login"
                 onClick={() => setAccountModalOpen(false)}
-                className="font-semibold text-brand-700 hover:text-brand-900"
+                className="font-semibold text-[#173f4f] hover:text-[#245d70]"
               >
                 Sign in
               </Link>
             </p>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
-    </header>
+    </>
   );
 }

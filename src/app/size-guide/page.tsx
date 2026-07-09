@@ -11,17 +11,17 @@ const sizeRows = [
 ];
 
 const tips = [
-  { icon: Ruler, title: "Measure over light clothing", text: "Keep the tape parallel and comfortable, not tight." },
+  { icon: Ruler, title: "Measure the product area", text: "For home and table linen, compare listed dimensions with the bed, table, or use case." },
   { icon: Shirt, title: "Compare with a favorite garment", text: "Flat measurements are often the easiest way to pick a familiar fit." },
-  { icon: Sparkles, title: "Between sizes?", text: "Choose the larger size for relaxed silhouettes and layering." },
+  { icon: Sparkles, title: "Between sizes?", text: "Choose the larger size for relaxed silhouettes, layering, and easy movement." },
 ];
 
 export default function SizeGuidePage() {
   return (
     <>
       <PageHero
-        title="Find the fit that feels right"
-        description="Use this guide for quick sizing confidence across shirts, kurtas, tops, dresses, and everyday wardrobe staples."
+        title="Size guide for textile products"
+        description="Use this guide for quick sizing confidence across kaftans, sarongs, beach cover-ups, bedding, table linen, accessories, and fabric yardage."
         image={PUBLIC_IMAGES.wardrobe}
         primaryHref="/shop"
         primaryLabel="Shop Now"

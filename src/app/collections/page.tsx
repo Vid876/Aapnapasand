@@ -11,13 +11,13 @@ export default async function CollectionsPage() {
   return (
     <>
       <PageHero
-        title="Collections with a point of view"
-        description="Browse curated edits designed around how you dress: daily ease, work polish, festive plans, and pieces that feel personal."
+        title="Textile collections with a clear path"
+        description="Browse BOHOBLOCKPRINTED categories for home linen, table linen, fashion, accessories, fabric by yard, custom orders, and wholesale buying."
         image={PUBLIC_IMAGES.hero}
         primaryHref="/shop"
         primaryLabel="Shop All"
-        secondaryHref="/new-arrivals"
-        secondaryLabel="New Arrivals"
+        secondaryHref="/wholesale"
+        secondaryLabel="Wholesale"
       />
 
       <section className="bg-brand-50/70 py-16 lg:py-24">
@@ -25,7 +25,7 @@ export default async function CollectionsPage() {
           <SectionHeader
             align="center"
             title="Shopping categories"
-            description="Only active categories created in the admin dashboard are shown here."
+            description="Active product categories from the catalog, aligned to the Jaipur hand block printed textile structure."
           />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
             {categories.map((category) => (
@@ -45,7 +45,7 @@ export default async function CollectionsPage() {
                 </div>
                 <div className="p-4">
                   <h2 className="text-sm font-semibold text-brand-950">{category.name}</h2>
-                  <p className="mt-1 text-xs capitalize text-gray-500">{category.gender}</p>
+                  <p className="mt-1 text-xs text-gray-500">Shop category</p>
                 </div>
               </Link>
             ))}

@@ -12,6 +12,7 @@ import {
   Tag,
   Plus,
   TrendingUp,
+  Grid3X3,
 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import type { CurrencyCode } from "@/types";
@@ -24,6 +25,8 @@ interface Stats {
   monthlyRevenue: number;
   pendingOrders: number;
   activeCoupons: number;
+  totalCategories: number;
+  activeCategories: number;
 }
 
 interface ChartDay {
@@ -83,6 +86,12 @@ export default function AdminDashboard() {
     { label: "Orders", value: stats?.totalOrders || 0, icon: ShoppingCart, color: "bg-blue-500" },
     { label: "Pending", value: stats?.pendingOrders || 0, icon: Clock, color: "bg-amber-500" },
     { label: "Products", value: stats?.totalProducts || 0, icon: Package, color: "bg-purple-500" },
+    {
+      label: "Categories",
+      value: `${stats?.activeCategories || 0}/${stats?.totalCategories || 0}`,
+      icon: Grid3X3,
+      color: "bg-cyan-600",
+    },
     { label: "Active Offers", value: stats?.activeCoupons || 0, icon: Tag, color: "bg-orange-500" },
     { label: "Customers", value: stats?.totalCustomers || 0, icon: Users, color: "bg-pink-500" },
   ];
@@ -92,7 +101,7 @@ export default function AdminDashboard() {
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage products, orders, and offers</p>
+          <p className="text-sm text-gray-500 mt-1">Manage products, categories, orders, and offers</p>
         </div>
         <div className="flex gap-3">
           <Link
@@ -111,9 +120,10 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
         {[
           { href: "/admin/products/new", label: "Add Product", desc: "Images, price, description", color: "border-brand-200 bg-brand-50" },
+          { href: "/admin/categories", label: "Add Category", desc: "Shop tiles & images", color: "border-cyan-200 bg-cyan-50" },
           { href: "/admin/coupons", label: "Create Offer", desc: "Discount codes & coupons", color: "border-orange-200 bg-orange-50" },
           { href: "/admin/orders", label: "Manage Orders", desc: "Ship & track orders", color: "border-blue-200 bg-blue-50" },
           { href: "/admin/reviews", label: "Reviews", desc: "Approve customer reviews", color: "border-purple-200 bg-purple-50" },

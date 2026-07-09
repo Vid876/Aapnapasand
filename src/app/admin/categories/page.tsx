@@ -34,6 +34,11 @@ export default function AdminCategoriesPage() {
     () => categories.filter((category) => category.isActive).length,
     [categories]
   );
+  const inactiveCount = useMemo(() => categories.length - activeCount, [activeCount, categories.length]);
+  const withImageCount = useMemo(
+    () => categories.filter((category) => Boolean(category.image)).length,
+    [categories]
+  );
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -120,6 +125,19 @@ export default function AdminCategoriesPage() {
           Create website categories with images. These appear on the storefront and product forms.
         </p>
 
+        <div className="mt-5 grid grid-cols-3 gap-3">
+          {[
+            { label: "Total", value: categories.length },
+            { label: "Active", value: activeCount },
+            { label: "With image", value: withImageCount },
+          ].map((item) => (
+            <div key={item.label} className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+              <p className="text-xs font-medium uppercase tracking-wide text-gray-500">{item.label}</p>
+              <p className="mt-1 text-2xl font-bold text-gray-900">{item.value}</p>
+            </div>
+          ))}
+        </div>
+
         <form onSubmit={saveCategory} className="mt-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-center justify-between gap-4">
             <h2 className="font-semibold">{form.id ? "Edit category" : "Add category"}</h2>
@@ -142,7 +160,7 @@ export default function AdminCategoriesPage() {
               <input
                 value={form.name}
                 onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
-                placeholder="Leggings, Sarees, Jeans..."
+                placeholder="Duvet Covers, Napkins, Kaftans..."
                 className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 required
               />
@@ -154,13 +172,13 @@ export default function AdminCategoriesPage() {
                 value={form.description}
                 onChange={(event) => setForm((prev) => ({ ...prev, description: event.target.value }))}
                 rows={3}
-                placeholder="Short line for this category"
+                placeholder="Short category copy for the storefront tile or collection page"
                 className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Gender</label>
+              <label className="block text-sm font-medium text-gray-700">Audience</label>
               <select
                 value={form.gender}
                 onChange={(event) =>
@@ -168,10 +186,10 @@ export default function AdminCategoriesPage() {
                 }
                 className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-500"
               >
+                <option value="unisex">Unisex / Home</option>
+                <option value="women">Women / Fashion</option>
                 <option value="men">Men</option>
-                <option value="women">Women</option>
                 <option value="kids">Kids</option>
-                <option value="unisex">Unisex</option>
               </select>
             </div>
 
@@ -211,7 +229,9 @@ export default function AdminCategoriesPage() {
         <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <h2 className="font-semibold">All categories</h2>
-            <p className="mt-1 text-sm text-gray-500">{activeCount} active of {categories.length} total</p>
+            <p className="mt-1 text-sm text-gray-500">
+              {activeCount} active, {inactiveCount} inactive, {withImageCount} with image
+            </p>
           </div>
         </div>
 

@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import Link from "next/link";
 import { ProductCard } from "@/components/products/ProductCard";
 import { SectionHeader } from "@/components/marketing/PublicPage";
 import { connectDB } from "@/lib/db";
@@ -40,15 +41,15 @@ export async function FeaturedProducts() {
       <div className="container-app">
         <div className="mb-10 flex items-end justify-between gap-6">
           <SectionHeader
-            title="Featured for this season"
-            description="Handpicked styles with strong fabric, versatile cuts, and easy styling."
+            title="Best Sellers"
+            description="Most requested textiles across home linen, table linen, fashion, accessories, and fabric."
           />
-          <a
+          <Link
             href="/shop?featured=true"
             className="hidden sm:block text-sm font-medium text-brand-600 hover:text-brand-800 transition-colors"
           >
             View all
-          </a>
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">

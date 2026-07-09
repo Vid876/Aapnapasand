@@ -126,7 +126,7 @@ export function ProductForm({
       currency: initialData?.currency || "INR",
       category: initialData?.category || "",
       subcategory: initialData?.subcategory || "",
-      gender: initialData?.gender || "men",
+      gender: initialData?.gender || "unisex",
       brand: initialData?.brand || "BOHOBLOCKPRINTED",
       specifications: initialData?.specifications || [],
       variants:
@@ -227,7 +227,7 @@ export function ProductForm({
             <label className="block text-sm font-medium mb-1.5">Product Name *</label>
             <input
               {...register("name")}
-              placeholder="Classic Oxford Cotton Shirt"
+              placeholder="Indigo Block Print Duvet Cover"
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
             />
             {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>}
@@ -247,7 +247,7 @@ export function ProductForm({
             <textarea
               {...register("description")}
               rows={5}
-              placeholder="Describe fabric, fit, care instructions, occasion, etc."
+              placeholder="Describe fabric, print, care instructions, origin, sizing, and shipping notes."
               className="w-full px-4 py-3 border border-gray-200 rounded-lg resize-y"
             />
             <p className="text-xs text-gray-400 mt-1">{(watch("description") || "").length} characters (min 10)</p>
@@ -287,15 +287,15 @@ export function ProductForm({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1.5">Gender *</label>
+              <label className="block text-sm font-medium mb-1.5">Audience *</label>
               <select
                 {...register("gender")}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg"
               >
+                <option value="unisex">Unisex / Home</option>
+                <option value="women">Women / Fashion</option>
                 <option value="men">Men</option>
-                <option value="women">Women</option>
                 <option value="kids">Kids</option>
-                <option value="unisex">Unisex</option>
               </select>
             </div>
           </div>

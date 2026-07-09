@@ -4,22 +4,22 @@ import { ArrowRight, Clock3, Sparkles } from "lucide-react";
 import { PageHero, PUBLIC_IMAGES, PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
 
 const arrivals = [
-  { title: "Fresh shirts", href: "/shop?category=shirts&sort=newest", image: PUBLIC_IMAGES.mens },
-  { title: "New sarees", href: "/shop?category=sarees&sort=newest", image: PUBLIC_IMAGES.ethnic },
-  { title: "Soft layers", href: "/shop?sort=newest", image: PUBLIC_IMAGES.wardrobe },
+  { title: "Fresh home linen", href: "/shop?category=duvet-covers&sort=newest", image: PUBLIC_IMAGES.fabric },
+  { title: "New table textiles", href: "/shop?category=napkins&sort=newest", image: PUBLIC_IMAGES.tableLinen },
+  { title: "Artisan fashion", href: "/shop?category=kaftans&sort=newest", image: PUBLIC_IMAGES.wardrobe },
 ];
 
 export default function NewArrivalsPage() {
   return (
     <>
       <PageHero
-        title="New arrivals just landed"
-        description="The latest BOHOBLOCKPRINTED edits bring in fresh colors, updated fits, polished staples, and celebration-ready pieces."
+        title="New block print arrivals"
+        description="The latest BOHOBLOCKPRINTED edits bring fresh Jaipur hand block printed home linen, table textiles, artisan fashion, accessories, and fabric by yard."
         image={PUBLIC_IMAGES.studio}
         primaryHref="/shop?sort=newest"
         primaryLabel="Shop Latest"
-        secondaryHref="/collections"
-        secondaryLabel="View Collections"
+        secondaryHref="/wholesale"
+        secondaryLabel="Wholesale Inquiry"
       >
         <div className="mt-8 flex flex-wrap gap-3 text-sm text-gray-600">
           <span className="inline-flex items-center gap-2 rounded-lg bg-brand-50 px-4 py-2">
@@ -36,7 +36,7 @@ export default function NewArrivalsPage() {
           <SectionHeader
             align="center"
             title="Start with what is new"
-            description="Quick paths into the newest pieces by wardrobe mood."
+            description="Quick paths into the newest handmade textile categories."
           />
           <div className="grid gap-5 md:grid-cols-3">
             {arrivals.map((arrival) => (

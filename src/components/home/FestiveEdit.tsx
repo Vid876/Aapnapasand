@@ -17,25 +17,25 @@ export function FestiveEdit() {
                 <Sparkles size={22} />
               </div>
               <h2 className="font-display text-4xl font-bold leading-tight sm:text-5xl">
-                The Festive Edit
+                The Artisan Edit
               </h2>
               <p className="mt-4 max-w-sm text-sm leading-7 text-brand-50/86">
-                Timeless pieces for wedding nights, family moments, and celebrations that deserve a softer glow.
+                Hand block printed textiles for layered homes, thoughtful gifting, travel, and custom wholesale edits.
               </p>
               <Link
-                href="/collections"
+                href="/shop"
                 className="mt-7 inline-flex w-fit min-h-12 items-center justify-center gap-2 rounded-lg bg-white px-5 text-sm font-semibold text-brand-950 shadow-lg shadow-black/10 transition-colors hover:bg-brand-100"
               >
-                Explore festive collection
+                Explore textiles
                 <ArrowRight size={16} />
               </Link>
             </div>
           </div>
 
-          <Link href="/shop?category=ethnic-wear" className="group relative min-h-[330px] overflow-hidden">
+          <Link href="/shop?category=kaftans" className="group relative min-h-[330px] overflow-hidden">
             <Image
               src="/Banner 2.png"
-              alt="Festive ethnic wear collection"
+              alt="Artisan fashion collection"
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 58vw"
@@ -43,8 +43,8 @@ export function FestiveEdit() {
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(47,25,18,0.36),transparent_38%,rgba(47,25,18,0.16))]" />
             <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-3 rounded-xl bg-white/82 px-4 py-3 text-brand-950 shadow-xl shadow-brand-950/15 backdrop-blur sm:left-auto sm:right-6 sm:w-[320px]">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-600">Curated occasion wear</p>
-                <p className="mt-1 font-display text-xl font-bold">Sarees, kurtas and classics</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-600">Curated artisan fashion</p>
+                <p className="mt-1 font-display text-xl font-bold">Kaftans, sarongs, cover-ups</p>
               </div>
               <ArrowRight className="shrink-0 text-brand-700" size={18} />
             </div>

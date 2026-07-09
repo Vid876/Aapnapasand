@@ -112,19 +112,73 @@ export default function ProductDetailPage() {
     },
     {
       title: "Best Offer",
-      text: "Selected styles include free shipping and limited period pricing.",
+      text: "Selected styles may include limited period pricing. Shipping benefits are confirmed at checkout.",
     },
   ];
   const trustPoints = [
-    { icon: RotateCcw, label: "Free returns" },
-    { icon: Truck, label: "Fast shipping" },
-    { icon: CheckCircle2, label: "Best quality" },
+    { icon: RotateCcw, label: "Return review" },
+    { icon: Truck, label: "Worldwide shipping" },
+    { icon: CheckCircle2, label: "Handmade textile" },
     { icon: Shield, label: "Secure checkout" },
   ];
   const displayBrand =
     product.brand?.toUpperCase().includes("BOHOBLOCKPRINTED")
       ? product.brand
       : "BOHOBLOCKPRINTED";
+  const categoryName =
+    typeof product.category === "string" ? "Hand block printed textiles" : product.category.name;
+  const specificationSummary =
+    product.specifications && product.specifications.length > 0
+      ? product.specifications.join(", ")
+      : "See product description and selected variant details.";
+  const productEssentials = [
+    {
+      title: "Detailed description",
+      text: product.description,
+    },
+    {
+      title: "Fabric details",
+      text: `${categoryName} made for everyday use, gifting, styling, or wholesale planning.`,
+    },
+    {
+      title: "Material composition",
+      text: specificationSummary,
+    },
+    {
+      title: "Care instructions",
+      text: "Wash separately in cold water with mild detergent, avoid bleach, and dry in shade where possible.",
+    },
+    {
+      title: "Country of origin",
+      text: "India. The brand story is centered on Jaipur, Rajasthan hand block printed textiles.",
+    },
+    {
+      title: "Processing time",
+      text: "Ready-to-ship, custom, and wholesale timelines vary by stock, printing, stitching, and packing needs.",
+    },
+    {
+      title: "Shipping details",
+      text: "Worldwide shipping may be available. Cost, tracking, customs, and delivery windows are confirmed by destination and order size.",
+    },
+    {
+      title: "Return policy",
+      text: "Eligible unused and unwashed items can be reviewed under the return policy. Custom and wholesale orders may have confirmed written terms.",
+    },
+  ];
+  const productFaqs = [
+    {
+      q: "Will hand block printed pieces look identical?",
+      a: "Small pressure, placement, and color variations are natural to hand block printing and are part of the handmade surface.",
+    },
+    {
+      q: "Can this product be customized or ordered wholesale?",
+      a: "Custom sizing, private label, fabric, and bulk requests can be discussed through the wholesale inquiry path.",
+    },
+    {
+      q: "Where can I check sizing?",
+      a: "Use the linked size chart and compare product measurements with your garment, bed, table, or intended use case.",
+    },
+  ];
 
   const handleAddToCart = () => {
     if (!selectedSize || !selectedColor) return;
@@ -422,6 +476,49 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      <section className="mt-16 border-t border-gray-100 pt-12">
+        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <h2 className="font-display text-2xl font-bold text-gray-950 lg:text-3xl">
+              Product information
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-7 text-gray-600">
+              Material, care, origin, processing, shipping, returns, sizing, FAQ, and reviews are kept visible for better shopping confidence.
+            </p>
+          </div>
+          <Link
+            href="/size-guide"
+            className="inline-flex w-fit items-center gap-2 rounded-lg border border-brand-900 px-4 py-2.5 text-sm font-semibold text-brand-900 transition-colors hover:bg-brand-900 hover:text-white"
+          >
+            <Ruler size={16} />
+            Size Chart
+          </Link>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {productEssentials.map((item) => (
+            <div key={item.title} className="rounded-lg border border-gray-100 bg-white p-5 shadow-sm">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-brand-700">
+                {item.title}
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-gray-600">{item.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 rounded-xl bg-brand-50/80 p-5 lg:p-6">
+          <h3 className="font-display text-2xl font-bold text-brand-950">Product FAQ</h3>
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            {productFaqs.map((faq) => (
+              <div key={faq.q} className="rounded-lg bg-white p-5 shadow-sm">
+                <h4 className="text-sm font-semibold text-gray-950">{faq.q}</h4>
+                <p className="mt-2 text-sm leading-7 text-gray-600">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="mt-16 border-t border-gray-100 pt-12">
         <h2 className="text-2xl font-display font-bold mb-8">{t.product.reviews}</h2>

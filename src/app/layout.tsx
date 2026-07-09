@@ -16,12 +16,19 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "BOHOBLOCKPRINTED | Premium Indian Fashion",
+    default: "BOHOBLOCKPRINTED | Hand Block Printed Textiles from Jaipur",
     template: "%s | BOHOBLOCKPRINTED",
   },
   description:
-    "Shop premium men's and women's clothing at BOHOBLOCKPRINTED. Discover shirts, jeans, kurtas, sarees, and more with fast delivery across India.",
-  keywords: ["fashion", "clothing", "india", "mens wear", "womens wear", "online shopping"],
+    "Shop hand block printed home decor, table linen, fashion, accessories, fabric by yard, custom orders, and wholesale textiles from Jaipur, India.",
+  keywords: [
+    "hand block printed textiles",
+    "Jaipur block print",
+    "home linen",
+    "table linen",
+    "block print fabric",
+    "wholesale textiles",
+  ],
 };
 
 export default function RootLayout({

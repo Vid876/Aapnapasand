@@ -5,6 +5,8 @@ import { Product } from "@/models/Product";
 import { User } from "@/models/User";
 import { Coupon } from "@/models/Coupon";
 import { requireAdmin } from "@/lib/admin";
+import { ensureDefaultCategories } from "@/lib/category-sync";
+import { Category } from "@/models/Category";
 
 export async function GET() {
   const auth = await requireAdmin();
@@ -12,6 +14,7 @@ export async function GET() {
 
   try {
     await connectDB();
+    await ensureDefaultCategories();
 
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -29,6 +32,8 @@ export async function GET() {
       dailyRevenue,
       topProducts,
       activeCoupons,
+      totalCategories,
+      activeCategories,
     ] = await Promise.all([
       Order.countDocuments(),
       Product.countDocuments({ isActive: true }),
@@ -84,6 +89,8 @@ export async function GET() {
         { $limit: 5 },
       ]),
       Coupon.countDocuments({ isActive: true }),
+      Category.countDocuments(),
+      Category.countDocuments({ isActive: true }),
     ]);
 
     const pendingOrders = await Order.countDocuments({
@@ -113,6 +120,8 @@ export async function GET() {
         monthlyRevenue: monthlyRevenue[0]?.total || 0,
         pendingOrders,
         activeCoupons,
+        totalCategories,
+        activeCategories,
       },
       recentOrders,
       chartData,

@@ -92,24 +92,6 @@ function ShopContent() {
   const FilterPanel = () => (
     <div className="space-y-6">
       <div>
-        <h3 className="font-semibold text-sm uppercase tracking-wider mb-3">Gender</h3>
-        <div className="space-y-2">
-          {["men", "women"].map((g) => (
-            <label key={g} className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="gender"
-                checked={filters.gender === g}
-                onChange={() => updateFilter("gender", g)}
-                className="accent-brand-600"
-              />
-              <span className="text-sm capitalize">{g}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div>
         <h3 className="font-semibold text-sm uppercase tracking-wider mb-3">Category</h3>
         <div className="space-y-2 max-h-48 overflow-y-auto">
           {categoryOptions.map((cat) => (

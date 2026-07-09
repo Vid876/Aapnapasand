@@ -4,8 +4,8 @@ import { PageHero, PUBLIC_IMAGES, SectionHeader } from "@/components/marketing/P
 
 const saleLinks = [
   { title: "Under Rs. 999", href: "/shop?maxPrice=999&sort=price-asc" },
-  { title: "Men's Sale", href: "/shop?gender=men&sort=price-asc" },
-  { title: "Women's Sale", href: "/shop?gender=women&sort=price-asc" },
+  { title: "Home Linen Offers", href: "/shop?category=duvet-covers&sort=price-asc" },
+  { title: "Table Linen Offers", href: "/shop?category=napkins&sort=price-asc" },
   { title: "Top Rated Deals", href: "/shop?sort=rating" },
 ];
 
@@ -13,8 +13,8 @@ export default function SalePage() {
   return (
     <>
       <PageHero
-        title="Sale styles worth keeping"
-        description="Find polished pieces at sharper prices, from everyday essentials to festive extras. Use code WELCOME10 for an additional welcome offer."
+        title="Textile offers worth keeping"
+        description="Find hand block printed home linen, table linen, fashion, accessories, and fabric at sharper prices. Use code WELCOME10 for an additional welcome offer."
         image={PUBLIC_IMAGES.fabric}
         primaryHref="/shop?sort=price-asc"
         primaryLabel="Shop Sale"
@@ -26,8 +26,8 @@ export default function SalePage() {
         <div className="container-app">
           <SectionHeader
             align="center"
-            title="Shop offers by mood"
-            description="Quick routes to the pieces customers usually look for first."
+            title="Shop offers by collection"
+            description="Quick routes into the textile categories customers usually look for first."
           />
           <div className="grid gap-4 md:grid-cols-4">
             {saleLinks.map((link) => (
@@ -43,7 +43,7 @@ export default function SalePage() {
           <div className="mt-10 grid gap-4 rounded-[1.25rem] bg-brand-950 p-6 text-white md:grid-cols-2 lg:p-8">
             <div className="flex gap-4">
               <Truck className="shrink-0 text-brand-200" size={24} />
-              <p className="text-sm leading-7 text-brand-100">Free shipping applies above Rs. 999 even during sale periods.</p>
+              <p className="text-sm leading-7 text-brand-100">Shipping terms are confirmed at checkout and may vary by destination, courier, and order size.</p>
             </div>
             <div className="flex gap-4">
               <ShieldCheck className="shrink-0 text-brand-200" size={24} />

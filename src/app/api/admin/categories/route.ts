@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/admin";
+import { ensureDefaultCategories } from "@/lib/category-sync";
 import { connectDB } from "@/lib/db";
 import { isValidStoredImage } from "@/lib/image-utils";
 import { slugify } from "@/lib/utils";
@@ -21,7 +22,9 @@ export async function GET() {
 
   try {
     await connectDB();
-    const categories = await Category.find().sort({ createdAt: -1 }).lean();
+    await ensureDefaultCategories();
+
+    const categories = await Category.find().sort({ name: 1 }).lean();
     return NextResponse.json({ categories });
   } catch (error) {
     console.error("Admin categories fetch error:", error);

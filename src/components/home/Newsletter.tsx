@@ -26,15 +26,15 @@ export function Newsletter() {
             <Mail size={28} />
           </div>
           <h2 className="text-4xl font-display font-bold leading-tight lg:text-6xl">
-            Stay in style
+            Get 10% Off Your First Order
           </h2>
           <p className="mx-auto mt-4 mb-8 max-w-2xl text-sm leading-7 text-brand-50 lg:text-base">
-            Subscribe for new arrivals, early sale access, festive edits, and premium styling notes from BOHOBLOCKPRINTED.
+            Subscribe for new block print arrivals, wholesale catalog notes, home textile ideas, and a welcome offer for your first order.
           </p>
 
           {submitted ? (
             <p className="font-medium text-brand-50">
-              Thank you for subscribing. Check your inbox for a welcome offer.
+              Thank you for subscribing. Check your inbox for your first-order offer.
             </p>
           ) : (
             <form onSubmit={handleSubmit} className="mx-auto flex max-w-2xl flex-col gap-3 rounded-2xl bg-white/12 p-2 shadow-2xl shadow-brand-950/20 ring-1 ring-white/20 backdrop-blur sm:flex-row">

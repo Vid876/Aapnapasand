@@ -8,43 +8,34 @@ const CATEGORY_SEED_IMAGES = [
 ] as const;
 
 export const CATEGORIES = [
-  { name: "Shirts", slug: "shirts", gender: "men", image: CATEGORY_SEED_IMAGES[5] },
-  { name: "T-Shirts", slug: "t-shirts", gender: "men", image: CATEGORY_SEED_IMAGES[5] },
-  { name: "Jeans", slug: "jeans", gender: "men", image: CATEGORY_SEED_IMAGES[4] },
-  { name: "Pants", slug: "pants", gender: "men", image: CATEGORY_SEED_IMAGES[4] },
-  { name: "Trousers", slug: "trousers", gender: "men", image: CATEGORY_SEED_IMAGES[4] },
-  { name: "Chinos", slug: "chinos", gender: "men", image: CATEGORY_SEED_IMAGES[4] },
-  { name: "Cargo Pants", slug: "cargo-pants", gender: "men", image: CATEGORY_SEED_IMAGES[4] },
-  { name: "Joggers", slug: "joggers", gender: "men", image: CATEGORY_SEED_IMAGES[4] },
-  { name: "Jackets", slug: "jackets", gender: "men", image: CATEGORY_SEED_IMAGES[4] },
-  { name: "Hoodies", slug: "hoodies", gender: "men", image: CATEGORY_SEED_IMAGES[4] },
-  { name: "Kurtas", slug: "kurtas", gender: "men", image: CATEGORY_SEED_IMAGES[2] },
-  { name: "Dresses", slug: "dresses", gender: "women", image: CATEGORY_SEED_IMAGES[5] },
-  { name: "Tops", slug: "tops", gender: "women", image: CATEGORY_SEED_IMAGES[5] },
-  { name: "Kurtis", slug: "kurtis", gender: "women", image: CATEGORY_SEED_IMAGES[2] },
-  { name: "Sarees", slug: "sarees", gender: "women", image: CATEGORY_SEED_IMAGES[2] },
-  { name: "Lehengas", slug: "lehengas", gender: "women", image: CATEGORY_SEED_IMAGES[2] },
-  { name: "Salwar Suits", slug: "salwar-suits", gender: "women", image: CATEGORY_SEED_IMAGES[2] },
-  { name: "Leggings", slug: "leggings", gender: "women", image: CATEGORY_SEED_IMAGES[5] },
-  { name: "Palazzos", slug: "palazzos", gender: "women", image: CATEGORY_SEED_IMAGES[5] },
-  { name: "Skirts", slug: "skirts", gender: "women", image: CATEGORY_SEED_IMAGES[5] },
-  { name: "Blouses", slug: "blouses", gender: "women", image: CATEGORY_SEED_IMAGES[5] },
-  { name: "Dupattas", slug: "dupattas", gender: "women", image: CATEGORY_SEED_IMAGES[2] },
-  { name: "Shorts", slug: "shorts", gender: "unisex", image: CATEGORY_SEED_IMAGES[5] },
-  { name: "Ethnic Wear", slug: "ethnic-wear", gender: "unisex", image: CATEGORY_SEED_IMAGES[2] },
+  { name: "Duvet Covers", slug: "duvet-covers", gender: "unisex", image: CATEGORY_SEED_IMAGES[1] },
+  { name: "Bed Sheets", slug: "bed-sheets", gender: "unisex", image: CATEGORY_SEED_IMAGES[0] },
+  { name: "Pillow Covers", slug: "pillow-covers", gender: "unisex", image: CATEGORY_SEED_IMAGES[0] },
+  { name: "Curtains", slug: "curtains", gender: "unisex", image: CATEGORY_SEED_IMAGES[3] },
+  { name: "Napkins", slug: "napkins", gender: "unisex", image: CATEGORY_SEED_IMAGES[2] },
+  { name: "Tablecloths", slug: "tablecloths", gender: "unisex", image: CATEGORY_SEED_IMAGES[2] },
+  { name: "Table Runners", slug: "table-runners", gender: "unisex", image: CATEGORY_SEED_IMAGES[2] },
+  { name: "Kaftans", slug: "kaftans", gender: "women", image: CATEGORY_SEED_IMAGES[5] },
+  { name: "Sarongs", slug: "sarongs", gender: "women", image: CATEGORY_SEED_IMAGES[5] },
+  { name: "Beach Cover-Ups", slug: "beach-cover-ups", gender: "women", image: CATEGORY_SEED_IMAGES[5] },
+  { name: "Bandanas", slug: "bandanas", gender: "unisex", image: CATEGORY_SEED_IMAGES[4] },
+  { name: "Quilted Tote Bags", slug: "quilted-tote-bags", gender: "unisex", image: CATEGORY_SEED_IMAGES[4] },
+  { name: "Cosmetic Bags", slug: "cosmetic-bags", gender: "unisex", image: CATEGORY_SEED_IMAGES[4] },
+  { name: "Duffle Bags", slug: "duffle-bags", gender: "unisex", image: CATEGORY_SEED_IMAGES[4] },
+  { name: "Block Print Fabric by Yard", slug: "block-print-fabric-by-yard", gender: "unisex", image: CATEGORY_SEED_IMAGES[1] },
 ] as const;
 
-export const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "28", "30", "32", "34", "36", "38"] as const;
+export const SIZES = ["OS", "XS", "S", "M", "L", "XL", "XXL", "Twin", "Queen", "King", "1 Yard", "2 Yard"] as const;
 
 export const COLORS = [
   { name: "Black", hex: "#000000" },
   { name: "White", hex: "#FFFFFF" },
-  { name: "Navy", hex: "#1e3a5f" },
-  { name: "Grey", hex: "#6b7280" },
-  { name: "Beige", hex: "#d4c4a8" },
-  { name: "Olive", hex: "#556b2f" },
-  { name: "Maroon", hex: "#800000" },
-  { name: "Blue", hex: "#2563eb" },
+  { name: "Indigo", hex: "#1f3f73" },
+  { name: "Madder Red", hex: "#9f2f2f" },
+  { name: "Sage", hex: "#7f9366" },
+  { name: "Mustard", hex: "#c9902e" },
+  { name: "Rose", hex: "#cf6f83" },
+  { name: "Charcoal", hex: "#2f3437" },
 ] as const;
 
 export const ORDER_STATUS = [
