@@ -38,7 +38,7 @@ export async function CategoryGrid() {
           description="Clear collection paths for home linen, table linen, artisan fashion, accessories, and fabric by yard."
         />
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {categories.map((category) => {
             const fallbackTile = tileBySlug.get(category.slug);
             const image = category.image || fallbackTile?.image || "/Logo.png";
@@ -47,10 +47,10 @@ export async function CategoryGrid() {
               <Link
                 key={category.slug}
                 href={`/shop?category=${category.slug}`}
-                className="group relative min-h-[280px] overflow-hidden rounded-xl bg-stone-100 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-950/10 sm:min-h-[320px] lg:min-h-[360px]"
+                className="group relative min-h-[280px] overflow-hidden rounded-xl bg-stone-100 shadow-sm ring-1 ring-stone-950/5 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-950/10 sm:min-h-[320px] xl:min-h-[300px]"
               >
                 <CategoryCardMedia alt={category.name} src={image} />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#102f3b]/82 via-[#102f3b]/16 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#102f3b]/88 via-[#102f3b]/12 to-transparent transition duration-500 group-hover:from-[#102f3b]/94" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
                   <h3 className="text-lg font-semibold text-white lg:text-xl">
                     {category.name}

@@ -6,11 +6,16 @@ import { SectionHeader } from "@/components/marketing/PublicPage";
 
 export function HeroIntroText() {
   return (
-    <section className="bg-white py-10 text-center lg:py-14">
-      <div className="container-app">
-        <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#276070]">Manufacturer &amp; Exporter From Jaipur, India</p>
-        <h2 className="mt-3 font-display text-2xl font-bold text-stone-950 sm:text-3xl">Hand Block Printed Home Textiles, Fashion &amp; Bags</h2>
-        <p className="mt-3 text-sm font-medium text-stone-600 sm:text-base">Manufacturer | Exporter | Wholesale Supplier | Private Label Partner</p>
+    <section className="relative overflow-hidden border-b border-stone-200/70 bg-white py-11 text-center lg:py-16">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c9902e] to-transparent" />
+      <div className="container-app relative">
+        <div className="mx-auto flex max-w-5xl items-center gap-4">
+          <span className="hidden h-px flex-1 bg-gradient-to-r from-transparent to-[#c9902e]/55 sm:block" />
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#276070] sm:text-sm">Manufacturer &amp; Exporter From Jaipur, India</p>
+          <span className="hidden h-px flex-1 bg-gradient-to-l from-transparent to-[#c9902e]/55 sm:block" />
+        </div>
+        <h2 className="mx-auto mt-4 max-w-4xl font-display text-2xl font-bold leading-tight text-stone-950 sm:text-3xl lg:text-4xl">Hand Block Printed Home Textiles, Fashion &amp; Bags</h2>
+        <p className="mt-4 text-sm font-medium tracking-wide text-stone-600 sm:text-base">Manufacturer <span className="mx-1 text-[#c9902e]">|</span> Exporter <span className="mx-1 text-[#c9902e]">|</span> Wholesale Supplier <span className="mx-1 text-[#c9902e]">|</span> Private Label Partner</p>
       </div>
     </section>
   );
@@ -18,7 +23,8 @@ export function HeroIntroText() {
 
 export function WhyChooseSection() {
   return (
-    <section className="bg-white py-16 lg:py-24">
+    <section className="relative overflow-hidden bg-white py-16 lg:py-24">
+      <div className="pointer-events-none absolute -right-24 top-16 h-72 w-72 rounded-full bg-[#eef4f0] blur-3xl" />
       <div className="container-app">
         <SectionHeader
           align="center"
@@ -30,9 +36,10 @@ export function WhyChooseSection() {
           {WHY_CHOOSE.map((item, index) => (
             <div
               key={item}
-              className="rounded-lg border border-stone-200 bg-[#fbfaf7] p-6 shadow-sm"
+              className="group relative overflow-hidden rounded-xl border border-stone-200 bg-[#fbfaf7] p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#276070]/25 hover:bg-white hover:shadow-xl hover:shadow-stone-950/5"
             >
-              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-[#173f4f] text-white">
+              <div className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-[#c9902e] transition-transform duration-300 group-hover:scale-x-100" />
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-[#173f4f] text-white shadow-md shadow-[#173f4f]/15">
                 <BadgeCheck size={20} />
               </div>
               <h3 className="text-lg font-semibold text-stone-950">{item}</h3>
@@ -98,9 +105,10 @@ const privateLabelItems = ["Custom Labels", "Custom Packaging", "Private Label M
 
 export function PrivateLabelSection() {
   return (
-    <section className="bg-white py-16 lg:py-24">
+    <section className="relative overflow-hidden bg-white py-16 lg:py-24">
+      <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(23,63,79,0.035)_0_1px,transparent_1px_44px)]" />
       <div className="container-app">
-        <div className="mb-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+        <div className="relative mb-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <SectionHeader
             title="Private Label & Custom Branding"
             description="We offer custom labels, custom packaging, and private label manufacturing services for brands, boutiques, retailers, and wholesalers worldwide."
@@ -114,9 +122,9 @@ export function PrivateLabelSection() {
           </Link>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="relative grid gap-4 md:grid-cols-2 lg:grid-cols-5">
           {privateLabelItems.map((item) => (
-            <div key={item} className="flex items-center gap-3 rounded-lg border border-stone-200 bg-[#fbfaf7] p-5">
+            <div key={item} className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#c9902e]/40 hover:shadow-lg">
               <CheckCircle2 className="shrink-0 text-[#276070]" size={22} />
               <h3 className="font-semibold text-stone-950">{item}</h3>
             </div>
@@ -130,12 +138,15 @@ export function PrivateLabelSection() {
 export function BulkOrdersBanner() {
   return (
     <section className="bg-[#eef4f0] py-12 lg:py-16">
-      <div className="container-app rounded-2xl bg-[#173f4f] px-6 py-10 text-center text-white shadow-xl sm:px-10">
+      <div className="container-app relative overflow-hidden rounded-2xl bg-[#173f4f] px-6 py-12 text-center text-white shadow-xl sm:px-10 lg:py-14">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(245,199,107,0.2),transparent_35%),repeating-linear-gradient(135deg,rgba(255,255,255,0.035)_0_1px,transparent_1px_18px)]" />
+        <div className="relative">
         <h2 className="font-display text-3xl font-bold text-white lg:text-4xl">Looking for Wholesale or Bulk Orders?</h2>
         <p className="mx-auto mt-4 max-w-3xl leading-7 text-white/80">We work with boutiques, retailers, interior designers, hotels, wedding planners, and brands worldwide.</p>
         <Link href="/wholesale#inquiry-form" className="mt-7 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-[#173f4f] transition hover:bg-[#f5c76b]">
           Request a Quote <ArrowRight size={16} />
         </Link>
+        </div>
       </div>
     </section>
   );

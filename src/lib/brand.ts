@@ -157,6 +157,7 @@ export const SHOP_CATEGORY_TILES = [
   { name: "Tablecloths", slug: "tablecloths", image: "/uploads/43d65792-c105-4a36-af1d-6c62856f818b.jpg" },
   { name: "Bandanas", slug: "bandanas", image: "/uploads/2cb32606-e0ed-4c52-a7bf-9fdd6c611a46.jpg" },
   { name: "Quilted Tote Bags", slug: "quilted-tote-bags", image: "/uploads/57ae2da7-67bf-45c2-bff8-09c3a59124d8.jpg" },
+  { name: "Tote Bags", slug: "tote-bags", image: "/uploads/57ae2da7-67bf-45c2-bff8-09c3a59124d8.jpg" },
   { name: "Cosmetic Bags", slug: "cosmetic-bags", image: "/uploads/57ae2da7-67bf-45c2-bff8-09c3a59124d8.jpg" },
   { name: "Duffle Bags", slug: "duffle-bags", image: "/uploads/57ae2da7-67bf-45c2-bff8-09c3a59124d8.jpg" },
   { name: "Kaftans", slug: "kaftans", image: "/uploads/81df845a-7e09-4d19-8ec9-d2070af19f80.jpg" },

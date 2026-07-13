@@ -92,9 +92,26 @@
     opacity: 0.26;
   }
 
+  .top-bar-shell {
+    position: relative;
+    background: linear-gradient(110deg, #6f3026 0%, #a25332 28%, #173f4f 62%, #276070 100%);
+    background-size: 220% 100%;
+    animation: top-bar-color-shift 12s ease-in-out infinite alternate;
+  }
+
+  .top-bar-shell::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.16) 48%, transparent 66%);
+    transform: translateX(-120%);
+    animation: top-bar-sheen 7s ease-in-out infinite;
+  }
+
   .top-bar-marquee {
-    animation: top-bar-marquee 28s linear infinite;
-    padding-left: max(1rem, calc((100vw - 80rem) / 2 + 1rem));
+    animation: top-bar-marquee 32s linear infinite;
+    will-change: transform;
   }
 
   .top-bar-marquee:hover {
@@ -142,11 +159,36 @@
   }
 }
 
+@keyframes top-bar-color-shift {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes top-bar-sheen {
+  0%,
+  55% {
+    transform: translateX(-120%);
+  }
+  85%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-rise,
   .animate-soft-float,
   .admin-auth-bg,
   .top-bar-marquee {
+    animation: none;
+  }
+
+  .top-bar-shell,
+  .top-bar-shell::after {
     animation: none;
   }
 }

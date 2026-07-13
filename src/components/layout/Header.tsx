@@ -141,12 +141,21 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-stone-200 bg-white/96 shadow-sm backdrop-blur">
-      <div className="bg-[#173f4f] text-white">
-        <div className="mx-auto flex w-full flex-wrap items-center justify-center gap-x-6 gap-y-1 px-4 py-2 text-center text-xs font-semibold tracking-wide sm:px-6 sm:text-sm xl:px-8">
-          {TOP_BAR_MESSAGES.map((message) => (
-            <span key={message} className="whitespace-nowrap">
-              {message}
-            </span>
+      <div className="top-bar-shell overflow-hidden text-white">
+        <div className="top-bar-marquee flex w-max items-center py-2 text-xs font-semibold tracking-wide sm:py-2.5 sm:text-sm">
+          {[false, true].map((duplicate) => (
+            <div
+              key={String(duplicate)}
+              aria-hidden={duplicate ? true : undefined}
+              className="flex shrink-0 items-center gap-7 px-3 sm:gap-10 sm:px-5 lg:gap-12"
+            >
+              {TOP_BAR_MESSAGES.map((message) => (
+                <span key={message} className="flex items-center gap-7 whitespace-nowrap sm:gap-10 lg:gap-12">
+                  {message}
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#f5c76b] shadow-[0_0_10px_rgba(245,199,107,0.75)]" />
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>
