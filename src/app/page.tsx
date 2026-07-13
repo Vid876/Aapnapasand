@@ -4,12 +4,14 @@ import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { Newsletter } from "@/components/home/Newsletter";
 import {
-  ArtisanStorySection,
+  BulkOrdersBanner,
   CustomerReviewsSection,
+  HeroIntroText,
   InstagramFeedSection,
-  WholesaleProgramSection,
+  PrivateLabelSection,
   WhyChooseSection,
 } from "@/components/home/HomeBrandSections";
+import { ProductionProcess } from "@/components/brand/ProductionProcess";
 
 export const revalidate = 300;
 
@@ -18,23 +20,27 @@ export default function HomePage() {
     <div className="home-page-bg">
       <HeroBanner />
 
+      <HeroIntroText />
+
       <QuickCollectionBlocks />
 
       <CategoryGrid />
 
-      <FeaturedProducts />
-
       <WhyChooseSection />
 
-      <ArtisanStorySection />
+      <ProductionProcess />
 
-      <WholesaleProgramSection />
+      <PrivateLabelSection />
+
+      <FeaturedProducts />
 
       <CustomerReviewsSection />
 
       <InstagramFeedSection />
 
       <Newsletter />
+
+      <BulkOrdersBanner />
     </div>
   );
 }

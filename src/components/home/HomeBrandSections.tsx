@@ -1,17 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, Globe2, Handshake, Instagram, Quote, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, CheckCircle2, Globe2, Instagram, Quote, Sparkles } from "lucide-react";
 import { BRAND, INSTAGRAM_POSTS, PROCESS_STEPS, TESTIMONIALS, WHY_CHOOSE } from "@/lib/brand";
 import { SectionHeader } from "@/components/marketing/PublicPage";
 
-const wholesaleCards = [
-  { title: "MOQ", text: "Minimum order quantity is confirmed by product type, print complexity, and sampling needs." },
-  { title: "Production capacity", text: "Capacity is shared after the product mix, sizes, fabric, and timeline are reviewed." },
-  { title: "Lead time", text: "Lead time is quoted before order confirmation and depends on sampling, printing, stitching, and packing." },
-  { title: "Custom printing", text: "Discuss print direction, colorways, fabric base, and repeat scale before production." },
-  { title: "Private label", text: "Private label, packaging, and buyer documentation can be reviewed for wholesale orders." },
-  { title: "Custom sizes", text: "Custom sizing is handled through measurement specs, approved samples, and written confirmation." },
-] as const;
+export function HeroIntroText() {
+  return (
+    <section className="bg-white py-10 text-center lg:py-14">
+      <div className="container-app">
+        <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#276070]">Manufacturer &amp; Exporter From Jaipur, India</p>
+        <h2 className="mt-3 font-display text-2xl font-bold text-stone-950 sm:text-3xl">Hand Block Printed Home Textiles, Fashion &amp; Bags</h2>
+        <p className="mt-3 text-sm font-medium text-stone-600 sm:text-base">Manufacturer | Exporter | Wholesale Supplier | Private Label Partner</p>
+      </div>
+    </section>
+  );
+}
 
 export function WhyChooseSection() {
   return (
@@ -20,7 +23,7 @@ export function WhyChooseSection() {
         <SectionHeader
           align="center"
           title="Why Choose Bohoblockprinted"
-          description="A permanent trust strip for handmade origin, textile quality, shipping confidence, and custom order readiness."
+          description="Handmade quality, flexible manufacturing, and dependable worldwide service."
         />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -37,9 +40,10 @@ export function WhyChooseSection() {
                 {index === 0 && "Textiles are positioned around Jaipur craft rather than generic fashion."}
                 {index === 1 && "Hand printing gives each piece a human surface and an artisan story."}
                 {index === 2 && "Cotton and linen fabrics support breathable home and wardrobe use."}
-                {index === 3 && "The store now speaks to international buyers as well as Indian customers."}
-                {index === 4 && "Bulk, custom sizing, private label, and fabric requests are routed to inquiry."}
-                {index === 5 && "Reviews, testimonials, and social proof support buyer confidence."}
+                {index === 3 && "Custom sizing is available for suitable products and production requirements."}
+                {index === 4 && "Labels, packaging, and branding can be tailored for business buyers."}
+                {index === 5 && "The store supports international buyers with worldwide shipping."}
+                {index === 6 && "Boutiques, retailers, designers, hotels, and brands are welcome."}
               </p>
             </div>
           ))}
@@ -90,33 +94,48 @@ export function ArtisanStorySection() {
   );
 }
 
-export function WholesaleProgramSection() {
+const privateLabelItems = ["Custom Labels", "Custom Packaging", "Private Label Manufacturing", "Bulk Orders", "Wholesale Supply"] as const;
+
+export function PrivateLabelSection() {
   return (
     <section className="bg-white py-16 lg:py-24">
       <div className="container-app">
         <div className="mb-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <SectionHeader
-            title="Wholesale Program"
-            description="A professional route for boutiques, interior studios, brands, hotels, event buyers, and makers who need custom textile production."
+            title="Private Label & Custom Branding"
+            description="We offer custom labels, custom packaging, and private label manufacturing services for brands, boutiques, retailers, and wholesalers worldwide."
           />
           <Link
             href="/wholesale"
             className="inline-flex w-fit items-center gap-2 rounded-lg border border-[#173f4f] px-5 py-3 text-sm font-semibold text-[#173f4f] transition-colors hover:bg-[#173f4f] hover:text-white"
           >
-            Wholesale Inquiry
+            Discuss Your Requirements
             <ArrowRight size={16} />
           </Link>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {wholesaleCards.map((card) => (
-            <div key={card.title} className="rounded-lg border border-stone-200 bg-[#fbfaf7] p-6">
-              <Handshake className="text-[#276070]" size={22} />
-              <h3 className="mt-4 font-semibold text-stone-950">{card.title}</h3>
-              <p className="mt-2 text-sm leading-7 text-stone-600">{card.text}</p>
+          {privateLabelItems.map((item) => (
+            <div key={item} className="flex items-center gap-3 rounded-lg border border-stone-200 bg-[#fbfaf7] p-5">
+              <CheckCircle2 className="shrink-0 text-[#276070]" size={22} />
+              <h3 className="font-semibold text-stone-950">{item}</h3>
             </div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+export function BulkOrdersBanner() {
+  return (
+    <section className="bg-[#eef4f0] py-12 lg:py-16">
+      <div className="container-app rounded-2xl bg-[#173f4f] px-6 py-10 text-center text-white shadow-xl sm:px-10">
+        <h2 className="font-display text-3xl font-bold text-white lg:text-4xl">Looking for Wholesale or Bulk Orders?</h2>
+        <p className="mx-auto mt-4 max-w-3xl leading-7 text-white/80">We work with boutiques, retailers, interior designers, hotels, wedding planners, and brands worldwide.</p>
+        <Link href="/wholesale#inquiry-form" className="mt-7 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-[#173f4f] transition hover:bg-[#f5c76b]">
+          Request a Quote <ArrowRight size={16} />
+        </Link>
       </div>
     </section>
   );

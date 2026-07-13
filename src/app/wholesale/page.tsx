@@ -1,29 +1,32 @@
 import type { Metadata } from "next";
-import { FileText, Handshake, Mail, PackageCheck, PenLine, Ruler, Shirt, Timer } from "lucide-react";
+import { FileText, Handshake, Mail, PackageCheck, PenLine, Ruler, Shirt, Timer, Truck } from "lucide-react";
 import { PageHero, PUBLIC_IMAGES, PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
 import { BRAND, WHOLESALE_FIELDS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Wholesale",
+  title: "Wholesale & Private Label Services",
   description:
     "Wholesale, custom printing, private label, custom sizing, fabric, and catalog inquiries for BOHOBLOCKPRINTED hand block printed textiles from Jaipur.",
 };
 
 const wholesaleItems = [
-  { icon: PackageCheck, title: "MOQ", text: "Minimum order quantity is confirmed by product type, fabric, print complexity, sampling needs, and packing requirements." },
-  { icon: Shirt, title: "Production capacity", text: "Capacity is shared after the product mix, sizes, fabric bases, finishing details, and target timeline are reviewed." },
-  { icon: Timer, title: "Lead time", text: "Lead time is quoted before order confirmation and depends on sampling, printing, stitching, quality inspection, and packing." },
-  { icon: PenLine, title: "Custom printing", text: "Discuss print direction, colorways, repeat scale, placement prints, fabric base, and sample approval before production." },
-  { icon: FileText, title: "Private label", text: "Private label, packaging, barcodes, buyer documents, and catalog needs can be reviewed for wholesale orders." },
-  { icon: Ruler, title: "Custom sizes", text: "Sizing is handled through measurement specs, approved samples, tolerance notes, and written confirmation." },
+  { icon: Handshake, title: "Wholesale Orders", text: "Flexible wholesale support for boutiques, retailers, hotels, designers, and brands." },
+  { icon: PackageCheck, title: "Bulk Manufacturing", text: "Bulk production planning based on product type, quantity, fabric, and finishing requirements." },
+  { icon: PenLine, title: "Custom Manufacturing", text: "Custom products, prints, colorways, and specifications can be developed for your business." },
+  { icon: FileText, title: "Private Label Services", text: "Private label manufacturing for brands, boutiques, retailers, and wholesalers." },
+  { icon: Shirt, title: "Custom Labeling", text: "Custom brand labels and buyer-specific product identification options." },
+  { icon: PackageCheck, title: "Custom Packaging", text: "Packaging solutions can be planned around your brand and shipping needs." },
+  { icon: Ruler, title: "Custom Sizes", text: "Sizing is handled through measurement specifications, approved samples, and written confirmation." },
+  { icon: Timer, title: "MOQ Information", text: "Minimum order quantity is confirmed by product type, fabric, print complexity, sampling, and packaging needs." },
+  { icon: Truck, title: "Worldwide Shipping", text: "Orders are carefully packed and prepared for shipping to customers and businesses worldwide." },
 ];
 
 export default function WholesalePage() {
   return (
     <>
       <PageHero
-        title="Wholesale hand block printed textiles"
-        description="A professional inquiry path for boutiques, interior studios, hotels, event buyers, brands, makers, and catalog buyers who need Jaipur artisan textile production."
+        title="Wholesale & Private Label Services"
+        description="We offer custom manufacturing, private labeling, custom packaging, and bulk production services for businesses worldwide."
         image={PUBLIC_IMAGES.studio}
         primaryHref="/contact"
         primaryLabel="Start Inquiry"
@@ -35,8 +38,8 @@ export default function WholesalePage() {
         <div className="container-app">
           <SectionHeader
             align="center"
-            title="Wholesale program details"
-            description="The page avoids inventing operational promises until product scope, quantity, and timeline are confirmed."
+            title="Services for Your Business"
+            description="From wholesale supply to custom branding, we help businesses build distinctive textile collections."
           />
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {wholesaleItems.map((item) => (
@@ -50,7 +53,7 @@ export default function WholesalePage() {
         </div>
       </section>
 
-      <section className="bg-[#eef4f0] py-16 lg:py-24">
+      <section id="inquiry-form" className="scroll-mt-24 bg-[#eef4f0] py-16 lg:py-24">
         <div className="container-app grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <SectionHeader
@@ -67,6 +70,16 @@ export default function WholesalePage() {
           </div>
 
           <form className="rounded-xl bg-white p-5 shadow-sm sm:p-8">
+            <label className="mb-4 block text-sm font-medium text-stone-950">
+              Inquiry service
+              <select className="mt-2 w-full rounded-lg border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#276070]">
+                <option>Wholesale Orders</option>
+                <option>Bulk Manufacturing</option>
+                <option>Private Label Services</option>
+                <option>Custom Labeling</option>
+                <option>Custom Packaging</option>
+              </select>
+            </label>
             <div className="grid gap-4 sm:grid-cols-2">
               {WHOLESALE_FIELDS.slice(0, 6).map((field) => (
                 <label key={field} className="block text-sm font-medium text-stone-950">

@@ -17,19 +17,20 @@ const contactCards = [
 
 const inquiryTypes = [
   "Retail order support",
-  "Wholesale inquiry",
-  "Custom printing",
-  "Private label",
-  "Fabric by yard",
-  "Catalog request",
+  "Wholesale Orders",
+  "Private Label",
+  "Custom Manufacturing",
+  "Worldwide Shipping",
 ];
+
+const services = ["Wholesale Orders", "Private Label", "Custom Manufacturing", "Worldwide Shipping"] as const;
 
 export default function ContactPage() {
   return (
     <>
       <PageHero
         title="Contact BOHOBLOCKPRINTED"
-        description="Ask about orders, worldwide shipping, wholesale, custom printing, private label, fabric by yard, or artisan textile details."
+        description="Bohoblockprinted, Jaipur, Rajasthan, India. Ask about wholesale orders, private label, custom manufacturing, or worldwide shipping."
         image={PUBLIC_IMAGES.studio}
         primaryHref="/faq"
         primaryLabel="Read FAQs"
@@ -58,6 +59,12 @@ export default function ContactPage() {
                   )}
                 </div>
               ))}
+            </div>
+            <div className="mt-5 rounded-lg border border-stone-200 bg-white p-5">
+              <h2 className="text-sm font-semibold text-stone-950">Services</h2>
+              <ul className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+                {services.map((service) => <li key={service} className="text-sm text-stone-600">{service}</li>)}
+              </ul>
             </div>
           </div>
 

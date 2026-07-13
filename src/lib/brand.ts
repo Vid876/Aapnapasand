@@ -4,9 +4,10 @@ export const BRAND = {
   subheadline: "Authentic Artisan-Made Textiles from Jaipur, India",
   description:
     "Premium hand block printed home decor, table linen, fashion, accessories, fabric by yard, custom orders, and wholesale textiles made with artisan craft in Jaipur, Rajasthan, India.",
-  email: "support@bohoblockprinted.com",
+  email: "bohoblockprinted@gmail.com",
   phoneDisplay: "+91 89553 79671",
   phoneHref: "tel:+918955379671",
+  whatsappNumber: "918955379671",
   location: "Jaipur, Rajasthan, India",
   url: "https://www.bohoblockprinted.com",
   instagram: "https://www.instagram.com/bohoblockprinted/",
@@ -150,22 +151,27 @@ export const QUICK_LINK_BLOCKS = [
 export const SHOP_CATEGORY_TILES = [
   { name: "Duvet Covers", slug: "duvet-covers", image: "/uploads/0bc7ea6a-63ec-4f94-b172-cedeeb3e05bb.jpg" },
   { name: "Bed Sheets", slug: "bed-sheets", image: "/uploads/30a06f5d-9226-4e4d-8e71-eef29ae601c3.jpg" },
+  { name: "Bedding Sets", slug: "bedding-sets", image: "/uploads/0bc7ea6a-63ec-4f94-b172-cedeeb3e05bb.jpg" },
+  { name: "Curtains", slug: "curtains", image: "/uploads/96806520-4612-4165-8b84-8e03b3b55083.jpg" },
   { name: "Napkins", slug: "napkins", image: "/uploads/35b92bf7-8b77-4d97-aa17-08c098563992.jpg" },
   { name: "Tablecloths", slug: "tablecloths", image: "/uploads/43d65792-c105-4a36-af1d-6c62856f818b.jpg" },
   { name: "Bandanas", slug: "bandanas", image: "/uploads/2cb32606-e0ed-4c52-a7bf-9fdd6c611a46.jpg" },
   { name: "Quilted Tote Bags", slug: "quilted-tote-bags", image: "/uploads/57ae2da7-67bf-45c2-bff8-09c3a59124d8.jpg" },
+  { name: "Cosmetic Bags", slug: "cosmetic-bags", image: "/uploads/57ae2da7-67bf-45c2-bff8-09c3a59124d8.jpg" },
+  { name: "Duffle Bags", slug: "duffle-bags", image: "/uploads/57ae2da7-67bf-45c2-bff8-09c3a59124d8.jpg" },
   { name: "Kaftans", slug: "kaftans", image: "/uploads/81df845a-7e09-4d19-8ec9-d2070af19f80.jpg" },
   { name: "Sarongs", slug: "sarongs", image: "/uploads/805b0cdc-5323-40fd-a383-802163946237.jpg" },
   { name: "Fabric by Yard", slug: "block-print-fabric-by-yard", image: "/uploads/dadf4cf8-da12-4c5c-ba03-991e68a258af.jpg" },
 ] as const;
 
 export const WHY_CHOOSE = [
-  "Handmade in Jaipur",
+  "Handmade by Skilled Artisans",
   "Traditional Hand Block Printing",
-  "Natural Cotton & Linen Fabrics",
+  "Premium Cotton & Linen Fabrics",
+  "Custom Sizes Available",
+  "Private Label & Custom Branding",
   "Worldwide Shipping",
-  "Custom & Wholesale Orders Available",
-  "Trusted by Thousands of Customers",
+  "Wholesale Orders Welcome",
 ] as const;
 
 export const PROCESS_STEPS = [
