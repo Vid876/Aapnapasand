@@ -10,31 +10,40 @@ import type { Product } from "@/types";
 
 interface ProductCardProps {
   product: Product;
+  priority?: boolean;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, priority = false }: ProductCardProps) {
   const { toggle, has } = useWishlistStore();
   const [mounted, setMounted] = useState(false);
   const discount = calculateDiscount(product.price, product.compareAtPrice);
   const isWishlisted = mounted ? has(product._id) : false;
   const alternateImage = product.images[1];
-  const displayBrand =
-    product.brand?.toUpperCase().includes("BOHOBLOCKPRINTED")
-      ? product.brand
-      : "BOHOBLOCKPRINTED";
+  const categoryName =
+    typeof product.category === "string"
+      ? product.subcategory || "Artisan textile"
+      : product.category?.name || product.subcategory || "Artisan textile";
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   return (
-    <div className="group relative rounded-lg transition duration-300 hover:-translate-y-1">
+    <article className="group relative min-w-0 overflow-hidden rounded-[1.15rem] border border-[#d9ddd7] bg-white shadow-[0_8px_28px_rgba(23,63,79,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(23,63,79,0.13)]">
       <Link href={`/product/${product.slug}`} className="block">
-        <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 rounded-lg shadow-sm transition-shadow duration-300 group-hover:shadow-xl group-hover:shadow-brand-950/10">
+        <div className="relative aspect-[4/5] overflow-hidden bg-[#e5ebe5]">
+          <ProductImage
+            src={product.images[0]}
+            alt=""
+            className="scale-110 object-cover opacity-20 blur-2xl"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
+          <div className="absolute inset-0 bg-[#eef0e9]/55" />
           <ProductImage
             src={product.images[0]}
             alt={product.name}
-            className={`object-cover transition duration-700 group-hover:scale-105 ${
+            priority={priority}
+            className={`object-contain p-3 transition duration-700 group-hover:scale-[1.025] ${
               alternateImage ? "group-hover:opacity-0" : ""
             }`}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -43,12 +52,12 @@ export function ProductCard({ product }: ProductCardProps) {
             <ProductImage
               src={alternateImage}
               alt={product.name}
-              className="object-cover opacity-0 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+              className="object-contain p-3 opacity-0 transition duration-700 group-hover:scale-[1.025] group-hover:opacity-100"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
           )}
           {discount > 0 && (
-            <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
+            <span className="absolute left-3 top-3 rounded-md border border-[#e7c882] bg-[#fff7e7]/95 px-2 py-1 text-[11px] font-semibold text-[#8a5708] shadow-sm backdrop-blur-sm">
               {discount}% OFF
             </span>
           )}
@@ -67,7 +76,7 @@ export function ProductCard({ product }: ProductCardProps) {
           e.preventDefault();
           toggle(product._id);
         }}
-        className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm transition duration-300 hover:bg-white hover:scale-105 sm:opacity-0 sm:translate-y-1 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100"
+        className="absolute right-3 top-3 rounded-full border border-white/70 bg-white/90 p-2 shadow-sm backdrop-blur-sm transition duration-300 hover:scale-105 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#173f4f]"
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
       >
         <Heart
@@ -76,10 +85,10 @@ export function ProductCard({ product }: ProductCardProps) {
         />
       </button>
 
-      <div className="mt-3 space-y-1">
-        <p className="text-xs text-gray-500 uppercase tracking-wide">{displayBrand}</p>
+      <div className="min-w-0 space-y-1 px-3.5 py-4 sm:px-4">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6f776f] sm:text-xs">{categoryName}</p>
         <Link href={`/product/${product.slug}`}>
-          <h3 className="text-sm font-medium text-gray-900 line-clamp-1 hover:text-brand-600 transition-colors">
+          <h3 className="line-clamp-2 min-h-10 break-words text-sm font-semibold leading-5 text-[#173f4f] transition-colors hover:text-[#9a620b]">
             {product.name}
           </h3>
         </Link>
@@ -102,6 +111,6 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
       </div>
-    </div>
+    </article>
   );
 }

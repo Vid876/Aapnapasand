@@ -8,6 +8,7 @@
     "start": "node server.js",
     "lint": "next lint",
     "seed": "tsx src/scripts/seed.ts",
+    "import:etsy": "tsx src/scripts/import-beachwearsindian.ts",
     "db:indexes": "tsx src/scripts/create-indexes.ts"
   },
   "dependencies": {

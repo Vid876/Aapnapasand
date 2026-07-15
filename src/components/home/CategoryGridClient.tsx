@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { CategoryCardMedia } from "./CategoryCardMedia";
 import type { Category } from "@/types";
 
@@ -15,7 +15,14 @@ interface CategoryGridClientProps {
   categories: PublicCategory[];
 }
 
-const INITIAL_CATEGORY_COUNT = 6;
+const INITIAL_CATEGORY_COUNT = 8;
+
+function formatCategoryName(name: string) {
+  return name
+    .trim()
+    .toLocaleLowerCase()
+    .replace(/\b[a-z]/g, (letter) => letter.toLocaleUpperCase());
+}
 
 export function CategoryGridClient({ categories }: CategoryGridClientProps) {
   const [showAll, setShowAll] = useState(false);
@@ -24,33 +31,37 @@ export function CategoryGridClient({ categories }: CategoryGridClientProps) {
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {visibleCategories.map((category) => (
           <Link
             key={category.slug}
             href={`/shop?category=${category.slug}`}
-            className="group relative min-h-[280px] overflow-hidden rounded-xl bg-brand-50 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-950/10 sm:min-h-[320px] lg:min-h-[360px]"
+            className="group overflow-hidden rounded-[1.15rem] border border-[#ded8cc] bg-white shadow-[0_8px_30px_rgba(23,63,79,0.05)] transition duration-300 hover:-translate-y-1 hover:border-[#c9902e]/45 hover:shadow-[0_18px_44px_rgba(23,63,79,0.12)]"
           >
-            <CategoryCardMedia alt={category.name} src={category.image} />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-950/78 via-brand-950/10 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-4">
-              <h3 className="text-sm font-semibold text-white lg:text-base">
-                {category.name}
+            <div className="relative aspect-[4/3] overflow-hidden bg-[#e8ece6]">
+              <CategoryCardMedia alt={category.name} src={category.image} />
+            </div>
+            <div className="flex min-h-16 items-center justify-between gap-4 px-5 py-4">
+              <h3 className="font-display text-lg font-semibold leading-tight text-[#173f4f]">
+                {formatCategoryName(category.name)}
               </h3>
-              <p className="mt-1 text-xs text-white/75">Explore styles</p>
+              <ArrowRight
+                size={19}
+                className="shrink-0 text-[#b87811] transition-transform duration-300 group-hover:translate-x-1"
+              />
             </div>
           </Link>
         ))}
       </div>
 
-      <div className="mt-9 flex justify-center">
+      <div className="mt-10 flex justify-start">
         {canExpand ? (
           <button
             type="button"
             onClick={() => setShowAll((current) => !current)}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-brand-900 px-6 py-3 text-sm font-semibold text-brand-900 transition-colors hover:bg-brand-900 hover:text-white"
+            className="group inline-flex min-h-11 items-center justify-center gap-2 border-b border-[#173f4f]/50 pb-1 text-sm font-semibold text-[#173f4f] transition-colors hover:border-[#c9902e] hover:text-[#9a620b]"
           >
-            {showAll ? "Show Less" : "View All"}
+            {showAll ? "Show fewer categories" : "View all categories"}
             <ChevronDown
               size={16}
               className={`transition-transform ${showAll ? "rotate-180" : ""}`}
@@ -58,11 +69,11 @@ export function CategoryGridClient({ categories }: CategoryGridClientProps) {
           </button>
         ) : (
           <Link
-            href="/collections"
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-brand-900 px-6 py-3 text-sm font-semibold text-brand-900 transition-colors hover:bg-brand-900 hover:text-white"
+            href="/shop"
+            className="inline-flex min-h-11 items-center justify-center gap-2 border-b border-[#173f4f]/50 pb-1 text-sm font-semibold text-[#173f4f] transition-colors hover:border-[#c9902e] hover:text-[#9a620b]"
           >
-            View All
-            <ChevronDown size={16} className="-rotate-90" />
+            Shop all products
+            <ArrowRight size={16} />
           </Link>
         )}
       </div>

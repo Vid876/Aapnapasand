@@ -226,16 +226,26 @@ export function InstagramFeedSection() {
               href={post.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-950/10"
+              className="group overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-950/10"
             >
-              <div className="relative aspect-square overflow-hidden bg-stone-100">
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#f4f1eb]">
+                <Image
+                  src={post.image}
+                  alt=""
+                  fill
+                  aria-hidden="true"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="scale-110 object-cover opacity-25 blur-2xl"
+                />
+                <div className="absolute inset-0 bg-white/45" />
                 <Image
                   src={post.image}
                   alt={post.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover transition duration-700 group-hover:scale-105"
+                  className="object-contain p-3 transition duration-500 group-hover:scale-[1.015]"
                 />
+                <div className="pointer-events-none absolute inset-3 rounded-xl border border-white/40" />
               </div>
               <div className="p-5">
                 <h3 className="font-semibold text-stone-950">{post.title}</h3>

@@ -33,8 +33,15 @@ export default function AboutPage() {
               <p>Our journey began with a passion for authentic handmade textiles and a commitment to supporting skilled artisans who have practiced the art of block printing for generations. Every product is thoughtfully crafted using traditional wooden blocks, carefully selected fabrics, and meticulous attention to detail.</p>
             </div>
           </div>
-          <div className="relative min-h-[420px] overflow-hidden rounded-2xl bg-stone-100 shadow-xl lg:min-h-[560px]">
-            <Image src="/About Us.jpeg" alt="Bohoblockprinted artisan textile studio" fill priority sizes="(max-width: 1024px) 100vw, 48vw" className="object-cover" />
+          <div className="relative aspect-[1536/1036] w-full overflow-hidden rounded-2xl bg-stone-100 shadow-xl">
+            <Image
+              src="/About Us.jpeg"
+              alt="Bohoblockprinted artisan textile studio"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 48vw"
+              className="object-cover"
+            />
           </div>
         </div>
       </section>

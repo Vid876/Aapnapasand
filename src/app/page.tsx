@@ -1,5 +1,4 @@
 import { HeroBanner } from "@/components/home/HeroBanner";
-import { QuickCollectionBlocks } from "@/components/home/QuickCollectionBlocks";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { Newsletter } from "@/components/home/Newsletter";
@@ -22,17 +21,15 @@ export default function HomePage() {
 
       <HeroIntroText />
 
-      <QuickCollectionBlocks />
-
       <CategoryGrid />
+
+      <FeaturedProducts />
 
       <WhyChooseSection />
 
       <ProductionProcess />
 
       <PrivateLabelSection />
-
-      <FeaturedProducts />
 
       <CustomerReviewsSection />
 

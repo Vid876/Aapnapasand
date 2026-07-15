@@ -8,11 +8,120 @@ import { SlidersHorizontal, X } from "lucide-react";
 import { SIZES, COLORS } from "@/lib/constants";
 import type { Category, Product } from "@/types";
 
+type ShopFilters = {
+  gender: string;
+  category: string;
+  sort: string;
+  minPrice: string;
+  maxPrice: string;
+  size: string;
+  color: string;
+  search: string;
+  featured: string;
+};
+
+type FilterPanelProps = {
+  categoryOptions: Pick<Category, "name" | "slug">[];
+  filters: ShopFilters;
+  onClear: () => void;
+  onUpdate: (key: keyof ShopFilters, value: string) => void;
+};
+
+function FilterPanel({ categoryOptions, filters, onClear, onUpdate }: FilterPanelProps) {
+  return (
+    <div className="space-y-7">
+      <div>
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#173f4f]">Category</h3>
+        <div className="max-h-64 space-y-2.5 overflow-y-auto pr-2 [scrollbar-color:#a9b4aa_transparent] [scrollbar-width:thin]">
+          {categoryOptions.map((cat) => (
+            <label key={cat.slug} className="flex cursor-pointer items-start gap-2.5 text-sm leading-5 text-stone-700">
+              <input
+                type="radio"
+                name="category"
+                checked={filters.category === cat.slug}
+                onChange={() => onUpdate("category", cat.slug)}
+                className="mt-1 accent-[#173f4f]"
+              />
+              <span className="min-w-0 break-words">{cat.name}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#173f4f]">Size</h3>
+        <div className="flex flex-wrap gap-2">
+          {SIZES.map((size) => (
+            <button
+              type="button"
+              key={size}
+              onClick={() => onUpdate("size", filters.size === size ? "" : size)}
+              className={`rounded-md border px-3 py-1.5 text-xs transition-colors ${
+                filters.size === size
+                  ? "border-[#173f4f] bg-[#173f4f] text-white"
+                  : "border-stone-300 bg-white hover:border-[#b87811]"
+              }`}
+            >
+              {size}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#173f4f]">Color</h3>
+        <div className="flex flex-wrap gap-2.5">
+          {COLORS.map((color) => (
+            <button
+              type="button"
+              key={color.name}
+              onClick={() => onUpdate("color", filters.color === color.name ? "" : color.name)}
+              aria-label={`Filter by ${color.name}`}
+              title={color.name}
+              className={`h-7 w-7 rounded-full border-2 shadow-sm transition-transform ${
+                filters.color === color.name
+                  ? "scale-110 border-[#b87811] ring-2 ring-[#b87811]/20"
+                  : "border-white ring-1 ring-stone-300 hover:scale-105"
+              }`}
+              style={{ backgroundColor: color.hex }}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#173f4f]">Price Range</h3>
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            type="number"
+            placeholder="Min"
+            value={filters.minPrice}
+            onChange={(event) => onUpdate("minPrice", event.target.value)}
+            className="min-w-0 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-[#173f4f] focus:ring-2 focus:ring-[#173f4f]/10"
+          />
+          <input
+            type="number"
+            placeholder="Max"
+            value={filters.maxPrice}
+            onChange={(event) => onUpdate("maxPrice", event.target.value)}
+            className="min-w-0 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-[#173f4f] focus:ring-2 focus:ring-[#173f4f]/10"
+          />
+        </div>
+      </div>
+
+      <Button variant="outline" size="sm" onClick={onClear} className="w-full bg-white">
+        Clear All Filters
+      </Button>
+    </div>
+  );
+}
+
 function ShopContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [categoryOptions, setCategoryOptions] = useState<Pick<Category, "name" | "slug">[]>([]);
@@ -42,8 +151,10 @@ function ShopContent() {
       const data = await res.json();
       setProducts(data.products || []);
       setTotalPages(data.pagination?.pages || 1);
+      setTotalProducts(data.pagination?.total || 0);
     } catch {
       setProducts([]);
+      setTotalProducts(0);
     } finally {
       setLoading(false);
     }
@@ -69,7 +180,7 @@ function ShopContent() {
       .catch(() => undefined);
   }, []);
 
-  const updateFilter = (key: string, value: string) => {
+  const updateFilter = (key: keyof ShopFilters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setCurrentPage(1);
   };
@@ -89,108 +200,27 @@ function ShopContent() {
     setCurrentPage(1);
   };
 
-  const FilterPanel = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="font-semibold text-sm uppercase tracking-wider mb-3">Category</h3>
-        <div className="space-y-2 max-h-48 overflow-y-auto">
-          {categoryOptions.map((cat) => (
-            <label key={cat.slug} className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="category"
-                checked={filters.category === cat.slug}
-                onChange={() => updateFilter("category", cat.slug)}
-                className="accent-brand-600"
-              />
-              <span className="text-sm">{cat.name}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="font-semibold text-sm uppercase tracking-wider mb-3">Size</h3>
-        <div className="flex flex-wrap gap-2">
-          {SIZES.map((size) => (
-            <button
-              key={size}
-              onClick={() => updateFilter("size", filters.size === size ? "" : size)}
-              className={`px-3 py-1.5 text-xs border rounded-md transition-colors ${
-                filters.size === size
-                  ? "bg-brand-900 text-white border-brand-900"
-                  : "border-gray-300 hover:border-brand-600"
-              }`}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="font-semibold text-sm uppercase tracking-wider mb-3">Color</h3>
-        <div className="flex flex-wrap gap-2">
-          {COLORS.map((color) => (
-            <button
-              key={color.name}
-              onClick={() =>
-                updateFilter("color", filters.color === color.name ? "" : color.name)
-              }
-              title={color.name}
-              className={`w-8 h-8 rounded-full border-2 transition-all ${
-                filters.color === color.name
-                  ? "border-brand-600 scale-110"
-                  : "border-gray-200"
-              }`}
-              style={{ backgroundColor: color.hex }}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="font-semibold text-sm uppercase tracking-wider mb-3">Price Range</h3>
-        <div className="flex gap-2">
-          <input
-            type="number"
-            placeholder="Min"
-            value={filters.minPrice}
-            onChange={(e) => updateFilter("minPrice", e.target.value)}
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md"
-          />
-          <input
-            type="number"
-            placeholder="Max"
-            value={filters.maxPrice}
-            onChange={(e) => updateFilter("maxPrice", e.target.value)}
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md"
-          />
-        </div>
-      </div>
-
-      <Button variant="outline" size="sm" onClick={clearFilters} className="w-full">
-        Clear All Filters
-      </Button>
-    </div>
-  );
-
   return (
-    <div className="container-app py-8 lg:py-12">
-      <div className="flex items-center justify-between mb-8">
+    <div className="container-app overflow-x-clip py-8 lg:py-12">
+      <div className="mb-8 flex flex-col gap-5 border-b border-stone-200 pb-7 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900">Shop</h1>
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[#b87811]">Artisan collections</p>
+          <h1 className="font-display text-4xl font-bold text-stone-950 lg:text-5xl">Shop</h1>
           {filters.search && (
             <p className="text-gray-500 mt-1">
               Results for &ldquo;{filters.search}&rdquo;
             </p>
           )}
+          {!loading && !filters.search && (
+            <p className="mt-2 text-sm text-stone-500">{totalProducts} handcrafted products</p>
+          )}
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex w-full items-center gap-3 sm:w-auto">
           <select
             value={filters.sort}
             onChange={(e) => updateFilter("sort", e.target.value)}
-            className="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            aria-label="Sort products"
+            className="min-h-11 min-w-0 flex-1 rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-[#173f4f] focus:ring-2 focus:ring-[#173f4f]/10 sm:min-w-44"
           >
             <option value="newest">Newest</option>
             <option value="price-asc">Price: Low to High</option>
@@ -199,8 +229,9 @@ function ShopContent() {
             <option value="popular">Most Popular</option>
           </select>
           <button
+            type="button"
             onClick={() => setFiltersOpen(!filtersOpen)}
-            className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm"
+            className="flex min-h-11 items-center gap-2 rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm lg:hidden"
           >
             <SlidersHorizontal size={16} />
             Filters
@@ -208,32 +239,32 @@ function ShopContent() {
         </div>
       </div>
 
-      <div className="flex gap-8">
-        <aside className="hidden lg:block w-64 shrink-0">
-          <FilterPanel />
+      <div className="grid min-w-0 gap-7 lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-9">
+        <aside className="hidden min-w-0 self-start rounded-2xl border border-stone-200 bg-[#fbfaf7]/95 p-5 shadow-[0_10px_32px_rgba(23,63,79,0.05)] lg:sticky lg:top-28 lg:block">
+          <FilterPanel categoryOptions={categoryOptions} filters={filters} onClear={clearFilters} onUpdate={updateFilter} />
         </aside>
 
         {filtersOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/50" onClick={() => setFiltersOpen(false)} />
-            <div className="absolute right-0 top-0 bottom-0 w-80 bg-white p-6 overflow-y-auto">
+            <div className="absolute bottom-0 right-0 top-0 w-[min(88vw,22rem)] overflow-y-auto bg-[#fbfaf7] p-6 shadow-2xl">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold">Filters</h2>
-                <button onClick={() => setFiltersOpen(false)}>
+                <button type="button" onClick={() => setFiltersOpen(false)} aria-label="Close filters">
                   <X size={20} />
                 </button>
               </div>
-              <FilterPanel />
+              <FilterPanel categoryOptions={categoryOptions} filters={filters} onClear={clearFilters} onUpdate={updateFilter} />
             </div>
           </div>
         )}
 
-        <div className="flex-1">
+        <div className="min-w-0">
           {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
+            <div className="grid min-w-0 grid-cols-2 gap-4 md:grid-cols-3 lg:gap-6">
               {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="aspect-[3/4] bg-gray-200 rounded-lg" />
+                <div key={i} className="min-w-0 animate-pulse">
+                  <div className="aspect-[4/5] rounded-2xl bg-stone-200" />
                   <div className="mt-3 h-4 bg-gray-200 rounded w-3/4" />
                   <div className="mt-2 h-4 bg-gray-200 rounded w-1/2" />
                 </div>
@@ -248,9 +279,9 @@ function ShopContent() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
-                {products.map((product) => (
-                  <ProductCard key={product._id} product={product} />
+              <div className="grid min-w-0 grid-cols-2 gap-4 md:grid-cols-3 lg:gap-6">
+                {products.map((product, index) => (
+                  <ProductCard key={product._id} product={product} priority={index < 3} />
                 ))}
               </div>
 
@@ -259,6 +290,7 @@ function ShopContent() {
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
                       key={page}
+                      type="button"
                       onClick={() => setCurrentPage(page)}
                       className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
                         currentPage === page

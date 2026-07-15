@@ -8,28 +8,47 @@ type CategoryCardMediaProps = {
   src?: string;
 };
 
-export function CategoryCardMedia({ alt, src }: CategoryCardMediaProps) {
+export function CategoryCardMedia({
+  alt,
+  src,
+}: CategoryCardMediaProps) {
   const [failed, setFailed] = useState(false);
 
   if (!src || failed) {
     return (
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,#f7d8c9_0%,#9f4a34_48%,#2f1912_100%)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.42),transparent_32%),radial-gradient(circle_at_80%_70%,rgba(255,255,255,0.16),transparent_26%)]" />
-        <div className="absolute inset-x-4 top-4 rounded-lg border border-white/25 bg-white/12 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/80">
-          {alt}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#d9e7df] via-[#eef4f0] to-[#c5d6cd]">
+        <div className="absolute inset-0 flex items-center justify-center p-8 text-center">
+          <span className="text-sm font-semibold uppercase tracking-[0.16em] text-[#173f4f]/60">
+            {alt}
+          </span>
         </div>
       </div>
     );
   }
 
   return (
-    <Image
-      src={src}
-      alt={alt}
-      fill
-      className="object-cover transition-transform duration-700 group-hover:scale-105"
-      sizes="(max-width: 768px) 50vw, 20vw"
-      onError={() => setFailed(true)}
-    />
+    <div className="absolute inset-0 overflow-hidden">
+      {/* Blurred background fills empty space */}
+      <Image
+        src={src}
+        alt=""
+        fill
+        aria-hidden="true"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+        className="scale-110 object-cover opacity-25 blur-2xl"
+      />
+
+      <div className="absolute inset-0 bg-[#f1efe8]/50" />
+
+      {/* Full image without cropping */}
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+        className="object-contain p-2 transition-transform duration-500 ease-out group-hover:scale-[1.025]"
+        onError={() => setFailed(true)}
+      />
+    </div>
   );
 }
