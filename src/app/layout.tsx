@@ -35,7 +35,8 @@ export const metadata: Metadata = {
     "wholesale textiles",
   ],
   icons: {
-    icon: [{ url: "/Logo.png", type: "image/png", sizes: "500x500" }],
+    icon: [{ url: "/favicon.png", type: "image/png", sizes: "192x192" }],
+    shortcut: [{ url: "/favicon.png", type: "image/png", sizes: "192x192" }],
     apple: [{ url: "/Logo.png", type: "image/png", sizes: "500x500" }],
   },
   openGraph: {
