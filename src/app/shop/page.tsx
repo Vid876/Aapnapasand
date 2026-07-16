@@ -206,9 +206,12 @@ function ShopContent() {
     setCurrentPage(1);
   };
 
+  const catalogTotal =
+    categoryOptions.reduce((sum, category) => sum + (category.productCount ?? 0), 0) || totalProducts;
+
   return (
     <div className="container-app overflow-x-clip py-8 lg:py-12">
-      <div className="mb-8 flex flex-col gap-5 border-b border-stone-200 pb-7 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mb-5 flex min-w-0 flex-col gap-5 border-b border-stone-200 pb-5 sm:mb-8 sm:flex-row sm:items-end sm:justify-between sm:pb-7">
         <div>
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[#b87811]">Artisan collections</p>
           <h1 className="font-display text-4xl font-bold text-stone-950 lg:text-5xl">Shop</h1>
@@ -221,7 +224,7 @@ function ShopContent() {
             <p className="mt-2 text-sm text-stone-500">{totalProducts} handcrafted products</p>
           )}
         </div>
-        <div className="flex w-full items-center gap-3 sm:w-auto">
+        <div className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:w-auto sm:gap-3">
           <select
             value={filters.sort}
             onChange={(e) => updateFilter("sort", e.target.value)}
@@ -237,13 +240,45 @@ function ShopContent() {
           <button
             type="button"
             onClick={() => setFiltersOpen(!filtersOpen)}
-            className="flex min-h-11 items-center gap-2 rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm lg:hidden"
+            className="flex min-h-11 shrink-0 items-center gap-2 rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm sm:px-4 lg:hidden"
           >
             <SlidersHorizontal size={16} />
-            Filters
+            <span>Filters</span>
           </button>
         </div>
       </div>
+
+      {categoryOptions.length > 0 && (
+        <div className="-mx-4 mb-6 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden">
+          <div className="flex w-max gap-2">
+            <button
+              type="button"
+              onClick={() => updateFilter("category", "")}
+              className={`whitespace-nowrap rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
+                !filters.category
+                  ? "border-[#173f4f] bg-[#173f4f] text-white"
+                  : "border-stone-300 bg-white text-stone-700"
+              }`}
+            >
+              All <span className="ml-1 opacity-70">{catalogTotal}</span>
+            </button>
+            {categoryOptions.map((category) => (
+              <button
+                type="button"
+                key={category.slug}
+                onClick={() => updateFilter("category", category.slug)}
+                className={`whitespace-nowrap rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
+                  filters.category === category.slug
+                    ? "border-[#173f4f] bg-[#173f4f] text-white"
+                    : "border-stone-300 bg-white text-stone-700"
+                }`}
+              >
+                {category.name} <span className="ml-1 opacity-70">{category.productCount ?? 0}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="grid min-w-0 gap-7 lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-9">
         <aside className="hidden min-w-0 self-start rounded-2xl border border-stone-200 bg-[#fbfaf7]/95 p-5 shadow-[0_10px_32px_rgba(23,63,79,0.05)] lg:sticky lg:top-28 lg:block">
@@ -253,7 +288,7 @@ function ShopContent() {
         {filtersOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/50" onClick={() => setFiltersOpen(false)} />
-            <div className="absolute bottom-0 right-0 top-0 w-[min(88vw,22rem)] overflow-y-auto bg-[#fbfaf7] p-6 shadow-2xl">
+            <div className="absolute bottom-0 right-0 top-0 w-[min(86vw,20rem)] overflow-y-auto bg-[#fbfaf7] p-5 shadow-2xl sm:p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold">Filters</h2>
                 <button type="button" onClick={() => setFiltersOpen(false)} aria-label="Close filters">
@@ -267,7 +302,7 @@ function ShopContent() {
 
         <div className="min-w-0">
           {loading ? (
-            <div className="grid min-w-0 grid-cols-2 gap-4 md:grid-cols-3 lg:gap-6">
+            <div className="grid w-full min-w-0 grid-cols-[repeat(2,minmax(0,1fr))] gap-3 sm:gap-4 md:grid-cols-3 lg:gap-6">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="min-w-0 animate-pulse">
                   <div className="aspect-[4/5] rounded-2xl bg-stone-200" />
@@ -285,7 +320,7 @@ function ShopContent() {
             </div>
           ) : (
             <>
-              <div className="grid min-w-0 grid-cols-2 gap-4 md:grid-cols-3 lg:gap-6">
+              <div className="grid w-full min-w-0 grid-cols-[repeat(2,minmax(0,1fr))] gap-3 sm:gap-4 md:grid-cols-3 lg:gap-6">
                 {products.map((product, index) => (
                   <ProductCard key={product._id} product={product} priority={index < 3} />
                 ))}

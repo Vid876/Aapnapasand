@@ -26,7 +26,7 @@ export default function PrivacyPage() {
       <PageHero
         title="Privacy, written simply"
         description="This page explains how BOHOBLOCKPRINTED handles customer information while you browse, shop, pay, and contact support."
-        image={PUBLIC_IMAGES.fabric}
+        image={PUBLIC_IMAGES.privacy}
         primaryHref="/contact"
         primaryLabel="Privacy Question"
         secondaryHref="/terms"

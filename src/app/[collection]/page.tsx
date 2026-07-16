@@ -44,9 +44,10 @@ export default async function CollectionLandingPage({ params }: CollectionPagePr
   return (
     <>
       <PageHero
-        title={`${category.name} by BOHOBLOCKPRINTED`}
+        title={`${category.name} Collection`}
         description={category.description}
         image={category.image}
+        imagePosition={category.imagePosition}
         primaryHref={`/shop?category=${category.subcategories[0]?.slug ?? category.slug}`}
         primaryLabel="Shop Collection"
         secondaryHref="/wholesale"
@@ -120,7 +121,7 @@ export default async function CollectionLandingPage({ params }: CollectionPagePr
 
           <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-white shadow-xl shadow-stone-950/10 lg:aspect-[5/4]">
             <Image
-              src={category.image}
+              src={category.secondaryImage}
               alt={`${category.name} hand block printed textile collection`}
               fill
               sizes="(max-width: 1024px) 100vw, 48vw"

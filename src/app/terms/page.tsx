@@ -26,7 +26,7 @@ export default function TermsPage() {
       <PageHero
         title="Terms of service"
         description="The practical terms for browsing, ordering, paying, returning, and using BOHOBLOCKPRINTED services."
-        image={PUBLIC_IMAGES.wardrobe}
+        image={PUBLIC_IMAGES.terms}
         primaryHref="/shop"
         primaryLabel="Back to Shop"
         secondaryHref="/privacy"

@@ -28,7 +28,7 @@ export default function ShippingPage() {
       <PageHero
         title="Worldwide shipping for artisan textiles"
         description="BOHOBLOCKPRINTED ships hand block printed textiles with careful packing, clear order communication, and international customs expectations set before dispatch."
-        image={PUBLIC_IMAGES.delivery}
+        image={PUBLIC_IMAGES.shippingCare}
         primaryHref="/shop"
         primaryLabel="Shop Collection"
         secondaryHref="/contact"

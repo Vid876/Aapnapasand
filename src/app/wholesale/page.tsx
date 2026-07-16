@@ -27,7 +27,7 @@ export default function WholesalePage() {
       <PageHero
         title="Wholesale & Private Label Services"
         description="We offer custom manufacturing, private labeling, custom packaging, and bulk production services for businesses worldwide."
-        image={PUBLIC_IMAGES.studio}
+        image={PUBLIC_IMAGES.wholesale}
         primaryHref="/contact"
         primaryLabel="Start Inquiry"
         secondaryHref="/fabric"

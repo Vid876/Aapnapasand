@@ -58,7 +58,7 @@ export default function FAQPage() {
       <PageHero
         title="Questions, answered clearly"
         description="Find quick help for worldwide shipping, customs, returns, textile care, wholesale, custom orders, sizing, payments, and shopping with BOHOBLOCKPRINTED."
-        image={PUBLIC_IMAGES.delivery}
+        image={PUBLIC_IMAGES.customerCare}
         primaryHref="/contact"
         primaryLabel="Contact Support"
         secondaryHref="/wholesale"

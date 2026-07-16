@@ -15,7 +15,8 @@ export default function SalePage() {
       <PageHero
         title="Textile offers worth keeping"
         description="Find hand block printed home linen, table linen, fashion, accessories, and fabric at sharper prices. Use code WELCOME10 for an additional welcome offer."
-        image={PUBLIC_IMAGES.fabric}
+        image={PUBLIC_IMAGES.saleEdit}
+        imagePosition="center top"
         primaryHref="/shop?sort=price-asc"
         primaryLabel="Shop Sale"
         secondaryHref="/shipping"

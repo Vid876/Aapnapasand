@@ -16,7 +16,8 @@ export default function OurStoryPage() {
       <PageHero
         title="Our Story"
         description={`${BRAND.name} is positioned around Jaipur hand block printed textiles, natural cotton and linen fabrics, worldwide shipping, custom orders, and wholesale production conversations.`}
-        image={PUBLIC_IMAGES.boutique}
+        image={PUBLIC_IMAGES.artisanStory}
+        imageFit="contain"
         primaryHref="/process"
         primaryLabel="See the Process"
         secondaryHref="/shop"
@@ -26,7 +27,7 @@ export default function OurStoryPage() {
       <InfoBand
         title="A clearer identity for a textile brand"
         text="The site now keeps the useful customer-support structure while shifting the public story from broad fashion to a focused artisan textile identity."
-        image={PUBLIC_IMAGES.hero}
+        image={PUBLIC_IMAGES.collectionEdit}
         bullets={[
           "Hand block printed home decor, fashion, and accessories",
           "A Jaipur, Rajasthan, India origin story",

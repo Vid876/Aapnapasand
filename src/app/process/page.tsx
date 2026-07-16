@@ -16,7 +16,7 @@ export default function ProcessPage() {
       <PageHero
         title="Hand block printing process"
         description="A clear look at the Jaipur textile workflow behind the finished home linen, table linen, fashion, accessories, fabric, custom orders, and wholesale pieces."
-        image={PUBLIC_IMAGES.fabric}
+        image={PUBLIC_IMAGES.printProcess}
         primaryHref="/shop"
         primaryLabel="Shop Textiles"
         secondaryHref="/our-story"

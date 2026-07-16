@@ -31,7 +31,7 @@ export default function ContactPage() {
       <PageHero
         title="Contact BOHOBLOCKPRINTED"
         description="Bohoblockprinted, Jaipur, Rajasthan, India. Ask about wholesale orders, private label, custom manufacturing, or worldwide shipping."
-        image={PUBLIC_IMAGES.studio}
+        image={PUBLIC_IMAGES.customerCare}
         primaryHref="/faq"
         primaryLabel="Read FAQs"
         secondaryHref="/wholesale"

@@ -4,9 +4,9 @@ import { ArrowRight, Clock3, Sparkles } from "lucide-react";
 import { PageHero, PUBLIC_IMAGES, PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
 
 const arrivals = [
-  { title: "Fresh home linen", href: "/shop?category=duvet-covers&sort=newest", image: PUBLIC_IMAGES.fabric },
-  { title: "New table textiles", href: "/shop?category=napkins&sort=newest", image: PUBLIC_IMAGES.tableLinen },
-  { title: "Artisan fashion", href: "/shop?category=kaftans&sort=newest", image: PUBLIC_IMAGES.wardrobe },
+  { title: "Fresh home linen", href: "/shop?category=duvet-covers&sort=newest", image: "/uploads/302aaa5c-c270-4c91-bf78-20eb8fa1c274.jpg" },
+  { title: "New table textiles", href: "/shop?category=napkins&sort=newest", image: "/uploads/8a2d2b14-6042-43c2-88fc-6127c6d3d3eb.jpg" },
+  { title: "Artisan fashion", href: "/shop?category=kaftans&sort=newest", image: "/uploads/30ef945d-0d6b-4c19-8ad0-888cb12d149e.jpg" },
 ];
 
 export default function NewArrivalsPage() {
@@ -15,7 +15,8 @@ export default function NewArrivalsPage() {
       <PageHero
         title="New block print arrivals"
         description="The latest BOHOBLOCKPRINTED edits bring fresh Jaipur hand block printed home linen, table textiles, artisan fashion, accessories, and fabric by yard."
-        image={PUBLIC_IMAGES.studio}
+        image={PUBLIC_IMAGES.latestEdit}
+        imagePosition="center top"
         primaryHref="/shop?sort=newest"
         primaryLabel="Shop Latest"
         secondaryHref="/wholesale"

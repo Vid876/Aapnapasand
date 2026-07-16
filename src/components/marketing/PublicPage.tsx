@@ -13,6 +13,19 @@ export const PUBLIC_IMAGES = {
   studio: "/Banner.png",
   delivery: "/festive-luxury-banner.png",
   wardrobe: "/uploads/81df845a-7e09-4d19-8ec9-d2070af19f80.jpg",
+  collectionEdit: "/uploads/0bc7ea6a-63ec-4f94-b172-cedeeb3e05bb.jpg",
+  customerCare: "/uploads/fe5baa5d-7097-490c-8285-aa999c83a438.jpg",
+  latestEdit: "/uploads/c2f8595c-a6c3-4af0-902c-6745cf9d2572.jpg",
+  artisanStory: "/About Us.jpeg",
+  printProcess: "/uploads/c2be09e5-5152-45d4-b944-7b08c05b5fe7.jpg",
+  returnsCare: "/uploads/178300f0-6701-4689-b622-58ec74d604e9.jpg",
+  saleEdit: "/uploads/823a002a-109f-4faa-8d05-3df30b32ee00.jpg",
+  shippingCare: "/uploads/etsy-4535112365.jpg",
+  sizeGuide: "/uploads/30ef945d-0d6b-4c19-8ad0-888cb12d149e.jpg",
+  wholesale: "/uploads/etsy-4535112365.jpg",
+  journal: "/uploads/da4dc09d-b211-4a8d-93fc-61ccb18e0256.jpg",
+  privacy: "/uploads/fac084e7-92de-419b-8a15-df732dd4ead4.webp",
+  terms: "/uploads/bb78ff61-4bde-45a4-a08d-ec130891e0aa.jpg",
 } as const;
 
 type PageHeroProps = {
@@ -23,6 +36,8 @@ type PageHeroProps = {
   primaryLabel?: string;
   secondaryHref?: string;
   secondaryLabel?: string;
+  imagePosition?: string;
+  imageFit?: "cover" | "contain";
   children?: ReactNode;
 };
 
@@ -34,13 +49,15 @@ export function PageHero({
   primaryLabel,
   secondaryHref,
   secondaryLabel,
+  imagePosition = "center",
+  imageFit = "cover",
   children,
 }: PageHeroProps) {
   return (
     <section className="bg-white">
       <div className="container-app grid gap-10 py-12 lg:grid-cols-[0.94fr_1.06fr] lg:items-center lg:py-20">
-        <div className="max-w-2xl">
-          <h1 className="text-4xl font-display font-bold leading-[1.05] text-brand-950 sm:text-5xl lg:text-6xl">
+        <div className="min-w-0 max-w-2xl">
+          <h1 className="break-words text-4xl font-display font-bold leading-[1.05] text-brand-950 [overflow-wrap:anywhere] sm:text-5xl lg:text-6xl">
             {title}
           </h1>
           <p className="mt-5 max-w-xl text-base leading-8 text-gray-600 lg:text-lg">
@@ -77,7 +94,8 @@ export function PageHero({
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 52vw"
-            className="object-cover"
+            className={imageFit === "contain" ? "object-contain" : "object-cover"}
+            style={{ objectPosition: imagePosition }}
           />
           <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-brand-950/45 to-transparent" />
         </div>
@@ -136,14 +154,31 @@ type InfoBandProps = {
   image: string;
   reverse?: boolean;
   bullets?: string[];
+  imagePosition?: string;
+  imageFit?: "cover" | "contain";
 };
 
-export function InfoBand({ title, text, image, reverse, bullets = [] }: InfoBandProps) {
+export function InfoBand({
+  title,
+  text,
+  image,
+  reverse,
+  bullets = [],
+  imagePosition = "center",
+  imageFit = "cover",
+}: InfoBandProps) {
   return (
     <section className="py-14 lg:py-20">
       <div className="container-app grid gap-10 lg:grid-cols-2 lg:items-center">
         <div className={`relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-brand-50 lg:aspect-[5/4] ${reverse ? "lg:order-2" : ""}`}>
-          <Image src={image} alt={title} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+          <Image
+            src={image}
+            alt={title}
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className={imageFit === "contain" ? "object-contain" : "object-cover"}
+            style={{ objectPosition: imagePosition }}
+          />
         </div>
         <div className="max-w-xl">
           <h2 className="text-3xl font-display font-bold leading-tight text-brand-950 lg:text-5xl">{title}</h2>

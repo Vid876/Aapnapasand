@@ -22,7 +22,7 @@ export default function ReturnsPage() {
       <PageHero
         title="Return policy for handmade textiles"
         description="Eligible BOHOBLOCKPRINTED orders can be reviewed through a clear support process, with special handling for custom, made-to-order, and wholesale pieces."
-        image={PUBLIC_IMAGES.studio}
+        image={PUBLIC_IMAGES.returnsCare}
         primaryHref="/contact"
         primaryLabel="Start a Request"
         secondaryHref="/faq"

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
-import { CTASection, PageHero, PUBLIC_IMAGES } from "@/components/marketing/PublicPage";
+import { CTASection, PageHero } from "@/components/marketing/PublicPage";
 import { BLOG_POSTS } from "@/lib/brand";
 
 type BlogPostPageProps = {
@@ -45,7 +45,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <PageHero
         title={post.title}
         description={post.description}
-        image={PUBLIC_IMAGES.fabric}
+        image={post.image}
         primaryHref="/shop"
         primaryLabel="Shop Related"
         secondaryHref="/blog"

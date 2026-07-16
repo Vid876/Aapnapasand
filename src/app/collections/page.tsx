@@ -13,7 +13,8 @@ export default async function CollectionsPage() {
       <PageHero
         title="Textile collections with a clear path"
         description="Browse BOHOBLOCKPRINTED categories for home linen, table linen, fashion, accessories, fabric by yard, custom orders, and wholesale buying."
-        image={PUBLIC_IMAGES.hero}
+        image={PUBLIC_IMAGES.collectionEdit}
+        imagePosition="center"
         primaryHref="/shop"
         primaryLabel="Shop All"
         secondaryHref="/wholesale"

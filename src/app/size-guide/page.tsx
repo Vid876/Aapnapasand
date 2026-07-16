@@ -22,7 +22,8 @@ export default function SizeGuidePage() {
       <PageHero
         title="Size guide for textile products"
         description="Use this guide for quick sizing confidence across kaftans, sarongs, beach cover-ups, bedding, table linen, accessories, and fabric yardage."
-        image={PUBLIC_IMAGES.wardrobe}
+        image={PUBLIC_IMAGES.sizeGuide}
+        imagePosition="center top"
         primaryHref="/shop"
         primaryLabel="Shop Now"
         secondaryHref="/contact"
