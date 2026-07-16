@@ -43,6 +43,7 @@ export interface Category {
   image?: string;
   gender: "men" | "women" | "kids" | "unisex";
   isActive: boolean;
+  productCount?: number;
 }
 
 export interface CartItem {

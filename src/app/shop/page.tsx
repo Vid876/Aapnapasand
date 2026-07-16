@@ -21,7 +21,7 @@ type ShopFilters = {
 };
 
 type FilterPanelProps = {
-  categoryOptions: Pick<Category, "name" | "slug">[];
+  categoryOptions: Pick<Category, "name" | "slug" | "productCount">[];
   filters: ShopFilters;
   onClear: () => void;
   onUpdate: (key: keyof ShopFilters, value: string) => void;
@@ -42,7 +42,12 @@ function FilterPanel({ categoryOptions, filters, onClear, onUpdate }: FilterPane
                 onChange={() => onUpdate("category", cat.slug)}
                 className="mt-1 accent-[#173f4f]"
               />
-              <span className="min-w-0 break-words">{cat.name}</span>
+              <span className="flex min-w-0 flex-1 items-start justify-between gap-2">
+                <span className="break-words">{cat.name}</span>
+                <span className="shrink-0 rounded-full bg-stone-100 px-2 py-0.5 text-xs tabular-nums text-stone-500">
+                  {cat.productCount ?? 0}
+                </span>
+              </span>
             </label>
           ))}
         </div>
@@ -124,7 +129,7 @@ function ShopContent() {
   const [totalProducts, setTotalProducts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [categoryOptions, setCategoryOptions] = useState<Pick<Category, "name" | "slug">[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<Pick<Category, "name" | "slug" | "productCount">[]>([]);
 
   const [filters, setFilters] = useState({
     gender: searchParams.get("gender") || "",
@@ -173,6 +178,7 @@ function ShopContent() {
             data.categories.map((category: Category) => ({
               name: category.name,
               slug: category.slug,
+              productCount: category.productCount ?? 0,
             }))
           );
         }

@@ -6,20 +6,34 @@ import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import type { Category as CategoryType } from "@/types";
 
-type PublicCategory = Pick<CategoryType, "_id" | "name" | "slug" | "description" | "image" | "gender" | "isActive">;
+type PublicCategory = Pick<CategoryType, "_id" | "name" | "slug" | "description" | "image" | "gender" | "isActive"> & {
+  productCount: number;
+};
 
 async function fetchPublicCategories(): Promise<PublicCategory[]> {
   try {
     await connectDB();
     await ensureDefaultCategories();
 
-    const categories = await Category.find({
-      isActive: true,
-    })
-      .sort({ name: 1 })
-      .lean();
+    const [categories, productCounts] = await Promise.all([
+      Category.find({ isActive: true }).sort({ name: 1 }).lean(),
+      Product.aggregate<{ _id: unknown; count: number }>([
+        { $match: { isActive: true } },
+        { $group: { _id: "$category", count: { $sum: 1 } } },
+      ]),
+    ]);
+    const countsByCategory = new Map(productCounts.map(({ _id, count }) => [String(_id), count]));
+    const categoriesWithCounts = categories
+      .map((category) => ({
+        ...category,
+        productCount: countsByCategory.get(String(category._id)) ?? 0,
+      }))
+      .sort((a, b) => {
+        const emptyCategoryOrder = Number(a.productCount === 0) - Number(b.productCount === 0);
+        return emptyCategoryOrder || a.name.localeCompare(b.name);
+      });
 
-    return JSON.parse(JSON.stringify(categories)) as PublicCategory[];
+    return JSON.parse(JSON.stringify(categoriesWithCounts)) as PublicCategory[];
   } catch {
     return [];
   }
