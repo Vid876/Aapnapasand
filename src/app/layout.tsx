@@ -15,6 +15,49 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
 });
 
+const PRIMARY_IMAGE_URL = `${BRAND.url}/image.png`;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${BRAND.url}/#organization`,
+      name: BRAND.name,
+      url: BRAND.url,
+      logo: `${BRAND.url}/Logo.png`,
+      image: { "@id": `${BRAND.url}/#primaryimage` },
+      email: BRAND.email,
+      sameAs: [BRAND.instagram, BRAND.pinterest, BRAND.etsy],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${BRAND.url}/#website`,
+      url: BRAND.url,
+      name: BRAND.name,
+      publisher: { "@id": `${BRAND.url}/#organization` },
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${BRAND.url}/#webpage`,
+      url: BRAND.url,
+      name: "BOHOBLOCKPRINTED | Hand Block Printed Textiles from Jaipur",
+      isPartOf: { "@id": `${BRAND.url}/#website` },
+      primaryImageOfPage: { "@id": `${BRAND.url}/#primaryimage` },
+      image: { "@id": `${BRAND.url}/#primaryimage` },
+    },
+    {
+      "@type": "ImageObject",
+      "@id": `${BRAND.url}/#primaryimage`,
+      url: PRIMARY_IMAGE_URL,
+      contentUrl: PRIMARY_IMAGE_URL,
+      width: 1254,
+      height: 1254,
+      caption: `${BRAND.name} premium hand block printed textiles`,
+      representativeOfPage: true,
+    },
+  ],
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.url),
   alternates: {
@@ -71,23 +114,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: BRAND.name,
-    url: BRAND.url,
-    logo: `${BRAND.url}/Logo.png`,
-    image: `${BRAND.url}/image.png`,
-    email: BRAND.email,
-    sameAs: [BRAND.instagram, BRAND.pinterest, BRAND.etsy],
-  };
-
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <head>
+        <link rel="image_src" href={PRIMARY_IMAGE_URL} />
+      </head>
       <body className="min-h-screen flex flex-col">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema).replace(/</g, "\\u003c") }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
         />
         <Providers>
           <SiteChrome>{children}</SiteChrome>
