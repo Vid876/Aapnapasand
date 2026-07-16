@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
 import { connectDB } from "@/lib/db";
 import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
-import { BLOG_POSTS, CATEGORY_GROUPS } from "@/lib/brand";
+import { BLOG_POSTS, BRAND, CATEGORY_GROUPS } from "@/lib/brand";
 import { Product } from "@/models/Product";
 
-const BASE_URL = process.env.NEXTAUTH_URL || "http://localhost:3000";
+const BASE_URL = BRAND.url;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [

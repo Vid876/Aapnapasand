@@ -17,6 +17,9 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.url),
+  alternates: {
+    canonical: BRAND.url,
+  },
   title: {
     default: "BOHOBLOCKPRINTED | Hand Block Printed Textiles from Jaipur",
     template: "%s | BOHOBLOCKPRINTED",
@@ -48,6 +51,17 @@ export const metadata: Metadata = {
     title: "BOHOBLOCKPRINTED | Hand Block Printed Textiles from Jaipur",
     description: BRAND.description,
     images: ["/image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
 };
 
