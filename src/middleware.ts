@@ -4,6 +4,12 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const host = request.headers.get("host")?.toLowerCase().split(":")[0];
 
+  if (request.nextUrl.pathname === "/_next/static/css/86c2f2a3ff93beaa.css") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/compat.css";
+    return NextResponse.rewrite(url);
+  }
+
   if (host === "bohoblockprinted.com") {
     const url = request.nextUrl.clone();
     url.protocol = "https";
@@ -16,5 +22,8 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/_next/static/css/86c2f2a3ff93beaa.css",
+    "/((?!_next/static|_next/image|favicon.ico).*)",
+  ],
 };
