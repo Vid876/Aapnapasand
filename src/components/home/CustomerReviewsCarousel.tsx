@@ -52,10 +52,8 @@ export function CustomerReviewsCarousel() {
           </div>
         </div>
       </article>
-      <div className="mt-5 flex items-center justify-center gap-1.5" aria-label="Customer review slides">
-        {CUSTOMER_REVIEWS.map((item, index) => (
-          <button key={`${item.customer}-${item.date}-${index}`} type="button" onClick={() => setActiveIndex(index)} aria-label={`Show review ${index + 1}`} aria-current={index === activeIndex} className={`h-1.5 rounded-full transition-all ${index === activeIndex ? "w-7 bg-[#f5c76b]" : "w-1.5 bg-white/35"}`} />
-        ))}
+      <div className="mt-5 h-1 overflow-hidden rounded-full bg-white/20" role="progressbar" aria-label="Customer review carousel progress" aria-valuemin={1} aria-valuemax={CUSTOMER_REVIEWS.length} aria-valuenow={activeIndex + 1}>
+        <div className="h-full rounded-full bg-[#f5c76b] transition-[width] duration-300" style={{ width: `${((activeIndex + 1) / CUSTOMER_REVIEWS.length) * 100}%` }} />
       </div>
       <p className="mt-3 text-center text-xs text-white/55">Review {activeIndex + 1} of {CUSTOMER_REVIEWS.length}</p>
     </div>
