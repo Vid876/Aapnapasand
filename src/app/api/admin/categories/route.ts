@@ -7,6 +7,7 @@ import { connectDB } from "@/lib/db";
 import { isValidStoredImage } from "@/lib/image-utils";
 import { slugify } from "@/lib/utils";
 import { Category } from "@/models/Category";
+import { MERGED_CATEGORY_SLUGS } from "@/lib/category-aliases";
 
 const categorySchema = z.object({
   name: z.string().min(2, "Category name is required"),
@@ -24,7 +25,7 @@ export async function GET() {
     await connectDB();
     await ensureDefaultCategories();
 
-    const categories = await Category.find().sort({ name: 1 }).lean();
+    const categories = await Category.find({ slug: { $nin: MERGED_CATEGORY_SLUGS } }).sort({ name: 1 }).lean();
     return NextResponse.json({ categories });
   } catch (error) {
     console.error("Admin categories fetch error:", error);

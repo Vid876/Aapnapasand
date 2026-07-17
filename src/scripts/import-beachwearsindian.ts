@@ -7,6 +7,7 @@ import { connectDB } from "../lib/db";
 import { Category } from "../models/Category";
 import { Product } from "../models/Product";
 import { slugify } from "../lib/utils";
+import { getCanonicalCategorySlug } from "../lib/category-aliases";
 
 type Gender = "men" | "women" | "kids" | "unisex";
 
@@ -295,9 +296,11 @@ async function run() {
   const categoryIds = new Map<string, mongoose.Types.ObjectId>();
   let createdCategories = 0;
 
-  for (const categorySlug of [...new Set(validDownloads.map((x) => x.entry.category))]) {
+  for (const categorySlug of [
+    ...new Set(validDownloads.map((x) => getCanonicalCategorySlug(x.entry.category))),
+  ]) {
     const firstProduct = validDownloads.find(
-      (item) => item.entry.category === categorySlug
+      (item) => getCanonicalCategorySlug(item.entry.category) === categorySlug
     );
     if (!firstProduct) continue;
 
@@ -342,12 +345,13 @@ async function run() {
         entry.sourceId +
         "-" +
         slugify(name).slice(0, 80);
-      const variants = buildVariants(entry.category, entry.sourceId);
+      const categorySlug = getCanonicalCategorySlug(entry.category);
+      const variants = buildVariants(categorySlug, entry.sourceId);
       const totalStock = variants.reduce(
         (sum, variant) => sum + variant.stock,
         0
       );
-      const categoryId = categoryIds.get(entry.category);
+      const categoryId = categoryIds.get(categorySlug);
 
       if (!categoryId) {
         throw new Error("Missing category for " + entry.sourceId);
@@ -369,7 +373,7 @@ async function run() {
             $setOnInsert: {
               slug,
               shortDescription:
-                CATEGORY_META[entry.category]?.description ||
+                CATEGORY_META[categorySlug]?.description ||
                 "Handcrafted Indian textile product.",
               price: entry.price,
               compareAtPrice:

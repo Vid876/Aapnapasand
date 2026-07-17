@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { publicJson } from "@/lib/api-response";
+import { noStoreJson } from "@/lib/api-response";
 import { connectDB } from "@/lib/db";
 import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
@@ -38,7 +38,7 @@ export async function GET(
       .limit(4)
       .lean();
 
-    return publicJson({ product, reviews, relatedProducts }, 120);
+    return noStoreJson({ product, reviews, relatedProducts });
   } catch (error) {
     console.error("Product fetch error:", error);
     return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });

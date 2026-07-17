@@ -152,7 +152,7 @@ function ShopContent() {
     params.set("page", currentPage.toString());
 
     try {
-      const res = await fetch(`/api/products?${params}`);
+      const res = await fetch(`/api/products?${params}`, { cache: "no-store" });
       const data = await res.json();
       setProducts(data.products || []);
       setTotalPages(data.pagination?.pages || 1);
@@ -170,7 +170,7 @@ function ShopContent() {
   }, [fetchProducts]);
 
   useEffect(() => {
-    fetch("/api/categories")
+    fetch(`/api/categories?v=${Date.now()}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data.categories) && data.categories.length > 0) {

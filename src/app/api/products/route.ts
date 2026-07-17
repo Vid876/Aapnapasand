@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/db";
 import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
 import { Category } from "@/models/Category";
+import { CATEGORY_ALIASES, getCanonicalCategorySlug } from "@/lib/category-aliases";
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,8 +32,19 @@ export async function GET(request: NextRequest) {
       if (/^[0-9a-fA-F]{24}$/.test(category)) {
         filter.category = category;
       } else {
-        const matchedCategory = await Category.findOne({ slug: category }).select("_id").lean();
-        filter.category = matchedCategory?._id || category;
+        const canonicalSlug = getCanonicalCategorySlug(category);
+        const sourceSlugs = Object.entries(CATEGORY_ALIASES)
+          .filter(([, target]) => target === canonicalSlug)
+          .map(([source]) => source);
+        const matchedCategories = await Category.find({
+          slug: { $in: [canonicalSlug, ...sourceSlugs] },
+          isActive: true,
+        })
+          .select("_id")
+          .lean();
+        filter.category = matchedCategories.length
+          ? { $in: matchedCategories.map((item) => item._id) }
+          : category;
       }
     }
     if (gender) filter.gender = gender;
@@ -83,7 +95,7 @@ export async function GET(request: NextRequest) {
         total,
         pages: Math.ceil(total / limit),
       },
-    }, search ? 30 : 60);
+    }, search ? 10 : 10);
   } catch (error) {
     console.error("Products fetch error:", error);
     return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });

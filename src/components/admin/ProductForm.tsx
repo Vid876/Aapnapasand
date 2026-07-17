@@ -10,6 +10,7 @@ import { ImageUpload } from "@/components/admin/ImageUpload";
 import { calculateDiscount, formatPrice } from "@/lib/utils";
 import { isValidStoredImage } from "@/lib/image-utils";
 import type { Category, CurrencyCode, ProductVariant } from "@/types";
+import { MERGED_CATEGORY_SLUGS } from "@/lib/category-aliases";
 
 type ProductVariantForm = Omit<ProductVariant, "stock" | "price"> & {
   stock: string;
@@ -149,7 +150,13 @@ export function ProductForm({
   useEffect(() => {
     fetch("/api/admin/categories")
       .then((res) => res.json())
-      .then((data) => setCategories((data.categories || []).filter((category: Category) => category.isActive)));
+      .then((data) =>
+        setCategories(
+          (data.categories || []).filter(
+            (category: Category) => category.isActive && !MERGED_CATEGORY_SLUGS.includes(category.slug as never)
+          )
+        )
+      );
   }, []);
 
   const watchImages = watch("images");

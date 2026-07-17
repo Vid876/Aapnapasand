@@ -204,7 +204,7 @@ export const PROCESS_STEPS = [
   {
     title: "Washing",
     text: "Printed fabric is washed and finished according to the fabric and dye process so the textile is ready for use.",
-    image: "/uploads/35b92bf7-8b77-4d97-aa17-08c098563992.jpg",
+    image: "/uploads/8a2d2b14-6042-43c2-88fc-6127c6d3d3eb.jpg",
   },
   {
     title: "Stitching",
@@ -244,19 +244,19 @@ export const INSTAGRAM_POSTS = [
     title: "Table textiles",
     text: "Printed napkins, runners, and tablecloths for layered dining.",
     href: BRAND.instagram,
-    image: "/uploads/35b92bf7-8b77-4d97-aa17-08c098563992.jpg",
+    image: "/uploads/8a2d2b14-6042-43c2-88fc-6127c6d3d3eb.jpg",
   },
   {
     title: "Quilted bags",
     text: "Soft accessories with artisan pattern and travel utility.",
     href: BRAND.instagram,
-    image: "/uploads/57ae2da7-67bf-45c2-bff8-09c3a59124d8.jpg",
+    image: "/uploads/bb78ff61-4bde-45a4-a08d-ec130891e0aa.jpg",
   },
   {
     title: "Wholesale updates",
     text: "Fresh catalog drops and bulk-order highlights.",
     href: BRAND.instagram,
-    image: "/uploads/20a9b9e3-862f-4acb-858c-6a7ec0bdf93a.png",
+    image: "/uploads/etsy-4535112365.jpg",
   },
 ] as const;
 
