@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CTASection, PageHero, PUBLIC_IMAGES, SectionHeader } from "@/components/marketing/PublicPage";
 import { getPublicCategories } from "@/lib/category-data";
+import { getRenderableImageSrc } from "@/lib/image-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,7 @@ export default async function CollectionsPage() {
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-brand-100">
                   <Image
-                    src={category.image!}
+                    src={getRenderableImageSrc(category.image)!}
                     alt={category.name}
                     fill
                     sizes="(max-width: 768px) 50vw, 16vw"

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, CheckCircle2, Globe2, Instagram, Quote, Sparkles } from "lucide-react";
 import { BRAND, INSTAGRAM_POSTS, PROCESS_STEPS, TESTIMONIALS, WHY_CHOOSE } from "@/lib/brand";
+import { getRenderableImageSrc } from "@/lib/image-utils";
 import { SectionHeader } from "@/components/marketing/PublicPage";
 
 export function HeroIntroText() {
@@ -230,7 +231,7 @@ export function InstagramFeedSection() {
             >
               <div className="relative aspect-[4/5] overflow-hidden bg-[#f4f1eb]">
                 <Image
-                  src={post.image}
+                  src={getRenderableImageSrc(post.image)!}
                   alt=""
                   fill
                   aria-hidden="true"
@@ -240,7 +241,7 @@ export function InstagramFeedSection() {
                 />
                 <div className="absolute inset-0 bg-white/45" />
                 <Image
-                  src={post.image}
+                  src={getRenderableImageSrc(post.image)!}
                   alt={post.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"

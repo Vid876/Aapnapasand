@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { getRenderableImageSrc } from "@/lib/image-utils";
 
 type CategoryCardMediaProps = {
   alt: string;
@@ -26,16 +27,18 @@ export function CategoryCardMedia({
     );
   }
 
+  const renderSrc = getRenderableImageSrc(src)!;
+
   return (
     <div className="absolute inset-0 overflow-hidden">
       {/* Blurred background fills empty space */}
       <Image
-        src={src}
+        src={renderSrc}
         alt=""
         fill
         aria-hidden="true"
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-        unoptimized={src.startsWith("/uploads/")}
+        unoptimized={renderSrc?.startsWith("/media/")}
         className="scale-110 object-cover opacity-25 blur-2xl"
       />
 
@@ -43,11 +46,11 @@ export function CategoryCardMedia({
 
       {/* Full image without cropping */}
       <Image
-        src={src}
+        src={renderSrc}
         alt={alt}
         fill
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-        unoptimized={src.startsWith("/uploads/")}
+        unoptimized={renderSrc?.startsWith("/media/")}
         className="object-contain p-2 transition-transform duration-500 ease-out group-hover:scale-[1.025]"
         onError={() => setFailed(true)}
       />

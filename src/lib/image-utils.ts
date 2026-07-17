@@ -34,3 +34,8 @@ export function isNextImageCompatible(value?: string): value is string {
     return false;
   }
 }
+
+export function getRenderableImageSrc(value?: string): string | undefined {
+  if (!value) return undefined;
+  return value.startsWith("/uploads/") ? `/media/${value.slice("/uploads/".length)}` : value;
+}
