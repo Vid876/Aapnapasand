@@ -51,7 +51,7 @@ async function fetchPublicCategories(): Promise<PublicCategory[]> {
   }
 }
 
-export const getPublicCategories = unstable_cache(fetchPublicCategories, ["public-categories-v2"], {
+export const getPublicCategories = unstable_cache(fetchPublicCategories, ["public-categories-v3"], {
   revalidate: 300,
   tags: ["categories"],
 });
@@ -84,7 +84,7 @@ async function fetchHomepageCategories(): Promise<PublicCategory[]> {
 
 export const getHomepageCategories = unstable_cache(
   fetchHomepageCategories,
-  ["homepage-categories-with-products-v2"],
+  ["homepage-categories-with-products-v3"],
   {
     revalidate: 300,
     tags: ["categories", "products"],

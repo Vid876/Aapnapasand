@@ -38,7 +38,7 @@ export function CategoryCardMedia({
         fill
         aria-hidden="true"
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-        unoptimized={renderSrc?.startsWith("/media/")}
+        unoptimized={renderSrc?.startsWith("/uploads/") || renderSrc?.startsWith("/media/")}
         className="scale-110 object-cover opacity-25 blur-2xl"
       />
 
@@ -50,7 +50,7 @@ export function CategoryCardMedia({
         alt={alt}
         fill
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-        unoptimized={renderSrc?.startsWith("/media/")}
+        unoptimized={renderSrc?.startsWith("/uploads/") || renderSrc?.startsWith("/media/")}
         className="object-contain p-2 transition-transform duration-500 ease-out group-hover:scale-[1.025]"
         onError={() => setFailed(true)}
       />

@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, CheckCircle2, Globe2, Instagram, Quote, Sparkles } from "lucide-react";
-import { BRAND, INSTAGRAM_POSTS, PROCESS_STEPS, TESTIMONIALS, WHY_CHOOSE } from "@/lib/brand";
+import { ArrowRight, BadgeCheck, CheckCircle2, Globe2, Instagram, Sparkles } from "lucide-react";
+import { BRAND, INSTAGRAM_POSTS, PROCESS_STEPS, WHY_CHOOSE } from "@/lib/brand";
 import { getRenderableImageSrc } from "@/lib/image-utils";
 import { SectionHeader } from "@/components/marketing/PublicPage";
+import { CustomerReviewsCarousel } from "./CustomerReviewsCarousel";
 
 export function HeroIntroText() {
   return (
@@ -166,20 +167,7 @@ export function CustomerReviewsSection() {
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
-          {TESTIMONIALS.map((review) => (
-            <figure key={review.name} className="rounded-lg bg-white/10 p-6 ring-1 ring-white/12">
-              <Quote className="text-[#f5c76b]" size={24} />
-              <blockquote className="mt-5 text-sm leading-7 text-white/86">
-                &ldquo;{review.quote}&rdquo;
-              </blockquote>
-              <figcaption className="mt-6">
-                <p className="font-semibold text-white">{review.name}</p>
-                <p className="text-xs uppercase tracking-[0.14em] text-white/55">{review.location}</p>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+        <CustomerReviewsCarousel />
 
         <div className="mt-8 grid gap-4 rounded-lg bg-white p-5 text-stone-800 md:grid-cols-3">
           <div className="flex gap-3">

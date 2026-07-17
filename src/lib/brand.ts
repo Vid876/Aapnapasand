@@ -218,27 +218,6 @@ export const PROCESS_STEPS = [
   },
 ] as const;
 
-export const TESTIMONIALS = [
-  {
-    name: "Boutique Buyer",
-    location: "California, USA",
-    quote:
-      "The prints feel handmade and elevated. Our customers respond to the story, the cotton, and the color combinations.",
-  },
-  {
-    name: "Home Linen Customer",
-    location: "Mumbai, India",
-    quote:
-      "The bedding changed the whole room. It has the charm of craft without feeling too delicate for daily use.",
-  },
-  {
-    name: "Wholesale Partner",
-    location: "Australia",
-    quote:
-      "Sampling and custom sizing were easy to discuss, and the textile range gave us enough variety for a cohesive edit.",
-  },
-] as const;
-
 export const INSTAGRAM_POSTS = [
   {
     title: "Table textiles",
