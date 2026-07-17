@@ -46,7 +46,10 @@ export async function GET(
     const upstreamUrl = new URL(`/uploads/${filename}`, "https://www.bohoblockprinted.com");
     const upstream = await fetch(upstreamUrl, {
       headers: {
-        Accept: "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        // Hostinger's static layer incorrectly 404s this large PNG when the
+        // browser advertises AVIF. Requesting the stored format explicitly
+        // keeps the upstream response stable for every browser.
+        Accept: "image/png,image/jpeg,image/webp,*/*;q=0.8",
         "User-Agent": DESKTOP_USER_AGENT,
       },
       cache: "no-store",
