@@ -33,6 +33,7 @@ export function ProductImage({ src, alt, className, sizes, priority }: ProductIm
       className={className}
       sizes={sizes}
       priority={priority}
+      unoptimized={src.startsWith("/uploads/")}
       onError={() => setFailed(true)}
     />
   );

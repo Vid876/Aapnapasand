@@ -235,6 +235,7 @@ export function InstagramFeedSection() {
                   fill
                   aria-hidden="true"
                   sizes="(max-width: 768px) 100vw, 33vw"
+                  unoptimized={post.image.startsWith("/uploads/")}
                   className="scale-110 object-cover opacity-25 blur-2xl"
                 />
                 <div className="absolute inset-0 bg-white/45" />
@@ -243,6 +244,7 @@ export function InstagramFeedSection() {
                   alt={post.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
+                  unoptimized={post.image.startsWith("/uploads/")}
                   className="object-contain p-3 transition duration-500 group-hover:scale-[1.015]"
                 />
                 <div className="pointer-events-none absolute inset-3 rounded-xl border border-white/40" />
