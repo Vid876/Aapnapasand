@@ -1,7 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, CheckCircle2, Globe2, Instagram, Sparkles } from "lucide-react";
-import { BRAND, INSTAGRAM_POSTS, PROCESS_STEPS, WHY_CHOOSE } from "@/lib/brand";
+import {
+  ArrowRight,
+  BadgeCheck,
+  CheckCircle2,
+  Globe2,
+  Instagram,
+  Sparkles,
+} from "lucide-react";
+import {
+  BRAND,
+  INSTAGRAM_POSTS,
+  PROCESS_STEPS,
+  WHY_CHOOSE,
+} from "@/lib/brand";
 import { getRenderableImageSrc } from "@/lib/image-utils";
 import { SectionHeader } from "@/components/marketing/PublicPage";
 import { CustomerReviewsCarousel } from "./CustomerReviewsCarousel";
@@ -10,14 +22,31 @@ export function HeroIntroText() {
   return (
     <section className="relative overflow-hidden border-b border-stone-200/70 bg-white py-11 text-center lg:py-16">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c9902e] to-transparent" />
+
       <div className="container-app relative">
         <div className="mx-auto flex max-w-5xl items-center gap-4">
           <span className="hidden h-px flex-1 bg-gradient-to-r from-transparent to-[#c9902e]/55 sm:block" />
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#276070] sm:text-sm">Manufacturer &amp; Exporter From Jaipur, India</p>
+
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#276070] sm:text-sm">
+            Manufacturer &amp; Exporter From Jaipur, India
+          </p>
+
           <span className="hidden h-px flex-1 bg-gradient-to-l from-transparent to-[#c9902e]/55 sm:block" />
         </div>
-        <h2 className="mx-auto mt-4 max-w-4xl font-display text-2xl font-bold leading-tight text-stone-950 sm:text-3xl lg:text-4xl">Hand Block Printed Home Textiles, Fashion &amp; Bags</h2>
-        <p className="mt-4 text-sm font-medium tracking-wide text-stone-600 sm:text-base">Manufacturer <span className="mx-1 text-[#c9902e]">|</span> Exporter <span className="mx-1 text-[#c9902e]">|</span> Wholesale Supplier <span className="mx-1 text-[#c9902e]">|</span> Private Label Partner</p>
+
+        <h2 className="mx-auto mt-4 max-w-4xl font-display text-2xl font-bold leading-tight text-stone-950 sm:text-3xl lg:text-4xl">
+          Hand Block Printed Home Textiles, Fashion &amp; Bags
+        </h2>
+
+        <p className="mt-4 text-sm font-medium tracking-wide text-stone-600 sm:text-base">
+          Manufacturer
+          <span className="mx-1 text-[#c9902e]">|</span>
+          Exporter
+          <span className="mx-1 text-[#c9902e]">|</span>
+          Wholesale Supplier
+          <span className="mx-1 text-[#c9902e]">|</span>
+          Private Label Partner
+        </p>
       </div>
     </section>
   );
@@ -27,6 +56,7 @@ export function WhyChooseSection() {
   return (
     <section className="relative overflow-hidden bg-white py-16 lg:py-24">
       <div className="pointer-events-none absolute -right-24 top-16 h-72 w-72 rounded-full bg-[#eef4f0] blur-3xl" />
+
       <div className="container-app">
         <SectionHeader
           align="center"
@@ -41,18 +71,36 @@ export function WhyChooseSection() {
               className="group relative overflow-hidden rounded-xl border border-stone-200 bg-[#fbfaf7] p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#276070]/25 hover:bg-white hover:shadow-xl hover:shadow-stone-950/5"
             >
               <div className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-[#c9902e] transition-transform duration-300 group-hover:scale-x-100" />
+
               <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-[#173f4f] text-white shadow-md shadow-[#173f4f]/15">
                 <BadgeCheck size={20} />
               </div>
-              <h3 className="text-lg font-semibold text-stone-950">{item}</h3>
+
+              <h3 className="text-lg font-semibold text-stone-950">
+                {item}
+              </h3>
+
               <p className="mt-2 text-sm leading-7 text-stone-600">
-                {index === 0 && "Textiles are positioned around Jaipur craft rather than generic fashion."}
-                {index === 1 && "Hand printing gives each piece a human surface and an artisan story."}
-                {index === 2 && "Cotton and linen fabrics support breathable home and wardrobe use."}
-                {index === 3 && "Custom sizing is available for suitable products and production requirements."}
-                {index === 4 && "Labels, packaging, and branding can be tailored for business buyers."}
-                {index === 5 && "The store supports international buyers with worldwide shipping."}
-                {index === 6 && "Boutiques, retailers, designers, hotels, and brands are welcome."}
+                {index === 0 &&
+                  "Textiles are positioned around Jaipur craft rather than generic fashion."}
+
+                {index === 1 &&
+                  "Hand printing gives each piece a human surface and an artisan story."}
+
+                {index === 2 &&
+                  "Cotton and linen fabrics support breathable home and wardrobe use."}
+
+                {index === 3 &&
+                  "Custom sizing is available for suitable products and production requirements."}
+
+                {index === 4 &&
+                  "Labels, packaging, and branding can be tailored for business buyers."}
+
+                {index === 5 &&
+                  "The store supports international buyers with worldwide shipping."}
+
+                {index === 6 &&
+                  "Boutiques, retailers, designers, hotels, and brands are welcome."}
               </p>
             </div>
           ))}
@@ -75,21 +123,38 @@ export function ArtisanStorySection() {
             className="object-cover"
           />
         </div>
+
         <div className="max-w-2xl">
           <h2 className="font-display text-3xl font-bold leading-tight text-stone-950 lg:text-5xl">
             Artisan Story
           </h2>
+
           <p className="mt-5 text-base leading-8 text-stone-700">
-            {BRAND.name} is now framed around the place and process that make the brand specific: Jaipur hand block printed textiles. The story connects carved blocks, prepared fabric, hand printing, washing, stitching, and inspection to the finished home linen, table linen, fashion, accessories, and fabric by yard.
+            {BRAND.name} is now framed around the place and process
+            that make the brand specific: Jaipur hand block printed
+            textiles. The story connects carved blocks, prepared
+            fabric, hand printing, washing, stitching, and inspection
+            to the finished home linen, table linen, fashion,
+            accessories, and fabric by yard.
           </p>
+
           <div className="mt-8 grid gap-3 sm:grid-cols-3">
             {PROCESS_STEPS.slice(0, 3).map((step) => (
-              <div key={step.title} className="rounded-lg bg-white p-4 shadow-sm">
-                <p className="text-sm font-semibold text-stone-950">{step.title}</p>
-                <p className="mt-2 text-xs leading-5 text-stone-600">{step.text}</p>
+              <div
+                key={step.title}
+                className="rounded-lg bg-white p-4 shadow-sm"
+              >
+                <p className="text-sm font-semibold text-stone-950">
+                  {step.title}
+                </p>
+
+                <p className="mt-2 text-xs leading-5 text-stone-600">
+                  {step.text}
+                </p>
               </div>
             ))}
           </div>
+
           <Link
             href="/process"
             className="mt-8 inline-flex items-center gap-2 rounded-lg bg-[#173f4f] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#245d70]"
@@ -103,18 +168,26 @@ export function ArtisanStorySection() {
   );
 }
 
-const privateLabelItems = ["Custom Labels", "Custom Packaging", "Private Label Manufacturing", "Bulk Orders", "Wholesale Supply"] as const;
+const privateLabelItems = [
+  "Custom Labels",
+  "Custom Packaging",
+  "Private Label Manufacturing",
+  "Bulk Orders",
+  "Wholesale Supply",
+] as const;
 
 export function PrivateLabelSection() {
   return (
     <section className="relative overflow-hidden bg-white py-16 lg:py-24">
       <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(23,63,79,0.035)_0_1px,transparent_1px_44px)]" />
+
       <div className="container-app">
         <div className="relative mb-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <SectionHeader
             title="Private Label & Custom Branding"
             description="We offer custom labels, custom packaging, and private label manufacturing services for brands, boutiques, retailers, and wholesalers worldwide."
           />
+
           <Link
             href="/wholesale"
             className="inline-flex w-fit items-center gap-2 rounded-lg border border-[#173f4f] px-5 py-3 text-sm font-semibold text-[#173f4f] transition-colors hover:bg-[#173f4f] hover:text-white"
@@ -126,9 +199,18 @@ export function PrivateLabelSection() {
 
         <div className="relative grid gap-4 md:grid-cols-2 lg:grid-cols-5">
           {privateLabelItems.map((item) => (
-            <div key={item} className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#c9902e]/40 hover:shadow-lg">
-              <CheckCircle2 className="shrink-0 text-[#276070]" size={22} />
-              <h3 className="font-semibold text-stone-950">{item}</h3>
+            <div
+              key={item}
+              className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#c9902e]/40 hover:shadow-lg"
+            >
+              <CheckCircle2
+                className="shrink-0 text-[#276070]"
+                size={22}
+              />
+
+              <h3 className="font-semibold text-stone-950">
+                {item}
+              </h3>
             </div>
           ))}
         </div>
@@ -142,12 +224,24 @@ export function BulkOrdersBanner() {
     <section className="bg-[#eef4f0] py-12 lg:py-16">
       <div className="container-app relative overflow-hidden rounded-2xl bg-[#173f4f] px-6 py-12 text-center text-white shadow-xl sm:px-10 lg:py-14">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(245,199,107,0.2),transparent_35%),repeating-linear-gradient(135deg,rgba(255,255,255,0.035)_0_1px,transparent_1px_18px)]" />
+
         <div className="relative">
-        <h2 className="font-display text-3xl font-bold text-white lg:text-4xl">Looking for Wholesale or Bulk Orders?</h2>
-        <p className="mx-auto mt-4 max-w-3xl leading-7 text-white/80">We work with boutiques, retailers, interior designers, hotels, wedding planners, and brands worldwide.</p>
-        <Link href="/wholesale#inquiry-form" className="mt-7 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-[#173f4f] transition hover:bg-[#f5c76b]">
-          Request a Quote <ArrowRight size={16} />
-        </Link>
+          <h2 className="font-display text-3xl font-bold text-white lg:text-4xl">
+            Looking for Wholesale or Bulk Orders?
+          </h2>
+
+          <p className="mx-auto mt-4 max-w-3xl leading-7 text-white/80">
+            We work with boutiques, retailers, interior designers,
+            hotels, wedding planners, and brands worldwide.
+          </p>
+
+          <Link
+            href="/wholesale#inquiry-form"
+            className="mt-7 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-[#173f4f] transition hover:bg-[#f5c76b]"
+          >
+            Request a Quote
+            <ArrowRight size={16} />
+          </Link>
         </div>
       </div>
     </section>
@@ -162,8 +256,10 @@ export function CustomerReviewsSection() {
           <h2 className="font-display text-3xl font-bold leading-tight text-white lg:text-4xl">
             Customer Reviews
           </h2>
+
           <p className="mt-3 text-sm leading-7 text-white/72 lg:text-base">
-            Social proof for finished products, wholesale buyers, and handmade textile confidence.
+            Social proof for finished products, wholesale buyers, and
+            handmade textile confidence.
           </p>
         </div>
 
@@ -171,16 +267,39 @@ export function CustomerReviewsSection() {
 
         <div className="mt-8 grid gap-4 rounded-lg bg-white p-5 text-stone-800 md:grid-cols-3">
           <div className="flex gap-3">
-            <Sparkles className="shrink-0 text-[#9f2f2f]" size={20} />
-            <p className="text-sm leading-6">Product reviews stay visible on product pages for conversion and trust.</p>
+            <Sparkles
+              className="shrink-0 text-[#9f2f2f]"
+              size={20}
+            />
+
+            <p className="text-sm leading-6">
+              Product reviews stay visible on product pages for
+              conversion and trust.
+            </p>
           </div>
+
           <div className="flex gap-3">
-            <Globe2 className="shrink-0 text-[#276070]" size={20} />
-            <p className="text-sm leading-6">Etsy review highlights can be added when verified review assets are available.</p>
+            <Globe2
+              className="shrink-0 text-[#276070]"
+              size={20}
+            />
+
+            <p className="text-sm leading-6">
+              Etsy review highlights can be added when verified
+              review assets are available.
+            </p>
           </div>
+
           <div className="flex gap-3">
-            <Instagram className="shrink-0 text-[#c9902e]" size={20} />
-            <p className="text-sm leading-6">Buyer photos can be pulled into the social story once approved for reuse.</p>
+            <Instagram
+              className="shrink-0 text-[#c9902e]"
+              size={20}
+            />
+
+            <p className="text-sm leading-6">
+              Buyer photos can be pulled into the social story once
+              approved for reuse.
+            </p>
           </div>
         </div>
       </div>
@@ -197,6 +316,7 @@ export function InstagramFeedSection() {
             title="Instagram Feed"
             description="Active social content reinforces table textiles, tote bags, wholesale messaging, and the handmade brand world."
           />
+
           <a
             href={BRAND.instagram}
             target="_blank"
@@ -208,42 +328,60 @@ export function InstagramFeedSection() {
           </a>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-3">
-          {INSTAGRAM_POSTS.map((post) => (
-            <a
-              key={post.title}
-              href={post.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-950/10"
-            >
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#f4f1eb]">
-                <Image
-                  src={getRenderableImageSrc(post.image)!}
-                  alt=""
-                  fill
-                  aria-hidden="true"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  unoptimized={post.image.startsWith("/uploads/")}
-                  className="scale-110 object-cover opacity-25 blur-2xl"
-                />
-                <div className="absolute inset-0 bg-white/45" />
-                <Image
-                  src={getRenderableImageSrc(post.image)!}
-                  alt={post.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  unoptimized={post.image.startsWith("/uploads/")}
-                  className="object-contain p-3 transition duration-500 group-hover:scale-[1.015]"
-                />
-                <div className="pointer-events-none absolute inset-3 rounded-xl border border-white/40" />
-              </div>
-              <div className="p-5">
-                <h3 className="font-semibold text-stone-950">{post.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-stone-600">{post.text}</p>
-              </div>
-            </a>
-          ))}
+        <div className="grid items-stretch gap-5 md:grid-cols-3">
+          {INSTAGRAM_POSTS.map((post) => {
+            const imageSrc = getRenderableImageSrc(post.image);
+
+            return (
+              <a
+                key={post.title}
+                href={post.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[#ded8cc] bg-white shadow-[0_8px_25px_rgba(23,63,79,0.07)] transition duration-300 hover:-translate-y-1 hover:border-[#c9902e]/60 hover:shadow-[0_18px_45px_rgba(23,63,79,0.15)]"
+              >
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#e8ece6]">
+                  {imageSrc ? (
+                    <Image
+                      src={imageSrc}
+                      alt={post.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      unoptimized={
+                        imageSrc.startsWith("/uploads/") ||
+                        imageSrc.startsWith("/media/")
+                      }
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#d9e7df] via-[#eef4f0] to-[#c5d6cd] p-5 text-center">
+                      <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#173f4f]/65">
+                        {post.title}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#102f3b]/35 via-transparent to-transparent" />
+
+                  <div className="pointer-events-none absolute inset-3 rounded-xl border border-white/45" />
+
+                  <span className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-[#b87811] shadow-md backdrop-blur-sm transition-transform duration-300 group-hover:scale-105">
+                    <Instagram size={18} />
+                  </span>
+                </div>
+
+                <div className="flex flex-1 flex-col p-5">
+                  <h3 className="font-display text-xl font-semibold text-[#173f4f]">
+                    {post.title}
+                  </h3>
+
+                  <p className="mt-2 text-sm leading-6 text-stone-600">
+                    {post.text}
+                  </p>
+                </div>
+              </a>
+            );
+          })}
         </div>
       </div>
     </section>
