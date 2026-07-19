@@ -21,6 +21,13 @@ import {
 } from "lucide-react";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ProductImage } from "@/components/products/ProductImage";
+import {
+  getChoicePrice,
+  getChoicePriceRange,
+  getConciseProductDescription,
+  getProductPurchaseOptions,
+  type PurchaseChoice,
+} from "@/lib/product-purchase-options";
 import { formatPrice, calculateDiscount } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
@@ -33,8 +40,46 @@ import type {
 
 type DisplayReview = ProductSourceReview & {
   key: string;
-  source: "Etsy" | "Bohoblockprinted";
+  source: "Etsy" | "Etsy shop" | "Bohoblockprinted";
+  productName?: string;
+  productSlug?: string;
 };
+
+type ShopReview = ProductSourceReview & {
+  productName: string;
+  productSlug: string;
+};
+
+function getChoiceLabel(
+  choice: PurchaseChoice,
+  otherChoices: PurchaseChoice[],
+  basePrice: number,
+  currency: Product["currency"]
+) {
+  const range = getChoicePriceRange(basePrice, choice, otherChoices);
+  const detail = choice.detail ? ` — ${choice.detail}` : "";
+  const price =
+    range.min === range.max
+      ? formatPrice(range.min, currency)
+      : `${formatPrice(range.min, currency)} – ${formatPrice(range.max, currency)}`;
+
+  return `${choice.name}${detail} (${price})`;
+}
+
+function splitDescription(value: string, previewLength = 1500) {
+  if (value.length <= previewLength) return [value, ""] as const;
+
+  const boundary = Math.max(
+    value.lastIndexOf("\n", previewLength),
+    value.lastIndexOf(" ", previewLength)
+  );
+  const safeBoundary = boundary > previewLength * 0.7 ? boundary : previewLength;
+
+  return [
+    value.slice(0, safeBoundary).trim(),
+    value.slice(safeBoundary).trim(),
+  ] as const;
+}
 
 function RatingStars({ rating, size = 15 }: { rating: number; size?: number }) {
   return (
@@ -90,6 +135,14 @@ function ReviewCard({ review }: { review: DisplayReview }) {
       <p className="mt-3 text-sm leading-7 text-stone-700">
         {review.comment}
       </p>
+      {review.productName && review.productSlug ? (
+        <Link
+          href={`/product/${review.productSlug}`}
+          className="mt-3 inline-flex text-xs font-semibold text-[#173f4f] hover:underline"
+        >
+          Review for {review.productName}
+        </Link>
+      ) : null}
     </article>
   );
 }
@@ -115,6 +168,7 @@ export default function ProductDetailPage() {
   const slug = params.slug as string;
   const [product, setProduct] = useState<Product | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [shopReviews, setShopReviews] = useState<ShopReview[]>([]);
   const [related, setRelated] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -139,16 +193,13 @@ export default function ProductDetailPage() {
 
         if (!cancelled && data.product) {
           const fetchedProduct = data.product as Product;
-          const variants = fetchedProduct.variants || [];
-          const sizes = [...new Set(variants.map((variant) => variant.size))];
-          const colors = [...new Set(variants.map((variant) => variant.color))];
-
           setProduct(fetchedProduct);
           setReviews(data.reviews || []);
+          setShopReviews(data.shopReviews || []);
           setRelated(data.relatedProducts || []);
           setSelectedImage(0);
-          setSelectedSize(sizes[0] || "");
-          setSelectedColor(colors[0] || "");
+          setSelectedSize("");
+          setSelectedColor("");
         }
       } catch (error) {
         console.error("Product detail fetch failed:", error);
@@ -181,20 +232,31 @@ export default function ProductDetailPage() {
     );
   }
 
-  const variants = product.variants || [];
-  const sizes = [...new Set(variants.map((variant) => variant.size))];
-  const colors = [...new Set(variants.map((variant) => variant.color))];
-  const selectedVariant = variants.find(
-    (variant) =>
-      variant.size === selectedSize && variant.color === selectedColor
+  const purchaseOptions = getProductPurchaseOptions(product);
+  const sizes = purchaseOptions.sizes;
+  const fabrics = purchaseOptions.fabrics;
+  const selectedSizeChoice = sizes.find(
+    (choice) => choice.value === selectedSize
   );
-  const inStock = selectedVariant
-    ? selectedVariant.stock > 0
-    : product.totalStock > 0;
-  const displayPrice = selectedVariant?.price || product.price;
+  const selectedFabricChoice = fabrics.find(
+    (choice) => choice.value === selectedColor
+  );
+  const inStock = product.totalStock > 0;
+  const displayPrice = getChoicePrice(
+    product.price,
+    selectedSizeChoice,
+    selectedFabricChoice
+  );
+  const displayCompareAtPrice = product.compareAtPrice
+    ? getChoicePrice(
+        product.compareAtPrice,
+        selectedSizeChoice,
+        selectedFabricChoice
+      )
+    : undefined;
   const discount = calculateDiscount(
     displayPrice,
-    product.compareAtPrice
+    displayCompareAtPrice
   );
   const categoryName =
     typeof product.category === "string"
@@ -218,7 +280,14 @@ export default function ProductDetailPage() {
     key: `local-${review._id}`,
     source: "Bohoblockprinted",
   }));
-  const displayReviews = [...sourceReviews, ...localReviews];
+  const itemReviews = [...sourceReviews, ...localReviews];
+  const fallbackReviews: DisplayReview[] = shopReviews.map((review) => ({
+    ...review,
+    key: `shop-${review.sourceReviewId}`,
+    source: "Etsy shop",
+  }));
+  const showingShopReviews = itemReviews.length === 0 && fallbackReviews.length > 0;
+  const displayReviews = showingShopReviews ? fallbackReviews : itemReviews;
   const visibleRating =
     product.rating > 0
       ? product.rating
@@ -226,7 +295,13 @@ export default function ProductDetailPage() {
         ? displayReviews.reduce((sum, review) => sum + review.rating, 0) /
           displayReviews.length
         : 0;
-  const visibleReviewCount = product.reviewCount || displayReviews.length;
+  const visibleReviewCount = showingShopReviews
+    ? displayReviews.length
+    : product.reviewCount || displayReviews.length;
+  const conciseDescription = getConciseProductDescription(product);
+  const [descriptionPreview, descriptionRemainder] = splitDescription(
+    conciseDescription
+  );
   const relatedSearches = [categoryName, ...(product.tags || [])]
     .reduce<string[]>((searches, value) => {
       const label = value?.trim();
@@ -250,7 +325,7 @@ export default function ProductDetailPage() {
   function handleAddToCart() {
     if (!product) return;
 
-    if ((sizes.length && !selectedSize) || (colors.length && !selectedColor)) {
+    if ((sizes.length && !selectedSize) || (fabrics.length && !selectedColor)) {
       return;
     }
 
@@ -362,10 +437,10 @@ export default function ProductDetailPage() {
               <span className="text-3xl font-bold text-[#173f4f]">
                 {formatPrice(displayPrice, product.currency)}
               </span>
-              {product.compareAtPrice &&
-              product.compareAtPrice > displayPrice ? (
+              {displayCompareAtPrice &&
+              displayCompareAtPrice > displayPrice ? (
                 <span className="text-base text-stone-500 line-through">
-                  {formatPrice(product.compareAtPrice, product.currency)}
+                  {formatPrice(displayCompareAtPrice, product.currency)}
                 </span>
               ) : null}
             </div>
@@ -389,7 +464,9 @@ export default function ProductDetailPage() {
                 >
                   <RatingStars rating={visibleRating} size={14} />
                   <span className="text-xs text-stone-600">
-                    {visibleRating.toFixed(1)} ({visibleReviewCount})
+                    {showingShopReviews
+                      ? `${visibleRating.toFixed(1)} shop reviews`
+                      : `${visibleRating.toFixed(1)} (${visibleReviewCount})`}
                   </span>
                 </Link>
               ) : null}
@@ -418,9 +495,17 @@ export default function ProductDetailPage() {
                       onChange={(event) => setSelectedSize(event.target.value)}
                       className="h-13 w-full appearance-none rounded-xl border border-stone-400 bg-white px-4 pr-11 text-sm font-medium text-stone-900 outline-none transition focus:border-[#173f4f] focus:ring-2 focus:ring-[#173f4f]/15"
                     >
+                      <option value="" disabled>
+                        Select a size
+                      </option>
                       {sizes.map((size) => (
-                        <option key={size} value={size}>
-                          {size}
+                        <option key={size.value} value={size.value}>
+                          {getChoiceLabel(
+                            size,
+                            fabrics,
+                            product.price,
+                            product.currency
+                          )}
                         </option>
                       ))}
                     </select>
@@ -432,7 +517,7 @@ export default function ProductDetailPage() {
                 </label>
               ) : null}
 
-              {colors.length ? (
+              {fabrics.length ? (
                 <label className="block">
                   <span className="mb-2 block text-sm font-semibold text-stone-900">
                     Fabric / colour
@@ -443,9 +528,17 @@ export default function ProductDetailPage() {
                       onChange={(event) => setSelectedColor(event.target.value)}
                       className="h-13 w-full appearance-none rounded-xl border border-stone-400 bg-white px-4 pr-11 text-sm font-medium text-stone-900 outline-none transition focus:border-[#173f4f] focus:ring-2 focus:ring-[#173f4f]/15"
                     >
-                      {colors.map((color) => (
-                        <option key={color} value={color}>
-                          {color}
+                      <option value="" disabled>
+                        Select a fabric
+                      </option>
+                      {fabrics.map((fabric) => (
+                        <option key={fabric.value} value={fabric.value}>
+                          {getChoiceLabel(
+                            fabric,
+                            sizes,
+                            product.price,
+                            product.currency
+                          )}
                         </option>
                       ))}
                     </select>
@@ -484,53 +577,76 @@ export default function ProductDetailPage() {
               <button
                 type="button"
                 onClick={handleAddToCart}
-                disabled={!inStock}
+                disabled={!inStock || !selectedSize || !selectedColor}
                 className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[#2f2a35] px-6 text-sm font-bold text-white transition hover:bg-[#173f4f] disabled:cursor-not-allowed disabled:bg-stone-300"
               >
                 <ShoppingBag size={18} />
                 {addedToCart
                   ? t.product.added
-                  : inStock
-                    ? t.product.addToCart
-                    : t.product.outOfStock}
+                  : !inStock
+                    ? t.product.outOfStock
+                    : !selectedSize || !selectedColor
+                      ? "Select size & fabric"
+                      : t.product.addToCart}
               </button>
             </div>
+          </div>
+        </section>
 
-            <div className="mt-8 divide-y divide-stone-200 border-y border-stone-200">
-              <details className="group py-5" open>
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-bold text-stone-950">
-                  Item details
-                  <ChevronDown
+        <section className="mt-14 grid gap-6 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,0.88fr)] lg:items-start lg:gap-8">
+          <article className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-[0_16px_45px_rgba(40,35,30,0.06)]">
+            <div className="border-b border-stone-200 bg-[#eef4f0] px-6 py-6 sm:px-8">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#9a620b]">
+                Handmade product information
+              </p>
+              <h2 className="mt-2 font-display text-3xl font-bold text-stone-950">
+                Item details
+              </h2>
+            </div>
+
+            <div className="p-6 sm:p-8">
+              <h3 className="text-sm font-bold text-stone-950">Highlights</h3>
+              <ul className="mt-4 grid gap-4 text-sm text-stone-700 sm:grid-cols-3">
+                <li className="flex gap-3 rounded-xl bg-[#fbfaf7] p-4">
+                  <Check size={18} className="mt-0.5 shrink-0 text-[#173f4f]" />
+                  <span>Made by {sellerName}</span>
+                </li>
+                <li className="flex gap-3 rounded-xl bg-[#fbfaf7] p-4">
+                  <PackageCheck
                     size={18}
-                    className="transition group-open:rotate-180"
+                    className="mt-0.5 shrink-0 text-[#173f4f]"
                   />
-                </summary>
-                <div className="mt-5">
-                  <h2 className="text-sm font-bold text-stone-950">Highlights</h2>
-                  <ul className="mt-4 space-y-3 text-sm text-stone-700">
-                    <li className="flex gap-3">
-                      <Check size={18} className="mt-0.5 shrink-0 text-[#173f4f]" />
-                      Made by {sellerName}
-                    </li>
-                    <li className="flex gap-3">
-                      <PackageCheck
-                        size={18}
-                        className="mt-0.5 shrink-0 text-[#173f4f]"
-                      />
-                      Delivery from a small business in India
-                    </li>
-                    <li className="flex gap-3">
-                      <Leaf size={18} className="mt-0.5 shrink-0 text-[#173f4f]" />
-                      Material: {product.material || "Cotton / natural textile"}
-                    </li>
-                  </ul>
-                  <p className="mt-5 whitespace-pre-line text-sm leading-7 text-stone-700">
-                    {product.description}
-                  </p>
-                </div>
-              </details>
+                  <span>Delivery from a small business in India</span>
+                </li>
+                <li className="flex gap-3 rounded-xl bg-[#fbfaf7] p-4">
+                  <Leaf size={18} className="mt-0.5 shrink-0 text-[#173f4f]" />
+                  <span>
+                    Material: {product.material || "Cotton / natural textile"}
+                  </span>
+                </li>
+              </ul>
 
-              <details className="group py-5">
+              <div className="mt-8 border-t border-stone-200 pt-7">
+                <p className="whitespace-pre-line text-sm leading-7 text-stone-700">
+                  {descriptionPreview}
+                </p>
+                {descriptionRemainder ? (
+                  <details className="group mt-5">
+                    <summary className="inline-flex cursor-pointer list-none items-center gap-2 text-sm font-bold text-[#173f4f]">
+                      Read complete item details
+                      <ChevronDown
+                        size={17}
+                        className="transition group-open:rotate-180"
+                      />
+                    </summary>
+                    <p className="mt-5 whitespace-pre-line border-t border-stone-200 pt-5 text-sm leading-7 text-stone-700">
+                      {descriptionRemainder}
+                    </p>
+                  </details>
+                ) : null}
+              </div>
+
+              <details className="group mt-8 border-t border-stone-200 pt-6">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-bold text-stone-950">
                   Delivery and return policies
                   <ChevronDown
@@ -538,7 +654,7 @@ export default function ProductDetailPage() {
                     className="transition group-open:rotate-180"
                   />
                 </summary>
-                <ul className="mt-5 space-y-3 text-sm leading-6 text-stone-700">
+                <ul className="mt-5 grid gap-4 text-sm leading-6 text-stone-700 sm:grid-cols-3">
                   <li className="flex gap-3">
                     <Truck size={18} className="mt-0.5 shrink-0" />
                     Worldwide tracked delivery from India
@@ -554,46 +670,54 @@ export default function ProductDetailPage() {
                 </ul>
               </details>
             </div>
-          </div>
-        </section>
+          </article>
 
-        <section id="reviews" className="mt-20 border-t border-stone-200 pt-14">
-          <div className="grid gap-10 lg:grid-cols-[0.6fr_1.4fr] lg:gap-16">
-            <div>
-              <h2 className="font-display text-3xl font-bold text-stone-950">
-                Reviews for this item
-              </h2>
-              {visibleRating > 0 ? (
-                <div className="mt-7 flex items-center gap-5">
-                  <span className="font-display text-5xl font-bold text-[#2f2a35]">
-                    {visibleRating.toFixed(1)}
-                  </span>
-                  <div>
-                    <RatingStars rating={visibleRating} size={20} />
-                    <p className="mt-2 text-xs text-stone-500">
-                      {visibleReviewCount} item reviews
-                    </p>
-                  </div>
+          <aside
+            id="reviews"
+            className="scroll-mt-28 rounded-2xl border border-stone-200 bg-white p-6 shadow-[0_16px_45px_rgba(40,35,30,0.06)] sm:p-8"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#9a620b]">
+              Verified customer feedback
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-bold text-stone-950">
+              {showingShopReviews
+                ? "Customer reviews from our Etsy shop"
+                : "Reviews for this item"}
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-stone-600">
+              {showingShopReviews
+                ? "This listing has no item-specific feedback yet, so we’re showing verified reviews from other products in our Etsy shop."
+                : "Verified feedback for this product."}
+            </p>
+
+            {visibleRating > 0 ? (
+              <div className="mt-6 flex items-center gap-5 rounded-xl bg-[#fbfaf7] p-5">
+                <span className="font-display text-5xl font-bold text-[#2f2a35]">
+                  {visibleRating.toFixed(1)}
+                </span>
+                <div>
+                  <RatingStars rating={visibleRating} size={20} />
+                  <p className="mt-2 text-xs text-stone-500">
+                    {showingShopReviews
+                      ? `${visibleReviewCount} verified shop reviews shown`
+                      : `${visibleReviewCount} item reviews`}
+                  </p>
                 </div>
-              ) : (
-                <p className="mt-4 text-sm text-stone-600">
-                  Reviews will appear here when available.
-                </p>
-              )}
-            </div>
+              </div>
+            ) : null}
 
-            <div className="space-y-7">
+            <div className="mt-7 space-y-7">
               {displayReviews.length ? (
-                displayReviews.map((review) => (
+                displayReviews.slice(0, 3).map((review) => (
                   <ReviewCard key={review.key} review={review} />
                 ))
               ) : (
-                <div className="rounded-2xl border border-stone-200 bg-white p-7 text-sm text-stone-600">
-                  No item-specific reviews are available yet.
+                <div className="rounded-xl bg-[#fbfaf7] p-5 text-sm text-stone-600">
+                  Customer reviews are being updated. Please check again shortly.
                 </div>
               )}
             </div>
-          </div>
+          </aside>
         </section>
 
         {related.length ? (

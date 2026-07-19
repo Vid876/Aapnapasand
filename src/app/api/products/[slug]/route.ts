@@ -22,24 +22,62 @@ export async function GET(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    const reviews = await Review.find({
-      product: product._id,
-      isApproved: true,
-    })
-      .sort({ createdAt: -1 })
-      .limit(10)
-      .lean();
+    const [
+      reviews,
+      relatedProducts,
+      categoryReviewProduct,
+      globalReviewProduct,
+    ] = await Promise.all([
+      Review.find({
+        product: product._id,
+        isApproved: true,
+      })
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .lean(),
+      Product.find({
+        category: product.category,
+        _id: { $ne: product._id },
+        isActive: true,
+        ...PRODUCT_IMAGE_FILTER,
+      })
+        .limit(4)
+        .lean(),
+      Product.findOne({
+        _id: { $ne: product._id },
+        category: product.category,
+        isActive: true,
+        "sourceReviews.0": { $exists: true },
+      })
+        .select("name slug sourceReviews reviewCount")
+        .sort({ reviewCount: -1, createdAt: -1 })
+        .lean(),
+      Product.findOne({
+        _id: { $ne: product._id },
+        isActive: true,
+        "sourceReviews.0": { $exists: true },
+      })
+        .select("name slug sourceReviews reviewCount")
+        .sort({ reviewCount: -1, createdAt: -1 })
+        .lean(),
+    ]);
 
-    const relatedProducts = await Product.find({
-      category: product.category,
-      _id: { $ne: product._id },
-      isActive: true,
-      ...PRODUCT_IMAGE_FILTER,
-    })
-      .limit(4)
-      .lean();
+    const fallbackReviewProduct =
+      categoryReviewProduct || globalReviewProduct;
+    const shopReviews = fallbackReviewProduct
+      ? (fallbackReviewProduct.sourceReviews || []).slice(0, 3).map((review) => ({
+          ...review,
+          productName: fallbackReviewProduct.name,
+          productSlug: fallbackReviewProduct.slug,
+        }))
+      : [];
 
-    return noStoreJson({ product, reviews, relatedProducts });
+    return noStoreJson({
+      product,
+      reviews,
+      relatedProducts,
+      shopReviews,
+    });
   } catch (error) {
     console.error("Product fetch error:", error);
     return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
