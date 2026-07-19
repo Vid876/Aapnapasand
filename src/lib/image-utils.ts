@@ -1,4 +1,5 @@
-export const UPLOADED_IMAGE_PATTERN = "^(\\/uploads\\/|https:\\/\\/res\\.cloudinary\\.com\\/)";
+export const UPLOADED_IMAGE_PATTERN =
+  "^(\\/uploads\\/|https:\\/\\/(res\\.cloudinary\\.com|i\\.etsystatic\\.com)\\/)";
 
 export const PRODUCT_IMAGE_FILTER = {
   "images.0": { $regex: UPLOADED_IMAGE_PATTERN },
@@ -14,7 +15,10 @@ export function isValidStoredImage(value: string): boolean {
 
   try {
     const url = new URL(value);
-    return url.protocol === "https:" && url.hostname === "res.cloudinary.com";
+    return (
+      url.protocol === "https:" &&
+      ["res.cloudinary.com", "i.etsystatic.com"].includes(url.hostname)
+    );
   } catch {
     return false;
   }
@@ -28,7 +32,7 @@ export function isNextImageCompatible(value?: string): value is string {
     const url = new URL(value);
     return (
       url.protocol === "https:" &&
-      url.hostname === "res.cloudinary.com"
+      ["res.cloudinary.com", "i.etsystatic.com"].includes(url.hostname)
     );
   } catch {
     return false;

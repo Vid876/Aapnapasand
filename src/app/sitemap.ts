@@ -25,7 +25,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/faq`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/shipping`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/returns`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
-    { url: `${BASE_URL}/size-guide`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
     ...CATEGORY_GROUPS.map((category) => ({
       url: `${BASE_URL}${category.href}`,
       lastModified: new Date(),

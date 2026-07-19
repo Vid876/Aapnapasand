@@ -9,6 +9,14 @@ export interface IProductVariant {
   price?: number;
 }
 
+export interface IProductSourceReview {
+  sourceReviewId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt?: Date;
+}
+
 export interface IProduct extends Document {
   name: string;
   slug: string;
@@ -23,6 +31,11 @@ export interface IProduct extends Document {
   gender: "men" | "women" | "kids" | "unisex";
   brand?: string;
   specifications?: string[];
+  sourceId?: string;
+  sourceUrl?: string;
+  material?: string;
+  categoryPath?: string;
+  sourceReviews?: IProductSourceReview[];
   tags: string[];
   variants: IProductVariant[];
   totalStock: number;
@@ -46,6 +59,17 @@ const ProductVariantSchema = new Schema<IProductVariant>(
   { _id: false }
 );
 
+const ProductSourceReviewSchema = new Schema<IProductSourceReview>(
+  {
+    sourceReviewId: { type: String, required: true },
+    userName: { type: String, required: true, trim: true },
+    rating: { type: Number, required: true, min: 1, max: 5 },
+    comment: { type: String, required: true, trim: true },
+    createdAt: { type: Date },
+  },
+  { _id: false }
+);
+
 const ProductSchema = new Schema<IProduct>(
   {
     name: { type: String, required: true, trim: true },
@@ -65,6 +89,11 @@ const ProductSchema = new Schema<IProduct>(
     brand: { type: String, default: "BOHOBLOCKPRINTED" },
     subcategory: { type: String },
     specifications: [{ type: String }],
+    sourceId: { type: String, index: true },
+    sourceUrl: { type: String },
+    material: { type: String },
+    categoryPath: { type: String },
+    sourceReviews: [ProductSourceReviewSchema],
     tags: [{ type: String }],
     variants: [ProductVariantSchema],
     totalStock: { type: Number, default: 0, min: 0 },

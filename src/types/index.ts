@@ -9,6 +9,14 @@ export interface ProductVariant {
   price?: number;
 }
 
+export interface ProductSourceReview {
+  sourceReviewId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt?: string;
+}
+
 export interface Product {
   _id: string;
   name: string;
@@ -24,6 +32,11 @@ export interface Product {
   brand?: string;
   subcategory?: string;
   specifications?: string[];
+  sourceId?: string;
+  sourceUrl?: string;
+  material?: string;
+  categoryPath?: string;
+  sourceReviews?: ProductSourceReview[];
   tags: string[];
   variants: ProductVariant[];
   totalStock: number;

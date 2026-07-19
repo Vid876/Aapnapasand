@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import mongoose from "mongoose";
 import catalog from "../data/beachwearsindian-products.json";
+import productDetails from "../data/beachwearsindian-product-details.json";
 import { connectDB } from "../lib/db";
 import { Category } from "../models/Category";
 import { Product } from "../models/Product";
@@ -23,7 +24,32 @@ type CatalogEntry = {
   gender: Gender;
 };
 
+type CatalogReview = {
+  sourceReviewId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt?: string;
+};
+
+type CatalogDetail = {
+  sourceId: string;
+  sourceUrl: string;
+  title: string;
+  description: string;
+  images: string[];
+  material?: string;
+  categoryPath?: string;
+  rating?: number;
+  reviewCount?: number;
+  reviews?: CatalogReview[];
+};
+
 const PRODUCTS = catalog as CatalogEntry[];
+const PRODUCT_DETAILS = productDetails as CatalogDetail[];
+const PRODUCT_DETAILS_BY_ID = new Map(
+  PRODUCT_DETAILS.map((detail) => [String(detail.sourceId), detail])
+);
 const SOURCE_SHOP = "https://www.etsy.com/shop/Beachwearsindian";
 const DOWNLOAD_CONCURRENCY = 6;
 const BULK_WRITE_SIZE = 100;
@@ -171,6 +197,14 @@ function buildDescription(name: string) {
     name +
     ". Handcrafted in India with an artisan-led textile process. Suitable for retail, gifting, travel, resort, home, and wholesale requirements according to the product type."
   );
+}
+
+function cleanSourceDescription(value: string) {
+  return value
+    .replace(/\r\n/g, "\n")
+    .replace(/\n\s*Tags\s*[\s\S]*$/i, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 async function downloadImage(entry: CatalogEntry) {
@@ -337,8 +371,11 @@ async function run() {
     const batch = validDownloads.slice(start, start + BULK_WRITE_SIZE);
 
     const operations = batch.map(({ entry, localImage }) => {
-      const name = cleanName(entry.title);
-      const description = buildDescription(name);
+      const sourceDetail = PRODUCT_DETAILS_BY_ID.get(String(entry.sourceId));
+      const name = cleanName(sourceDetail?.title || entry.title);
+      const description = sourceDetail?.description.trim()
+        ? cleanSourceDescription(sourceDetail.description)
+        : buildDescription(name);
       const sourceTag = "etsy:" + entry.sourceId;
       const slug =
         "etsy-" +
@@ -352,6 +389,17 @@ async function run() {
         0
       );
       const categoryId = categoryIds.get(categorySlug);
+      const galleryImages = sourceDetail?.images?.length
+        ? [localImage, ...sourceDetail.images.slice(1, 5)]
+        : [localImage];
+      const specifications = [
+        sourceDetail?.material
+          ? `Material: ${sourceDetail.material}`
+          : "Handcrafted textile product",
+        "Made in India",
+        CATEGORY_META[categorySlug]?.description,
+        "Colors may vary slightly due to screen settings and handmade printing",
+      ].filter((value): value is string => Boolean(value));
 
       if (!categoryId) {
         throw new Error("Missing category for " + entry.sourceId);
@@ -366,15 +414,31 @@ async function run() {
             $set: {
               name,
               description,
-              images: [localImage],
+              shortDescription:
+                CATEGORY_META[categorySlug]?.description ||
+                "Handcrafted Indian textile product.",
+              images: galleryImages,
               category: categoryId,
+              sourceId: String(entry.sourceId),
+              sourceUrl: sourceDetail?.sourceUrl || entry.sourceUrl,
+              material: sourceDetail?.material || "Cotton / natural textile",
+              categoryPath: sourceDetail?.categoryPath || entry.categoryName,
+              sourceReviews: (sourceDetail?.reviews || []).map((review) => ({
+                ...review,
+                createdAt: review.createdAt
+                  ? new Date(review.createdAt)
+                  : undefined,
+              })),
+              specifications,
+              variants,
+              totalStock,
+              rating: sourceDetail?.rating || 0,
+              reviewCount:
+                sourceDetail?.reviewCount || sourceDetail?.reviews?.length || 0,
               isActive: true,
             },
             $setOnInsert: {
               slug,
-              shortDescription:
-                CATEGORY_META[categorySlug]?.description ||
-                "Handcrafted Indian textile product.",
               price: entry.price,
               compareAtPrice:
                 entry.compareAtPrice > entry.price
@@ -383,12 +447,6 @@ async function run() {
               currency: "INR" as const,
               gender: entry.gender,
               brand: "BOHOBLOCKPRINTED",
-              specifications: [
-                "Handcrafted in India",
-                "Artisan textile product",
-                "Colors may vary slightly due to screen settings",
-                "Care instructions depend on the selected product",
-              ],
               tags: [
                 entry.category,
                 entry.gender,
@@ -398,10 +456,6 @@ async function run() {
                 sourceTag,
                 "source:" + SOURCE_SHOP,
               ],
-              variants,
-              totalStock,
-              rating: 0,
-              reviewCount: 0,
               isFeatured: false,
             },
           },

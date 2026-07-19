@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { noStoreJson } from "@/lib/api-response";
 import { connectDB } from "@/lib/db";
 import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
+import "@/models/Category";
 import { Product } from "@/models/Product";
 import { Review } from "@/models/Review";
 

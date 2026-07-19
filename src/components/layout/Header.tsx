@@ -276,7 +276,7 @@ export function Header() {
             >
               <ShoppingBag size={20} />
               {itemCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#9f2f2f] text-xs font-medium text-white">
+                <span className="absolute right-0 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#9f2f2f] text-xs font-medium text-white">
                   {itemCount}
                 </span>
               )}

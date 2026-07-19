@@ -12,7 +12,6 @@ const FOOTER_LINKS = {
   help: [
     { label: "Contact Us", href: "/contact" },
     { label: "FAQ", href: "/faq" },
-    { label: "Size Guide", href: "/size-guide" },
     { label: "Shipping Policy", href: "/shipping" },
     { label: "Return Policy", href: "/returns" },
   ],

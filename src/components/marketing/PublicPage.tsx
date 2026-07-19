@@ -21,7 +21,6 @@ export const PUBLIC_IMAGES = {
   returnsCare: "/uploads/178300f0-6701-4689-b622-58ec74d604e9.jpg",
   saleEdit: "/uploads/823a002a-109f-4faa-8d05-3df30b32ee00.jpg",
   shippingCare: "/uploads/etsy-4535112365.jpg",
-  sizeGuide: "/uploads/30ef945d-0d6b-4c19-8ad0-888cb12d149e.jpg",
   wholesale: "/uploads/etsy-4535112365.jpg",
   journal: "/uploads/da4dc09d-b211-4a8d-93fc-61ccb18e0256.jpg",
   privacy: "/uploads/fac084e7-92de-419b-8a15-df732dd4ead4.webp",

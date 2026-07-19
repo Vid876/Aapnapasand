@@ -34,7 +34,11 @@ export function ProductImage({ src, alt, className, sizes, priority }: ProductIm
       className={className}
       sizes={sizes}
       priority={priority}
-      unoptimized={renderSrc.startsWith("/uploads/") || renderSrc.startsWith("/media/")}
+      unoptimized={
+        renderSrc.startsWith("/uploads/") ||
+        renderSrc.startsWith("/media/") ||
+        renderSrc.includes("i.etsystatic.com")
+      }
       onError={() => setFailed(true)}
     />
   );
