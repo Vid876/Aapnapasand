@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowRight, CheckCircle2, Layers3, PackageCheck, Sparkles } from "lucide-react";
 import { CTASection, PageHero, PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
-import { BRAND, CATEGORY_GROUPS } from "@/lib/brand";
+import { BRAND, CATEGORY_GROUPS, WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 
 type CollectionPageProps = {
   params: Promise<{ collection: string }>;
@@ -50,7 +50,7 @@ export default async function CollectionLandingPage({ params }: CollectionPagePr
         imagePosition={category.imagePosition}
         primaryHref={`/shop?category=${category.subcategories[0]?.slug ?? category.slug}`}
         primaryLabel="Shop Collection"
-        secondaryHref="/wholesale"
+        secondaryHref={WHOLESALE_INQUIRY_HREF}
         secondaryLabel="Wholesale Inquiry"
       >
         <div className="mt-8 grid gap-3 sm:grid-cols-3">

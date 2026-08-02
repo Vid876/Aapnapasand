@@ -68,23 +68,29 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
 
       <div>
         <label className="block text-sm font-medium mb-2">Rating</label>
-        <div className="flex gap-1">
-          {Array.from({ length: 5 }).map((_, i) => (
+        <div className="flex flex-wrap gap-2">
+          {[3, 4, 5].map((value) => (
             <button
-              key={i}
+              key={value}
               type="button"
-              onClick={() => setRating(i + 1)}
-              className="p-1"
+              onClick={() => setRating(value)}
+              className={`inline-flex items-center gap-1 rounded-lg border px-3 py-2 text-sm font-semibold transition ${
+                rating === value
+                  ? "border-[#173f4f] bg-[#173f4f] text-white"
+                  : "border-gray-200 bg-white text-gray-700 hover:border-[#173f4f]"
+              }`}
+              aria-label={`${value} out of 5 stars`}
+              aria-pressed={rating === value}
             >
+              {value}
               <Star
-                size={24}
-                className={
-                  i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-                }
+                size={17}
+                className="fill-yellow-400 text-yellow-400"
               />
             </button>
           ))}
         </div>
+        <p className="mt-1 text-xs text-gray-500">Choose 3, 4, or 5 stars.</p>
       </div>
 
       <div>

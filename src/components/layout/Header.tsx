@@ -3,12 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { ChevronDown, Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { BRAND, PRIMARY_NAV, TOP_BAR_MESSAGES } from "@/lib/brand";
 import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { useTranslation } from "@/store/localeStore";
 
 const EMPTY_ACCOUNT_FORM = {
@@ -21,6 +22,8 @@ const EMPTY_ACCOUNT_FORM = {
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openDesktopMenu, setOpenDesktopMenu] = useState<string | null>(null);
+  const [openMobileMenu, setOpenMobileMenu] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [accountModalOpen, setAccountModalOpen] = useState(false);
@@ -29,13 +32,16 @@ export function Header() {
   const [accountSuccess, setAccountSuccess] = useState("");
   const [accountLoading, setAccountLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const desktopNavRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
 
   const { data: session } = useSession();
   const cartItems = useCartStore((s) => s.items);
+  const wishlistItems = useWishlistStore((state) => state.items);
   const itemCount = mounted
     ? cartItems.reduce((sum, item) => sum + item.quantity, 0)
     : 0;
+  const wishlistCount = mounted ? wishlistItems.length : 0;
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -44,9 +50,33 @@ export function Header() {
 
   useEffect(() => {
     setMobileOpen(false);
+    setOpenDesktopMenu(null);
+    setOpenMobileMenu(null);
     setSearchOpen(false);
     setAccountModalOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (
+        openDesktopMenu &&
+        desktopNavRef.current &&
+        !desktopNavRef.current.contains(event.target as Node)
+      ) {
+        setOpenDesktopMenu(null);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpenDesktopMenu(null);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [openDesktopMenu]);
 
   useEffect(() => {
     if (!accountModalOpen) return;
@@ -141,7 +171,7 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-stone-200 bg-white/96 shadow-sm backdrop-blur">
-      <div className="top-bar-shell overflow-hidden text-white">
+      <div className="top-bar-shell overflow-hidden text-white" tabIndex={0} aria-label="Store announcements">
         <div className="top-bar-marquee flex w-max items-center py-2 text-xs font-semibold tracking-wide sm:py-2.5 sm:text-sm">
           {[false, true].map((duplicate) => (
             <div
@@ -181,22 +211,40 @@ export function Header() {
             />
           </Link>
 
-          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-2 xl:flex 2xl:gap-4">
+          <nav ref={desktopNavRef} className="hidden min-w-0 flex-1 items-center justify-center gap-2 xl:flex 2xl:gap-4">
             {PRIMARY_NAV.map((link) => {
               const children = "children" in link ? link.children : [];
 
-              return (
-                <div key={link.href} className="group py-8 -my-8">
+              if (children.length === 0) {
+                return (
                   <Link
+                    key={link.href}
                     href={link.href}
+                    className="inline-flex items-center whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] text-stone-700 transition-colors hover:text-[#173f4f] 2xl:text-xs 2xl:tracking-[0.12em]"
+                  >
+                    {link.label}
+                  </Link>
+                );
+              }
+
+              const isOpen = openDesktopMenu === link.href;
+              const menuId = `desktop-menu-${link.href.replace(/[^a-z0-9]+/gi, "-")}`;
+
+              return (
+                <div key={link.href}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenDesktopMenu(isOpen ? null : link.href)}
+                    aria-expanded={isOpen}
+                    aria-controls={menuId}
                     className="inline-flex items-center gap-0.5 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] text-stone-700 transition-colors hover:text-[#173f4f] 2xl:gap-1 2xl:text-xs 2xl:tracking-[0.12em]"
                   >
                     {link.label}
-                    {children.length > 0 && <ChevronDown size={13} />}
-                  </Link>
+                    <ChevronDown size={13} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                  </button>
 
-                  {children.length > 0 && (
-                    <div className="absolute left-0 right-0 top-full hidden border-t border-stone-200 bg-white shadow-xl shadow-stone-950/10 group-hover:block group-focus-within:block">
+                  {isOpen && (
+                    <div id={menuId} className="absolute left-0 right-0 top-full border-t border-stone-200 bg-white shadow-xl shadow-stone-950/10">
                       <div className="container-app grid gap-8 py-6 xl:grid-cols-[0.72fr_1.28fr]">
                         <div>
                           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#276070]">
@@ -205,6 +253,12 @@ export function Header() {
                           <p className="mt-3 max-w-md text-sm leading-7 text-stone-600">
                             Explore artisan block printed textiles with clear collection paths for shoppers and search engines.
                           </p>
+                          <Link
+                            href={link.href}
+                            className="mt-4 inline-flex text-sm font-semibold text-[#173f4f] hover:underline"
+                          >
+                            View all {link.label}
+                          </Link>
                         </div>
                         <div className="grid grid-cols-2 gap-x-8 gap-y-3 xl:grid-cols-3">
                           {children.map((child) => (
@@ -236,10 +290,15 @@ export function Header() {
 
             <Link
               href="/wishlist"
-              className="hidden rounded-full p-2 transition-colors hover:bg-stone-100 sm:flex"
+              className="relative hidden rounded-full p-2 transition-colors hover:bg-stone-100 sm:flex"
               aria-label="Wishlist"
             >
               <Heart size={20} />
+              {wishlistCount > 0 ? (
+                <span className="absolute right-0 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#173f4f] px-1 text-[10px] font-semibold text-white">
+                  {wishlistCount > 99 ? "99+" : wishlistCount}
+                </span>
+              ) : null}
             </Link>
 
             {session ? (
@@ -311,15 +370,28 @@ export function Header() {
               const children = "children" in link ? link.children : [];
 
               return (
-                <div key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="block py-3 text-base font-semibold text-stone-800 hover:text-[#173f4f]"
-                    onClick={closeMobileMenu}
-                  >
-                    {link.label}
-                  </Link>
-                  {children.length > 0 && (
+                <div key={link.href} className="border-b border-stone-100 last:border-0">
+                  <div className="flex items-center justify-between gap-3">
+                    <Link
+                      href={link.href}
+                      className="flex-1 py-3 text-base font-semibold text-stone-800 hover:text-[#173f4f]"
+                      onClick={closeMobileMenu}
+                    >
+                      {link.label}
+                    </Link>
+                    {children.length > 0 ? (
+                      <button
+                        type="button"
+                        onClick={() => setOpenMobileMenu(openMobileMenu === link.href ? null : link.href)}
+                        className="rounded-full p-2 text-stone-600 hover:bg-stone-100"
+                        aria-label={`Toggle ${link.label} menu`}
+                        aria-expanded={openMobileMenu === link.href}
+                      >
+                        <ChevronDown size={18} className={`transition-transform ${openMobileMenu === link.href ? "rotate-180" : ""}`} />
+                      </button>
+                    ) : null}
+                  </div>
+                  {children.length > 0 && openMobileMenu === link.href && (
                     <div className="grid grid-cols-1 gap-1 pb-2 pl-4">
                       {children.map((child) => (
                         <Link

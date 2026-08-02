@@ -3,10 +3,13 @@ export type CurrencyCode = "INR" | "USD";
 export interface ProductVariant {
   size: string;
   color: string;
+  fabric?: string;
   colorHex?: string;
   sku: string;
   stock: number;
   price?: number;
+  sourceProductId?: string;
+  isAvailable?: boolean;
 }
 
 export interface ProductSourceReview {
@@ -34,6 +37,8 @@ export interface Product {
   specifications?: string[];
   sourceId?: string;
   sourceUrl?: string;
+  sourceSyncedAt?: string;
+  sourceSyncStatus?: "description-derived" | "api-synced" | "sync-error";
   material?: string;
   categoryPath?: string;
   sourceReviews?: ProductSourceReview[];
@@ -69,6 +74,7 @@ export interface CartItem {
   quantity: number;
   size: string;
   color: string;
+  fabric?: string;
 }
 
 export interface Review {
@@ -91,6 +97,7 @@ export interface Order {
     quantity: number;
     size: string;
     color: string;
+    fabric?: string;
     price: number;
     currency?: CurrencyCode;
   }[];
@@ -117,12 +124,14 @@ export interface Order {
 }
 
 export interface ProductFilters {
-  category?: string;
+  category?: string | string[];
   gender?: string;
   minPrice?: number;
   maxPrice?: number;
-  size?: string;
-  color?: string;
+  size?: string | string[];
+  color?: string | string[];
+  fabric?: string | string[];
+  minRating?: number;
   sort?: string;
   search?: string;
   page?: number;

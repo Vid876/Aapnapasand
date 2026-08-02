@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, Globe2, Handshake, Sparkles } from "lucide-react";
-import { BRAND } from "@/lib/brand";
+import { BRAND, WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 
 const HIGHLIGHTS = [
   { label: "Handmade in Jaipur", icon: Sparkles },
@@ -41,7 +41,7 @@ export function HeroBanner() {
               <ArrowRight size={17} />
             </Link>
             <Link
-              href="/wholesale"
+              href={WHOLESALE_INQUIRY_HREF}
               className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/70 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-[#173f4f]"
             >
               Wholesale Inquiry

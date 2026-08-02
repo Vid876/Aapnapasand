@@ -7,13 +7,14 @@ import type { CartItem } from "@/types";
 interface CartState {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (productId: string, size: string, color: string) => void;
-  updateQuantity: (productId: string, size: string, color: string, quantity: number) => void;
+  removeItem: (productId: string, size: string, color: string, fabric?: string) => void;
+  updateQuantity: (productId: string, size: string, color: string, quantity: number, fabric?: string) => void;
   updateItemOptions: (
     productId: string,
     currentSize: string,
     currentColor: string,
-    next: { size: string; color: string; price?: number }
+    next: { size: string; color: string; price?: number; fabric?: string },
+    currentFabric?: string
   ) => void;
   clearCart: () => void;
   getItemCount: () => number;
@@ -31,7 +32,8 @@ export const useCartStore = create<CartState>()(
             (i) =>
               i.productId === item.productId &&
               i.size === item.size &&
-              i.color === item.color
+              i.color === item.color &&
+              (i.fabric || "") === (item.fabric || "")
           );
 
           if (existingIndex > -1) {
@@ -47,35 +49,45 @@ export const useCartStore = create<CartState>()(
         });
       },
 
-      removeItem: (productId, size, color) => {
+      removeItem: (productId, size, color, fabric) => {
         set((state) => ({
           items: state.items.filter(
-            (i) => !(i.productId === productId && i.size === size && i.color === color)
+            (i) =>
+              !(
+                i.productId === productId &&
+                i.size === size &&
+                i.color === color &&
+                (i.fabric || "") === (fabric || "")
+              )
           ),
         }));
       },
 
-      updateQuantity: (productId, size, color, quantity) => {
+      updateQuantity: (productId, size, color, quantity, fabric) => {
         if (quantity < 1) {
-          get().removeItem(productId, size, color);
+          get().removeItem(productId, size, color, fabric);
           return;
         }
         set((state) => ({
           items: state.items.map((i) =>
-            i.productId === productId && i.size === size && i.color === color
+            i.productId === productId &&
+            i.size === size &&
+            i.color === color &&
+            (i.fabric || "") === (fabric || "")
               ? { ...i, quantity }
               : i
           ),
         }));
       },
 
-      updateItemOptions: (productId, currentSize, currentColor, next) => {
+      updateItemOptions: (productId, currentSize, currentColor, next, currentFabric) => {
         set((state) => {
           const currentIndex = state.items.findIndex(
             (i) =>
               i.productId === productId &&
               i.size === currentSize &&
-              i.color === currentColor
+              i.color === currentColor &&
+              (i.fabric || "") === (currentFabric || "")
           );
 
           if (currentIndex === -1) return state;
@@ -85,13 +97,15 @@ export const useCartStore = create<CartState>()(
           const nextSize = next.size || currentItem.size;
           const nextColor = next.color || currentItem.color;
           const nextPrice = next.price ?? currentItem.price;
+          const nextFabric = next.fabric ?? currentItem.fabric;
 
           const duplicateIndex = items.findIndex(
             (i, index) =>
               index !== currentIndex &&
               i.productId === productId &&
               i.size === nextSize &&
-              i.color === nextColor
+              i.color === nextColor &&
+              (i.fabric || "") === (nextFabric || "")
           );
 
           if (duplicateIndex > -1) {
@@ -108,6 +122,7 @@ export const useCartStore = create<CartState>()(
             ...currentItem,
             size: nextSize,
             color: nextColor,
+            fabric: nextFabric,
             price: nextPrice,
           };
           return { items };

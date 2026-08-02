@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, Instagram, Mail, MapPin, Phone, ShoppingBag, Store } from "lucide-react";
-import { BRAND, CATEGORY_GROUPS } from "@/lib/brand";
+import { BRAND, CATEGORY_GROUPS, WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 
 const FOOTER_LINKS = {
   shop: [
@@ -34,7 +34,7 @@ const SOCIAL_LINKS = [
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-[#173f4f] text-white">
-      <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.055)_0_1px,transparent_1px_42px),linear-gradient(135deg,rgba(201,144,46,0.25),transparent_44%,rgba(31,63,115,0.26))]" />
+      <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.04)_0_1px,transparent_1px_42px),linear-gradient(135deg,rgba(255,255,255,0.07),transparent_48%,rgba(0,0,0,0.12))]" />
       <div className="relative container-app py-14 lg:py-20">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[1.25fr_0.82fr_0.82fr_0.92fr_1.12fr] lg:gap-10">
           <div>
@@ -167,7 +167,7 @@ export function Footer() {
               </div>
 
               <Link
-                href="/wholesale"
+                href={WHOLESALE_INQUIRY_HREF}
                 className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-semibold text-[#173f4f] transition-colors hover:bg-[#f5c76b]"
               >
                 Wholesale Inquiry

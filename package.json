@@ -6,9 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "node server.js",
-    "lint": "next lint",
+    "lint": "eslint src",
     "seed": "tsx src/scripts/seed.ts",
     "import:etsy": "tsx src/scripts/import-beachwearsindian.ts",
+    "sync:etsy-inventory": "tsx src/scripts/sync-etsy-inventory.ts",
     "db:indexes": "tsx src/scripts/create-indexes.ts"
   },
   "dependencies": {

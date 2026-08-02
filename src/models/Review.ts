@@ -17,6 +17,8 @@ const ReviewSchema = new Schema<IReview>(
     product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     userName: { type: String, required: true },
+    // Historical ratings remain intact for audit. Public submission policy is
+    // enforced in the review API and only ratings from 3 to 5 are published.
     rating: { type: Number, required: true, min: 1, max: 5 },
     title: { type: String },
     comment: { type: String, required: true },

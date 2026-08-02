@@ -3,10 +3,13 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface IProductVariant {
   size: string;
   color: string;
+  fabric?: string;
   colorHex?: string;
   sku: string;
   stock: number;
   price?: number;
+  sourceProductId?: string;
+  isAvailable?: boolean;
 }
 
 export interface IProductSourceReview {
@@ -33,6 +36,8 @@ export interface IProduct extends Document {
   specifications?: string[];
   sourceId?: string;
   sourceUrl?: string;
+  sourceSyncedAt?: Date;
+  sourceSyncStatus?: "description-derived" | "api-synced" | "sync-error";
   material?: string;
   categoryPath?: string;
   sourceReviews?: IProductSourceReview[];
@@ -51,10 +56,13 @@ const ProductVariantSchema = new Schema<IProductVariant>(
   {
     size: { type: String, required: true },
     color: { type: String, required: true },
+    fabric: { type: String },
     colorHex: { type: String },
     sku: { type: String, required: true },
     stock: { type: Number, required: true, min: 0, default: 0 },
     price: { type: Number },
+    sourceProductId: { type: String },
+    isAvailable: { type: Boolean, default: true },
   },
   { _id: false }
 );
@@ -91,6 +99,12 @@ const ProductSchema = new Schema<IProduct>(
     specifications: [{ type: String }],
     sourceId: { type: String, index: true },
     sourceUrl: { type: String },
+    sourceSyncedAt: { type: Date },
+    sourceSyncStatus: {
+      type: String,
+      enum: ["description-derived", "api-synced", "sync-error"],
+      default: "description-derived",
+    },
     material: { type: String },
     categoryPath: { type: String },
     sourceReviews: [ProductSourceReviewSchema],
@@ -111,7 +125,7 @@ ProductSchema.index({ isActive: 1, createdAt: -1 });
 ProductSchema.index({ isActive: 1, isFeatured: 1, createdAt: -1 });
 ProductSchema.index({ isActive: 1, reviewCount: -1, rating: -1 });
 ProductSchema.index({ slug: 1, isActive: 1 });
-ProductSchema.index({ "variants.size": 1, "variants.color": 1 });
+ProductSchema.index({ "variants.size": 1, "variants.color": 1, "variants.fabric": 1 });
 
 export const Product: Model<IProduct> =
   mongoose.models.Product || mongoose.model<IProduct>("Product", ProductSchema);

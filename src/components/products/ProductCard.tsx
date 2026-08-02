@@ -152,7 +152,7 @@ export function ProductCard({
               )}
           </div>
 
-          {product.rating > 0 && (
+          {product.rating >= 3 ? (
             <div className="mt-2 flex items-center gap-1">
               <Star
                 size={12}
@@ -164,6 +164,8 @@ export function ProductCard({
                 {product.reviewCount})
               </span>
             </div>
+          ) : (
+            <p className="mt-2 text-xs text-gray-500">Not yet rated</p>
           )}
         </div>
       </div>

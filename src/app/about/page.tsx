@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { CheckCircle2 } from "lucide-react";
 import { ProductionProcess } from "@/components/brand/ProductionProcess";
+import { WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -72,7 +73,7 @@ export default function AboutPage() {
             <p>Whether you are looking for unique home décor, sustainable textiles, or wholesale manufacturing solutions, Bohoblockprinted is committed to delivering quality, authenticity, and exceptional customer service.</p>
             <p>Thank you for supporting handmade craftsmanship and being part of our journey.</p>
             <p className="font-semibold text-stone-950">Bohoblockprinted<br />Hand Block Printed Textile Manufacturer &amp; Exporter<br />Jaipur, Rajasthan, India</p>
-            <Link href="/wholesale" className="inline-flex rounded-lg bg-[#173f4f] px-6 py-3 text-sm font-semibold text-white hover:bg-[#245d70]">Wholesale &amp; Private Label Services</Link>
+            <Link href={WHOLESALE_INQUIRY_HREF} className="inline-flex rounded-lg bg-[#173f4f] px-6 py-3 text-sm font-semibold text-white hover:bg-[#245d70]">Wholesale &amp; Private Label Services</Link>
           </div>
         </div>
       </section>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CTASection, PageHero, PUBLIC_IMAGES, SectionHeader } from "@/components/marketing/PublicPage";
 import { getPublicCategories } from "@/lib/category-data";
 import { getRenderableImageSrc } from "@/lib/image-utils";
+import { WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export default async function CollectionsPage() {
         imagePosition="center"
         primaryHref="/shop"
         primaryLabel="Shop All"
-        secondaryHref="/wholesale"
+        secondaryHref={WHOLESALE_INQUIRY_HREF}
         secondaryLabel="Wholesale"
       />
 

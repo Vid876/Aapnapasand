@@ -8,7 +8,7 @@ import { z } from "zod";
 
 const reviewSchema = z.object({
   productId: z.string(),
-  rating: z.number().min(1).max(5),
+  rating: z.number().int().min(3, "Minimum rating is 3 stars").max(5),
   title: z.string().optional(),
   comment: z.string().min(10, "Review must be at least 10 characters"),
 });

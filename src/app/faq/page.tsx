@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { HelpCircle } from "lucide-react";
 import { PageHero, PUBLIC_IMAGES, SectionHeader } from "@/components/marketing/PublicPage";
-import { BRAND } from "@/lib/brand";
+import { BRAND, WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "FAQ",
@@ -61,7 +61,7 @@ export default function FAQPage() {
         image={PUBLIC_IMAGES.customerCare}
         primaryHref="/contact"
         primaryLabel="Contact Support"
-        secondaryHref="/wholesale"
+        secondaryHref={WHOLESALE_INQUIRY_HREF}
         secondaryLabel="Wholesale Inquiry"
       />
 

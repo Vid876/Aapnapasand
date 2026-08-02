@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ProductImage } from "@/components/products/ProductImage";
+import { ReviewForm } from "@/components/products/ReviewForm";
 import {
   getChoicePrice,
   getChoicePriceRange,
@@ -43,11 +44,6 @@ type DisplayReview = ProductSourceReview & {
   source: "Etsy" | "Etsy shop" | "Bohoblockprinted";
   productName?: string;
   productSlug?: string;
-};
-
-type ShopReview = ProductSourceReview & {
-  productName: string;
-  productSlug: string;
 };
 
 function getChoiceLabel(
@@ -168,14 +164,14 @@ export default function ProductDetailPage() {
   const slug = params.slug as string;
   const [product, setProduct] = useState<Product | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [shopReviews, setShopReviews] = useState<ShopReview[]>([]);
   const [related, setRelated] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedFabric, setSelectedFabric] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [showAllReviews, setShowAllReviews] = useState(false);
 
   const addItem = useCartStore((state) => state.addItem);
   const { toggle, has } = useWishlistStore();
@@ -195,11 +191,10 @@ export default function ProductDetailPage() {
           const fetchedProduct = data.product as Product;
           setProduct(fetchedProduct);
           setReviews(data.reviews || []);
-          setShopReviews(data.shopReviews || []);
           setRelated(data.relatedProducts || []);
           setSelectedImage(0);
           setSelectedSize("");
-          setSelectedColor("");
+          setSelectedFabric("");
         }
       } catch (error) {
         console.error("Product detail fetch failed:", error);
@@ -239,7 +234,7 @@ export default function ProductDetailPage() {
     (choice) => choice.value === selectedSize
   );
   const selectedFabricChoice = fabrics.find(
-    (choice) => choice.value === selectedColor
+    (choice) => choice.value === selectedFabric
   );
   const inStock = product.totalStock > 0;
   const displayPrice = getChoicePrice(
@@ -264,14 +259,18 @@ export default function ProductDetailPage() {
       : product.category?.name || "Handcrafted textiles";
   const sellerName = "BOHOBLOCKPRINTED";
 
-  const sourceReviews: DisplayReview[] = (product.sourceReviews || []).map(
+  const sourceReviews: DisplayReview[] = (product.sourceReviews || [])
+    .filter((review) => review.rating >= 3)
+    .map(
     (review) => ({
       ...review,
       key: `source-${review.sourceReviewId}`,
       source: "Etsy",
     })
   );
-  const localReviews: DisplayReview[] = reviews.map((review) => ({
+  const localReviews: DisplayReview[] = reviews
+    .filter((review) => review.rating >= 3)
+    .map((review) => ({
     sourceReviewId: review._id,
     userName: review.userName,
     rating: review.rating,
@@ -279,25 +278,17 @@ export default function ProductDetailPage() {
     createdAt: review.createdAt,
     key: `local-${review._id}`,
     source: "Bohoblockprinted",
-  }));
+    }));
   const itemReviews = [...sourceReviews, ...localReviews];
-  const fallbackReviews: DisplayReview[] = shopReviews.map((review) => ({
-    ...review,
-    key: `shop-${review.sourceReviewId}`,
-    source: "Etsy shop",
-  }));
-  const showingShopReviews = itemReviews.length === 0 && fallbackReviews.length > 0;
-  const displayReviews = showingShopReviews ? fallbackReviews : itemReviews;
-  const visibleRating =
-    product.rating > 0
+  const displayReviews = itemReviews;
+  const visibleRating = displayReviews.length
+    ? displayReviews.reduce((sum, review) => sum + review.rating, 0) /
+      displayReviews.length
+    : product.rating >= 3
       ? product.rating
-      : displayReviews.length
-        ? displayReviews.reduce((sum, review) => sum + review.rating, 0) /
-          displayReviews.length
-        : 0;
-  const visibleReviewCount = showingShopReviews
-    ? displayReviews.length
-    : product.reviewCount || displayReviews.length;
+      : 0;
+  const visibleReviewCount = displayReviews.length ||
+    (product.rating >= 3 ? product.reviewCount : 0);
   const conciseDescription = getConciseProductDescription(product);
   const [descriptionPreview, descriptionRemainder] = splitDescription(
     conciseDescription
@@ -325,7 +316,7 @@ export default function ProductDetailPage() {
   function handleAddToCart() {
     if (!product) return;
 
-    if ((sizes.length && !selectedSize) || (fabrics.length && !selectedColor)) {
+    if ((sizes.length && !selectedSize) || (fabrics.length && !selectedFabric)) {
       return;
     }
 
@@ -338,7 +329,11 @@ export default function ProductDetailPage() {
       currency: product.currency || "INR",
       quantity,
       size: selectedSize || "One Size",
-      color: selectedColor || "As Shown",
+      color:
+        product.variants?.find(
+          (variant) => variant.color && variant.color !== "As Shown"
+        )?.color || "As Shown",
+      fabric: selectedFabric || product.material || undefined,
     });
 
     setAddedToCart(true);
@@ -464,9 +459,7 @@ export default function ProductDetailPage() {
                 >
                   <RatingStars rating={visibleRating} size={14} />
                   <span className="text-xs text-stone-600">
-                    {showingShopReviews
-                      ? `${visibleRating.toFixed(1)} shop reviews`
-                      : `${visibleRating.toFixed(1)} (${visibleReviewCount})`}
+                    {`${visibleRating.toFixed(1)} (${visibleReviewCount})`}
                   </span>
                 </Link>
               ) : null}
@@ -520,12 +513,12 @@ export default function ProductDetailPage() {
               {fabrics.length ? (
                 <label className="block">
                   <span className="mb-2 block text-sm font-semibold text-stone-900">
-                    Fabric / colour
+                    Fabric
                   </span>
                   <span className="relative block">
                     <select
-                      value={selectedColor}
-                      onChange={(event) => setSelectedColor(event.target.value)}
+                      value={selectedFabric}
+                      onChange={(event) => setSelectedFabric(event.target.value)}
                       className="h-13 w-full appearance-none rounded-xl border border-stone-400 bg-white px-4 pr-11 text-sm font-medium text-stone-900 outline-none transition focus:border-[#173f4f] focus:ring-2 focus:ring-[#173f4f]/15"
                     >
                       <option value="" disabled>
@@ -577,7 +570,11 @@ export default function ProductDetailPage() {
               <button
                 type="button"
                 onClick={handleAddToCart}
-                disabled={!inStock || !selectedSize || !selectedColor}
+                disabled={
+                  !inStock ||
+                  (sizes.length > 0 && !selectedSize) ||
+                  (fabrics.length > 0 && !selectedFabric)
+                }
                 className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[#2f2a35] px-6 text-sm font-bold text-white transition hover:bg-[#173f4f] disabled:cursor-not-allowed disabled:bg-stone-300"
               >
                 <ShoppingBag size={18} />
@@ -585,7 +582,8 @@ export default function ProductDetailPage() {
                   ? t.product.added
                   : !inStock
                     ? t.product.outOfStock
-                    : !selectedSize || !selectedColor
+                    : (sizes.length > 0 && !selectedSize) ||
+                        (fabrics.length > 0 && !selectedFabric)
                       ? "Select size & fabric"
                       : t.product.addToCart}
               </button>
@@ -680,14 +678,11 @@ export default function ProductDetailPage() {
               Verified customer feedback
             </p>
             <h2 className="mt-2 font-display text-3xl font-bold text-stone-950">
-              {showingShopReviews
-                ? "Customer reviews from our Etsy shop"
-                : "Reviews for this item"}
+              Reviews for this item
             </h2>
             <p className="mt-3 text-sm leading-6 text-stone-600">
-              {showingShopReviews
-                ? "This listing has no item-specific feedback yet, so we’re showing verified reviews from other products in our Etsy shop."
-                : "Verified feedback for this product."}
+              Verified feedback for this product. Reviews below 3 stars are
+              retained for audit but are not published.
             </p>
 
             {visibleRating > 0 ? (
@@ -698,9 +693,7 @@ export default function ProductDetailPage() {
                 <div>
                   <RatingStars rating={visibleRating} size={20} />
                   <p className="mt-2 text-xs text-stone-500">
-                    {showingShopReviews
-                      ? `${visibleReviewCount} verified shop reviews shown`
-                      : `${visibleReviewCount} item reviews`}
+                    {`${visibleReviewCount} item reviews`}
                   </p>
                 </div>
               </div>
@@ -708,14 +701,30 @@ export default function ProductDetailPage() {
 
             <div className="mt-7 space-y-7">
               {displayReviews.length ? (
-                displayReviews.slice(0, 3).map((review) => (
+                (showAllReviews ? displayReviews : displayReviews.slice(0, 3)).map((review) => (
                   <ReviewCard key={review.key} review={review} />
                 ))
               ) : (
                 <div className="rounded-xl bg-[#fbfaf7] p-5 text-sm text-stone-600">
-                  Customer reviews are being updated. Please check again shortly.
+                  Not yet rated. Be the first customer to share a verified review.
                 </div>
               )}
+            </div>
+
+            {displayReviews.length > 3 ? (
+              <button
+                type="button"
+                onClick={() => setShowAllReviews((current) => !current)}
+                className="mt-6 text-sm font-bold text-[#173f4f] hover:underline"
+              >
+                {showAllReviews
+                  ? "Show fewer reviews"
+                  : `View all ${displayReviews.length} reviews`}
+              </button>
+            ) : null}
+
+            <div className="mt-8 border-t border-stone-200 pt-7">
+              <ReviewForm productId={product._id} />
             </div>
           </aside>
         </section>
@@ -727,7 +736,11 @@ export default function ProductDetailPage() {
                 You may also like
               </h2>
               <Link
-                href="/shop"
+                href={`/shop?category=${encodeURIComponent(
+                  typeof product.category === "string"
+                    ? product.category
+                    : product.category.slug
+                )}`}
                 className="rounded-full border border-stone-700 px-5 py-2.5 text-sm font-semibold text-stone-900 transition hover:bg-[#173f4f] hover:text-white"
               >
                 See more

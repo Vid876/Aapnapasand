@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { FileText, Handshake, Mail, PackageCheck, PenLine, Ruler, Shirt, Timer, Truck } from "lucide-react";
 import { PageHero, PUBLIC_IMAGES, PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
-import { BRAND, WHOLESALE_FIELDS } from "@/lib/brand";
+import { InquiryHashFocus } from "@/components/wholesale/InquiryHashFocus";
+import { BRAND, WHOLESALE_FIELDS, WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Wholesale & Private Label Services",
@@ -24,11 +25,12 @@ const wholesaleItems = [
 export default function WholesalePage() {
   return (
     <>
+      <InquiryHashFocus />
       <PageHero
         title="Wholesale & Private Label Services"
         description="We offer custom manufacturing, private labeling, custom packaging, and bulk production services for businesses worldwide."
         image={PUBLIC_IMAGES.wholesale}
-        primaryHref="/contact"
+        primaryHref={WHOLESALE_INQUIRY_HREF}
         primaryLabel="Start Inquiry"
         secondaryHref="/fabric"
         secondaryLabel="Explore Fabric"
@@ -53,13 +55,20 @@ export default function WholesalePage() {
         </div>
       </section>
 
-      <section id="inquiry-form" className="scroll-mt-24 bg-[#eef4f0] py-16 lg:py-24">
+      <section id="inquiry-form" className="scroll-mt-28 bg-[#eef4f0] py-16 lg:py-24" aria-labelledby="inquiry-form-heading">
         <div className="container-app grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <SectionHeader
-              title="What to include in your inquiry"
-              description="Complete inquiries help confirm MOQ, sampling needs, catalog fit, and realistic lead time."
-            />
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#b87811]">Wholesale inquiry</p>
+            <h2
+              id="inquiry-form-heading"
+              tabIndex={-1}
+              className="mt-3 font-display text-3xl font-bold text-stone-950 outline-none lg:text-4xl"
+            >
+              What to include in your inquiry
+            </h2>
+            <p className="mb-8 mt-3 max-w-xl text-sm leading-7 text-stone-600 lg:text-base">
+              Complete inquiries help confirm MOQ, sampling needs, catalog fit, and realistic lead time.
+            </p>
             <div className="rounded-xl bg-[#173f4f] p-6 text-white lg:p-8">
               <Handshake className="text-[#f5c76b]" size={30} />
               <h2 className="mt-5 font-display text-3xl font-bold">Wholesale catalog request</h2>
@@ -69,7 +78,7 @@ export default function WholesalePage() {
             </div>
           </div>
 
-          <form className="rounded-xl bg-white p-5 shadow-sm sm:p-8">
+          <form className="rounded-xl bg-white p-5 shadow-sm sm:p-8" aria-labelledby="inquiry-form-heading">
             <label className="mb-4 block text-sm font-medium text-stone-950">
               Inquiry service
               <select className="mt-2 w-full rounded-lg border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#276070]">

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { COLORS, SIZES } from "@/lib/constants";
+import { COLORS, FABRICS, SIZES } from "@/lib/constants";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { calculateDiscount, formatPrice } from "@/lib/utils";
 import { isValidStoredImage } from "@/lib/image-utils";
@@ -20,6 +20,7 @@ type ProductVariantForm = Omit<ProductVariant, "stock" | "price"> & {
 const DEFAULT_VARIANT: ProductVariantForm = {
   size: "M",
   color: "Black",
+  fabric: "Cotton",
   colorHex: "#000000",
   sku: "",
   stock: "10",
@@ -70,6 +71,7 @@ const productFormSchema = z.object({
       z.object({
         size: z.string().min(1),
         color: z.string().min(1),
+        fabric: z.string().optional(),
         colorHex: z.string().optional(),
         sku: z.string().min(1),
         stock: z
@@ -394,7 +396,7 @@ export function ProductForm({
 
         <section className="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">4. Size, Color & Stock</h2>
+            <h2 className="text-lg font-semibold">4. Size, Fabric, Color &amp; Stock</h2>
             <button
               type="button"
               onClick={addVariant}
@@ -405,21 +407,30 @@ export function ProductForm({
           </div>
 
           <div className="space-y-2">
-            <div className="grid grid-cols-5 gap-2 text-xs font-medium text-gray-500 px-3">
+            <div className="grid grid-cols-6 gap-2 text-xs font-medium text-gray-500 px-3">
               <span>Size</span>
+              <span>Fabric</span>
               <span>Color</span>
               <span>Stock</span>
               <span>Price</span>
               <span className="col-span-1">SKU</span>
             </div>
             {variantFieldArray.fields.map((field, index) => (
-              <div key={field.id} className="grid grid-cols-5 gap-2 p-3 bg-gray-50 rounded-lg items-center">
+              <div key={field.id} className="grid grid-cols-6 gap-2 p-3 bg-gray-50 rounded-lg items-center">
                 <select
                   {...register(`variants.${index}.size` as const)}
                   className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white"
                 >
                   {SIZES.map((s) => (
                     <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+                <select
+                  {...register(`variants.${index}.fabric` as const)}
+                  className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white"
+                >
+                  {FABRICS.map((fabric) => (
+                    <option key={fabric} value={fabric}>{fabric}</option>
                   ))}
                 </select>
                 <select

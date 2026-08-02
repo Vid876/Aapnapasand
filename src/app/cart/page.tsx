@@ -97,7 +97,13 @@ export default function CartPage() {
           price: item.price,
         };
 
-    updateItemOptions(item.productId, item.size, item.color, nextSelection);
+    updateItemOptions(
+      item.productId,
+      item.size,
+      item.color,
+      { ...nextSelection, fabric: item.fabric },
+      item.fabric
+    );
   };
 
   if (items.length === 0) {
@@ -133,7 +139,7 @@ export default function CartPage() {
 
             return (
               <div
-                key={`${item.productId}-${item.size}-${item.color}`}
+                key={`${item.productId}-${item.size}-${item.color}-${item.fabric || ""}`}
                 className="flex gap-4 rounded-xl border border-gray-100 bg-white p-4"
               >
                 <Link
@@ -165,6 +171,7 @@ export default function CartPage() {
                           ))}
                         </select>
                       </label>
+                      {colorOptions.some((color) => color !== "As Shown") ? (
                       <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
                         Color
                         <select
@@ -179,10 +186,16 @@ export default function CartPage() {
                           ))}
                         </select>
                       </label>
+                      ) : null}
+                      {item.fabric ? (
+                        <span className="self-end rounded-lg bg-[#eef4f0] px-3 py-2 text-sm font-semibold text-[#173f4f]">
+                          Fabric: {item.fabric}
+                        </span>
+                      ) : null}
                     </div>
                   ) : (
                     <p className="text-sm text-gray-500 mt-1">
-                      Size: {item.size} | Color: {item.color}
+                      Size: {item.size}{item.fabric ? ` | Fabric: ${item.fabric}` : ""}
                     </p>
                   )}
                   <p className="text-sm font-semibold mt-3">{formatPrice(item.price, item.currency)}</p>
@@ -191,7 +204,7 @@ export default function CartPage() {
                     <div className="flex items-center border border-gray-200 rounded-lg">
                       <button
                         onClick={() =>
-                          updateQuantity(item.productId, item.size, item.color, item.quantity - 1)
+                          updateQuantity(item.productId, item.size, item.color, item.quantity - 1, item.fabric)
                         }
                         className="p-2 hover:bg-gray-50"
                         aria-label="Decrease quantity"
@@ -201,7 +214,7 @@ export default function CartPage() {
                       <span className="px-3 text-sm font-medium">{item.quantity}</span>
                       <button
                         onClick={() =>
-                          updateQuantity(item.productId, item.size, item.color, item.quantity + 1)
+                          updateQuantity(item.productId, item.size, item.color, item.quantity + 1, item.fabric)
                         }
                         className="p-2 hover:bg-gray-50"
                         aria-label="Increase quantity"
@@ -211,7 +224,7 @@ export default function CartPage() {
                     </div>
 
                     <button
-                      onClick={() => removeItem(item.productId, item.size, item.color)}
+                      onClick={() => removeItem(item.productId, item.size, item.color, item.fabric)}
                       className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                       aria-label={`Remove ${item.name}`}
                     >

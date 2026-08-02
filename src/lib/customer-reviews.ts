@@ -7,7 +7,7 @@ export type CustomerReview = {
   response?: string;
 };
 
-export const CUSTOMER_REVIEWS: CustomerReview[] = [
+const CUSTOMER_REVIEW_AUDIT: CustomerReview[] = [
   {
     customer: "Leah",
     date: "16 Jul, 2026",
@@ -236,3 +236,9 @@ export const CUSTOMER_REVIEWS: CustomerReview[] = [
     response: "Thank you so much for your lovely feedback! We're delighted you love the prints, comfort, and the 60s–70s vibe. Enjoy your caftans! 💕",
   },
 ];
+
+// Imported source feedback is retained above for audit. Only eligible public
+// reviews are exposed to the homepage carousel.
+export const CUSTOMER_REVIEWS = CUSTOMER_REVIEW_AUDIT.filter(
+  (review) => review.rating >= 3 && review.rating <= 5
+);

@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/products/ProductCard";
 import { PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
 import { connectDB } from "@/lib/db";
 import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
+import { toPublicProductRating } from "@/lib/public-rating";
 import { Product } from "@/models/Product";
 import type { Product as ProductType } from "@/types";
 
@@ -18,7 +19,9 @@ async function fetchTrendingProducts(): Promise<ProductType[]> {
       .sort({ reviewCount: -1, rating: -1 })
       .limit(4)
       .lean();
-    return JSON.parse(JSON.stringify(products));
+    return (JSON.parse(JSON.stringify(products)) as ProductType[]).map((product) =>
+      toPublicProductRating(product)
+    );
   } catch {
     return [];
   }

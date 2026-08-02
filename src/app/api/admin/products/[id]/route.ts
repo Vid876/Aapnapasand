@@ -30,6 +30,7 @@ const updateSchema = z.object({
       z.object({
         size: z.string(),
         color: z.string(),
+        fabric: z.string().optional(),
         colorHex: z.string().optional(),
         sku: z.string(),
         stock: z.number().min(0),

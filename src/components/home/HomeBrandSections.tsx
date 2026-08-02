@@ -13,6 +13,7 @@ import {
   INSTAGRAM_POSTS,
   PROCESS_STEPS,
   WHY_CHOOSE,
+  WHOLESALE_INQUIRY_HREF,
 } from "@/lib/brand";
 import { getRenderableImageSrc } from "@/lib/image-utils";
 import { SectionHeader } from "@/components/marketing/PublicPage";
@@ -189,7 +190,7 @@ export function PrivateLabelSection() {
           />
 
           <Link
-            href="/wholesale"
+            href={WHOLESALE_INQUIRY_HREF}
             className="inline-flex w-fit items-center gap-2 rounded-lg border border-[#173f4f] px-5 py-3 text-sm font-semibold text-[#173f4f] transition-colors hover:bg-[#173f4f] hover:text-white"
           >
             Discuss Your Requirements
@@ -236,7 +237,7 @@ export function BulkOrdersBanner() {
           </p>
 
           <Link
-            href="/wholesale#inquiry-form"
+            href={WHOLESALE_INQUIRY_HREF}
             className="mt-7 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-[#173f4f] transition hover:bg-[#f5c76b]"
           >
             Request a Quote

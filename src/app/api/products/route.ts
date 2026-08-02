@@ -4,61 +4,157 @@ import { connectDB } from "@/lib/db";
 import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Product } from "@/models/Product";
 import { Category } from "@/models/Category";
-import { CATEGORY_ALIASES, getCanonicalCategorySlug } from "@/lib/category-aliases";
+import {
+  CATEGORY_ALIASES,
+  getCanonicalCategorySlug,
+} from "@/lib/category-aliases";
+import { toPublicProductRating } from "@/lib/public-rating";
+
+function getList(searchParams: URLSearchParams, key: string) {
+  return searchParams
+    .getAll(key)
+    .flatMap((value) => value.split(","))
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function positiveInteger(value: string | null, fallback: number) {
+  const parsed = Number.parseInt(value || "", 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+async function resolveCategoryIds(values: string[]) {
+  const objectIds = values.filter((value) => /^[0-9a-fA-F]{24}$/.test(value));
+  const slugs = values.filter((value) => !/^[0-9a-fA-F]{24}$/.test(value));
+  const expandedSlugs = new Set<string>();
+
+  for (const slug of slugs) {
+    const canonical = getCanonicalCategorySlug(slug);
+    expandedSlugs.add(canonical);
+    for (const [source, target] of Object.entries(CATEGORY_ALIASES)) {
+      if (target === canonical) expandedSlugs.add(source);
+    }
+  }
+
+  const categories = expandedSlugs.size
+    ? await Category.find({
+        slug: { $in: [...expandedSlugs] },
+        isActive: true,
+      })
+        .select("_id")
+        .lean()
+    : [];
+
+  return [...objectIds, ...categories.map((category) => category._id)];
+}
 
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
 
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get("category");
+    const categories = getList(searchParams, "category");
+    const sizes = getList(searchParams, "size");
+    const colors = getList(searchParams, "color");
+    const fabrics = getList(searchParams, "fabric");
+    const ids = getList(searchParams, "ids").filter((id) =>
+      /^[0-9a-fA-F]{24}$/.test(id)
+    );
     const gender = searchParams.get("gender");
-    const search = searchParams.get("search");
-    const minPrice = searchParams.get("minPrice");
-    const maxPrice = searchParams.get("maxPrice");
-    const size = searchParams.get("size");
-    const color = searchParams.get("color");
+    const search = searchParams.get("search")?.trim();
+    const minPrice = searchParams.has("minPrice")
+      ? Number(searchParams.get("minPrice"))
+      : Number.NaN;
+    const maxPrice = searchParams.has("maxPrice")
+      ? Number(searchParams.get("maxPrice"))
+      : Number.NaN;
+    const minRating = searchParams.has("minRating")
+      ? Number(searchParams.get("minRating"))
+      : Number.NaN;
     const sort = searchParams.get("sort") || "newest";
     const featured = searchParams.get("featured");
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = Math.min(parseInt(searchParams.get("limit") || "12"), 50);
+    const page = positiveInteger(searchParams.get("page"), 1);
+    const requestedLimit = positiveInteger(searchParams.get("limit"), 12);
+    const limit = Math.min(requestedLimit, ids.length ? 100 : 50);
 
     const filter: Record<string, unknown> = {
       isActive: true,
       ...PRODUCT_IMAGE_FILTER,
     };
+    const andConditions: Record<string, unknown>[] = [];
 
-    if (category) {
-      if (/^[0-9a-fA-F]{24}$/.test(category)) {
-        filter.category = category;
-      } else {
-        const canonicalSlug = getCanonicalCategorySlug(category);
-        const sourceSlugs = Object.entries(CATEGORY_ALIASES)
-          .filter(([, target]) => target === canonicalSlug)
-          .map(([source]) => source);
-        const matchedCategories = await Category.find({
-          slug: { $in: [canonicalSlug, ...sourceSlugs] },
-          isActive: true,
-        })
-          .select("_id")
-          .lean();
-        filter.category = matchedCategories.length
-          ? { $in: matchedCategories.map((item) => item._id) }
-          : category;
+    if (ids.length) filter._id = { $in: ids };
+
+    if (categories.length) {
+      const categoryIds = await resolveCategoryIds(categories);
+      if (!categoryIds.length) {
+        return publicJson({
+          products: [],
+          pagination: { page: 1, limit, total: 0, pages: 0 },
+        });
       }
+      filter.category = { $in: categoryIds };
     }
+
     if (gender) filter.gender = gender;
     if (featured === "true") filter.isFeatured = true;
-    if (minPrice || maxPrice) {
-      filter.price = {};
-      if (minPrice) (filter.price as Record<string, number>).$gte = parseInt(minPrice);
-      if (maxPrice) (filter.price as Record<string, number>).$lte = parseInt(maxPrice);
+
+    if (Number.isFinite(minPrice) || Number.isFinite(maxPrice)) {
+      const priceFilter: Record<string, number> = {};
+      if (Number.isFinite(minPrice) && minPrice >= 0) priceFilter.$gte = minPrice;
+      if (Number.isFinite(maxPrice) && maxPrice >= 0) priceFilter.$lte = maxPrice;
+      if (Object.keys(priceFilter).length) filter.price = priceFilter;
     }
-    if (size) filter["variants.size"] = size;
-    if (color) filter["variants.color"] = color;
-    if (search) {
-      filter.$text = { $search: search };
+
+    if (Number.isFinite(minRating) && minRating >= 3) {
+      filter.rating = { $gte: Math.min(minRating, 5) };
     }
+
+    if (sizes.length) {
+      andConditions.push({
+        $or: [
+          { "variants.size": { $in: sizes } },
+          {
+            description: {
+              $regex: sizes.map(escapeRegex).join("|"),
+              $options: "i",
+            },
+          },
+        ],
+      });
+    }
+
+    if (colors.length) {
+      andConditions.push({
+        $or: [
+          { "variants.color": { $in: colors } },
+          {
+            name: {
+              $regex: colors.map(escapeRegex).join("|"),
+              $options: "i",
+            },
+          },
+        ],
+      });
+    }
+
+    if (fabrics.length) {
+      const fabricPattern = fabrics.map(escapeRegex).join("|");
+      andConditions.push({
+        $or: [
+          { "variants.fabric": { $in: fabrics } },
+          { material: { $regex: fabricPattern, $options: "i" } },
+          { description: { $regex: fabricPattern, $options: "i" } },
+        ],
+      });
+    }
+
+    if (andConditions.length) filter.$and = andConditions;
+    if (search) filter.$text = { $search: search };
 
     let sortOption: Record<string, 1 | -1> = { createdAt: -1 };
     switch (sort) {
@@ -69,10 +165,10 @@ export async function GET(request: NextRequest) {
         sortOption = { price: -1 };
         break;
       case "rating":
-        sortOption = { rating: -1 };
+        sortOption = { rating: -1, reviewCount: -1 };
         break;
       case "popular":
-        sortOption = { reviewCount: -1 };
+        sortOption = { reviewCount: -1, rating: -1 };
         break;
     }
 
@@ -87,17 +183,23 @@ export async function GET(request: NextRequest) {
       Product.countDocuments(filter),
     ]);
 
-    return publicJson({
-      products,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit),
+    return publicJson(
+      {
+        products: products.map((product) => toPublicProductRating(product)),
+        pagination: {
+          page,
+          limit,
+          total,
+          pages: Math.ceil(total / limit),
+        },
       },
-    }, search ? 10 : 10);
+      search ? 10 : 30
+    );
   } catch (error) {
     console.error("Products fetch error:", error);
-    return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch products" },
+      { status: 500 }
+    );
   }
 }

@@ -8,6 +8,7 @@ export interface IOrderItem {
   quantity: number;
   size: string;
   color: string;
+  fabric?: string;
   price: number;
   currency?: "INR" | "USD";
 }
@@ -53,6 +54,7 @@ const OrderItemSchema = new Schema<IOrderItem>(
     quantity: { type: Number, required: true, min: 1 },
     size: { type: String, required: true },
     color: { type: String, required: true },
+    fabric: { type: String },
     price: { type: Number, required: true },
     currency: { type: String, enum: ["INR", "USD"], default: "INR" },
   },

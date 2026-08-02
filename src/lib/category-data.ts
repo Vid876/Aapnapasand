@@ -1,5 +1,4 @@
 import { unstable_cache } from "next/cache";
-import { ensureDefaultCategories } from "@/lib/category-sync";
 import { connectDB } from "@/lib/db";
 import { CATEGORY_IMAGE_FILTER, PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
 import { Category } from "@/models/Category";
@@ -14,7 +13,6 @@ type PublicCategory = Pick<CategoryType, "_id" | "name" | "slug" | "description"
 async function fetchPublicCategories(): Promise<PublicCategory[]> {
   try {
     await connectDB();
-    await ensureDefaultCategories();
 
     const [categories, productCounts] = await Promise.all([
       Category.find({ isActive: true }).sort({ name: 1 }).lean(),
@@ -59,7 +57,6 @@ export const getPublicCategories = unstable_cache(fetchPublicCategories, ["publi
 async function fetchHomepageCategories(): Promise<PublicCategory[]> {
   try {
     await connectDB();
-    await ensureDefaultCategories();
 
     const categoryIds = await Product.distinct("category", {
       isActive: true,

@@ -9,6 +9,9 @@ import { Category } from "../models/Category";
 import { Product } from "../models/Product";
 import { slugify } from "../lib/utils";
 import { getCanonicalCategorySlug } from "../lib/category-aliases";
+import { COLORS } from "../lib/constants";
+import { getProductPurchaseOptions } from "../lib/product-purchase-options";
+import type { Product as ProductType } from "../types";
 
 type Gender = "men" | "women" | "kids" | "unisex";
 
@@ -183,11 +186,40 @@ function normalizeEtsyImageUrl(value: string) {
     .replace(/il_(?:340x270|600x600)\./, "il_794xN.");
 }
 
-function buildVariants(category: string, sourceId: string) {
-  return (SIZE_MAP[category] || ["One Size"]).map((size, index) => ({
-    size,
-    color: "As Shown",
-    sku: "ETSY-" + sourceId + "-" + slugify(size).toUpperCase(),
+function inferListingColor(name: string) {
+  const normalizedName = name.toLowerCase();
+  return (
+    COLORS.find((color) => normalizedName.includes(color.name.toLowerCase()))?.name ||
+    "As Shown"
+  );
+}
+
+function buildVariants(
+  category: string,
+  sourceId: string,
+  name: string,
+  description: string,
+  material?: string
+) {
+  const legacySizes = SIZE_MAP[category] || ["One Size"];
+  const options = getProductPurchaseOptions({
+    description,
+    material,
+    variants: legacySizes.map((size, index) => ({
+      size,
+      color: inferListingColor(name),
+      sku: `ETSY-${sourceId}-${index}`,
+      stock: 10 + index * 2,
+    })),
+  } as ProductType);
+  const fabric = options.fabrics[0]?.value;
+  const color = inferListingColor(name);
+
+  return options.sizes.map((choice, index) => ({
+    size: choice.value,
+    fabric,
+    color,
+    sku: "ETSY-" + sourceId + "-" + slugify(choice.value).toUpperCase(),
     stock: 10 + index * 2,
   }));
 }
@@ -383,7 +415,13 @@ async function run() {
         "-" +
         slugify(name).slice(0, 80);
       const categorySlug = getCanonicalCategorySlug(entry.category);
-      const variants = buildVariants(categorySlug, entry.sourceId);
+      const variants = buildVariants(
+        categorySlug,
+        entry.sourceId,
+        name,
+        description,
+        sourceDetail?.material
+      );
       const totalStock = variants.reduce(
         (sum, variant) => sum + variant.stock,
         0
@@ -421,6 +459,7 @@ async function run() {
               category: categoryId,
               sourceId: String(entry.sourceId),
               sourceUrl: sourceDetail?.sourceUrl || entry.sourceUrl,
+              sourceSyncStatus: "description-derived" as const,
               material: sourceDetail?.material || "Cotton / natural textile",
               categoryPath: sourceDetail?.categoryPath || entry.categoryName,
               sourceReviews: (sourceDetail?.reviews || []).map((review) => ({

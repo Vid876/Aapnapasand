@@ -4,6 +4,7 @@ import { ProductCard } from "@/components/products/ProductCard";
 import { SectionHeader } from "@/components/marketing/PublicPage";
 import { connectDB } from "@/lib/db";
 import { PRODUCT_IMAGE_FILTER } from "@/lib/image-utils";
+import { toPublicProductRating } from "@/lib/public-rating";
 import { Product } from "@/models/Product";
 import type { Product as ProductType } from "@/types";
 
@@ -36,13 +37,13 @@ async function fetchFeaturedProducts(): Promise<ProductType[]> {
           .lean(),
       ]);
 
-    const importedProducts = JSON.parse(
+    const importedProducts = (JSON.parse(
       JSON.stringify(importedCandidates)
-    ) as ProductType[];
+    ) as ProductType[]).map((product) => toPublicProductRating(product));
 
-    const featuredProducts = JSON.parse(
+    const featuredProducts = (JSON.parse(
       JSON.stringify(featuredCandidates)
-    ) as ProductType[];
+    ) as ProductType[]).map((product) => toPublicProductRating(product));
 
     const selectedProducts: ProductType[] = [];
     const selectedProductIds = new Set<string>();

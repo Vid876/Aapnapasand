@@ -12,7 +12,13 @@ const updateSchema = z.object({
 
 async function updateProductRating(productId: string) {
   const stats = await Review.aggregate([
-    { $match: { product: new mongoose.Types.ObjectId(productId), isApproved: true } },
+    {
+      $match: {
+        product: new mongoose.Types.ObjectId(productId),
+        isApproved: true,
+        rating: { $gte: 3 },
+      },
+    },
     {
       $group: {
         _id: null,
@@ -27,6 +33,8 @@ async function updateProductRating(productId: string) {
       rating: Math.round(stats[0].avgRating * 10) / 10,
       reviewCount: stats[0].count,
     });
+  } else {
+    await Product.findByIdAndUpdate(productId, { rating: 0, reviewCount: 0 });
   }
 }
 

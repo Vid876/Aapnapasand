@@ -25,7 +25,33 @@ export const CATEGORIES = [
   { name: "Block Print Fabric by Yard", slug: "block-print-fabric-by-yard", gender: "unisex", image: CATEGORY_SEED_IMAGES[1] },
 ] as const;
 
-export const SIZES = ["OS", "XS", "S", "M", "L", "XL", "XXL", "Twin", "Queen", "King", "1 Yard", "2 Yard"] as const;
+export const SIZES = [
+  "One Size",
+  "XS",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL",
+  "Fabric Sample",
+  "Crib / Baby",
+  "Twin",
+  "Twin XL",
+  "Full",
+  "Queen",
+  "King",
+  "California King",
+  "4 Seater",
+  "6 Seater",
+  "8 Seater",
+  "10 Seater",
+  "12 Seater",
+  "14 Seater",
+  "16 Seater",
+  "1 Yard",
+  "2 Yard",
+  "Custom Size",
+] as const;
 
 export const COLORS = [
   { name: "Black", hex: "#000000" },
@@ -35,7 +61,24 @@ export const COLORS = [
   { name: "Sage", hex: "#7f9366" },
   { name: "Mustard", hex: "#c9902e" },
   { name: "Rose", hex: "#cf6f83" },
+  { name: "Pink", hex: "#df91a5" },
+  { name: "Green", hex: "#668b62" },
+  { name: "Blue", hex: "#557da4" },
+  { name: "Brown", hex: "#795548" },
+  { name: "Beige", hex: "#d8c7a6" },
+  { name: "Purple", hex: "#765486" },
+  { name: "Orange", hex: "#d57932" },
+  { name: "Yellow", hex: "#d9b642" },
+  { name: "Grey", hex: "#8b8b87" },
   { name: "Charcoal", hex: "#2f3437" },
+] as const;
+
+export const FABRICS = [
+  "Cotton",
+  "Linen",
+  "Cotton Linen Blend",
+  "Rayon",
+  "Silk",
 ] as const;
 
 export const ORDER_STATUS = [

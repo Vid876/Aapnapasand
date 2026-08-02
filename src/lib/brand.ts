@@ -12,8 +12,10 @@ export const BRAND = {
   url: "https://www.bohoblockprinted.com",
   instagram: "https://www.instagram.com/bohoblockprinted/",
   pinterest: "https://in.pinterest.com/thecottonduvet/",
-  etsy: "https://www.etsy.com/shop/coloursofspirit",
+  etsy: "https://www.etsy.com/shop/Beachwearsindian",
 } as const;
+
+export const WHOLESALE_INQUIRY_HREF = "/wholesale#inquiry-form" as const;
 
 export const TOP_BAR_MESSAGES = [
   "Handmade in Jaipur",
@@ -134,7 +136,7 @@ export const QUICK_LINK_BLOCKS = [
   },
   {
     title: "Wholesale",
-    href: "/wholesale",
+    href: WHOLESALE_INQUIRY_HREF,
     image: "/uploads/20a9b9e3-862f-4acb-858c-6a7ec0bdf93a.png",
     text: "Bulk production, private label, and catalog requests.",
   },

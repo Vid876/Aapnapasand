@@ -18,6 +18,7 @@ const orderSchema = z.object({
       quantity: z.number().min(1),
       size: z.string(),
       color: z.string(),
+      fabric: z.string().optional(),
       price: z.number(),
       currency: z.enum(["INR", "USD"]).optional(),
     })
@@ -96,6 +97,7 @@ export async function POST(request: NextRequest) {
         quantity: item.quantity,
         size: item.size,
         color: item.color,
+        fabric: item.fabric,
         price: item.price,
         currency: item.currency || currency,
       })),

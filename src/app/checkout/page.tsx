@@ -102,6 +102,7 @@ export default function CheckoutPage() {
             quantity: item.quantity,
             size: item.size,
             color: item.color,
+            fabric: item.fabric,
             price: item.price,
             currency: item.currency || "INR",
           })),
@@ -323,14 +324,14 @@ export default function CheckoutPage() {
             <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
             <div className="space-y-3 max-h-60 overflow-y-auto mb-4">
               {items.map((item) => (
-                <div key={`${item.productId}-${item.size}-${item.color}`} className="flex gap-3">
+                <div key={`${item.productId}-${item.size}-${item.color}-${item.fabric || ""}`} className="flex gap-3">
                   <div className="relative w-14 h-18 shrink-0 rounded overflow-hidden bg-gray-200">
                     <Image src={item.image} alt={item.name} fill className="object-cover" sizes="56px" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium line-clamp-1">{item.name}</p>
                     <p className="text-xs text-gray-500">
-                      {item.size} | {item.color} x{item.quantity}
+                      {item.size}{item.fabric ? ` | ${item.fabric}` : ""} x{item.quantity}
                     </p>
                   </div>
                   <p className="text-sm font-medium">{formatPrice(item.price * item.quantity, item.currency)}</p>
