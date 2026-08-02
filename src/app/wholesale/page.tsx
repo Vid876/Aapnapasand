@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { FileText, Handshake, Mail, PackageCheck, PenLine, Ruler, Shirt, Timer, Truck } from "lucide-react";
+import { FileText, Handshake, PackageCheck, PenLine, Ruler, Shirt, Timer, Truck } from "lucide-react";
 import { PageHero, PUBLIC_IMAGES, PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
 import { InquiryHashFocus } from "@/components/wholesale/InquiryHashFocus";
-import { BRAND, WHOLESALE_FIELDS, WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
+import { WholesaleInquiryForm } from "@/components/wholesale/WholesaleInquiryForm";
+import { BRAND, WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Wholesale & Private Label Services",
@@ -78,43 +79,7 @@ export default function WholesalePage() {
             </div>
           </div>
 
-          <form className="rounded-xl bg-white p-5 shadow-sm sm:p-8" aria-labelledby="inquiry-form-heading">
-            <label className="mb-4 block text-sm font-medium text-stone-950">
-              Inquiry service
-              <select className="mt-2 w-full rounded-lg border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#276070]">
-                <option>Wholesale Orders</option>
-                <option>Bulk Manufacturing</option>
-                <option>Private Label Services</option>
-                <option>Custom Labeling</option>
-                <option>Custom Packaging</option>
-              </select>
-            </label>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {WHOLESALE_FIELDS.slice(0, 6).map((field) => (
-                <label key={field} className="block text-sm font-medium text-stone-950">
-                  {field}
-                  <input
-                    type={field.toLowerCase().includes("email") ? "email" : "text"}
-                    className="mt-2 w-full rounded-lg border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#276070]"
-                  />
-                </label>
-              ))}
-            </div>
-            <label className="mt-4 block text-sm font-medium text-stone-950">
-              {WHOLESALE_FIELDS[6]}
-              <textarea
-                rows={6}
-                className="mt-2 w-full rounded-lg border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#276070]"
-              />
-            </label>
-            <button
-              type="submit"
-              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#173f4f] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#245d70]"
-            >
-              <Mail size={16} />
-              Request Catalog
-            </button>
-          </form>
+          <WholesaleInquiryForm />
         </div>
       </section>
 

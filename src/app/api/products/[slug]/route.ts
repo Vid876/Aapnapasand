@@ -34,7 +34,6 @@ export async function GET(
         rating: { $gte: 3, $lte: 5 },
       })
         .sort({ createdAt: -1 })
-        .limit(50)
         .lean(),
       Product.find({
         category: product.category,

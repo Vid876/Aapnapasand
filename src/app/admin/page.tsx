@@ -13,6 +13,7 @@ import {
   Plus,
   TrendingUp,
   Grid3X3,
+  MessageSquare,
 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import type { CurrencyCode } from "@/types";
@@ -27,6 +28,8 @@ interface Stats {
   activeCoupons: number;
   totalCategories: number;
   activeCategories: number;
+  totalInquiries: number;
+  newInquiries: number;
 }
 
 interface ChartDay {
@@ -55,11 +58,23 @@ interface RecentOrder {
   shippingAddress: { fullName: string };
 }
 
+interface RecentInquiry {
+  _id: string;
+  businessName: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  productInterest: string;
+  status: "new" | "contacted" | "closed";
+  createdAt: string;
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [chartData, setChartData] = useState<ChartDay[]>([]);
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+  const [recentInquiries, setRecentInquiries] = useState<RecentInquiry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -70,6 +85,7 @@ export default function AdminDashboard() {
         setChartData(data.chartData || []);
         setTopProducts(data.topProducts || []);
         setRecentOrders(data.recentOrders || []);
+        setRecentInquiries(data.recentInquiries || []);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -94,6 +110,12 @@ export default function AdminDashboard() {
     },
     { label: "Active Offers", value: stats?.activeCoupons || 0, icon: Tag, color: "bg-orange-500" },
     { label: "Customers", value: stats?.totalCustomers || 0, icon: Users, color: "bg-pink-500" },
+    {
+      label: "New Inquiries",
+      value: `${stats?.newInquiries || 0}/${stats?.totalInquiries || 0}`,
+      icon: MessageSquare,
+      color: "bg-teal-600",
+    },
   ];
 
   return (
@@ -120,13 +142,14 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 mb-8">
         {[
           { href: "/admin/products/new", label: "Add Product", desc: "Images, price, description", color: "border-brand-200 bg-brand-50" },
           { href: "/admin/categories", label: "Add Category", desc: "Shop tiles & images", color: "border-cyan-200 bg-cyan-50" },
           { href: "/admin/coupons", label: "Create Offer", desc: "Discount codes & coupons", color: "border-orange-200 bg-orange-50" },
           { href: "/admin/orders", label: "Manage Orders", desc: "Ship & track orders", color: "border-blue-200 bg-blue-50" },
           { href: "/admin/reviews", label: "Reviews", desc: "Approve customer reviews", color: "border-purple-200 bg-purple-50" },
+          { href: "/admin/inquiries", label: "Inquiries", desc: "Wholesale leads & contact details", color: "border-teal-200 bg-teal-50" },
         ].map((action) => (
           <Link
             key={action.href}
@@ -200,6 +223,38 @@ export default function AdminDashboard() {
               ))
             )}
           </div>
+        </div>
+      </div>
+
+      <div className="mb-8 rounded-xl border border-gray-100 bg-white shadow-sm">
+        <div className="flex items-center justify-between border-b border-gray-100 p-5">
+          <h2 className="font-semibold">Recent Wholesale Inquiries</h2>
+          <Link href="/admin/inquiries" className="text-sm text-brand-600 hover:text-brand-800">
+            View all
+          </Link>
+        </div>
+        <div className="grid gap-3 p-5 md:grid-cols-2 xl:grid-cols-3">
+          {recentInquiries.map((inquiry) => (
+            <Link
+              key={inquiry._id}
+              href="/admin/inquiries"
+              className="rounded-lg border border-gray-100 p-4 transition hover:border-teal-200 hover:bg-teal-50/40"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-semibold text-gray-900">{inquiry.businessName}</p>
+                  <p className="mt-1 truncate text-xs text-gray-500">{inquiry.contactName} · {inquiry.email}</p>
+                </div>
+                <span className="rounded-full bg-gray-100 px-2 py-1 text-[10px] font-semibold uppercase text-gray-600">
+                  {inquiry.status}
+                </span>
+              </div>
+              <p className="mt-3 line-clamp-2 text-sm text-gray-600">{inquiry.productInterest}</p>
+            </Link>
+          ))}
+          {!recentInquiries.length ? (
+            <p className="text-sm text-gray-500">No wholesale inquiries yet.</p>
+          ) : null}
         </div>
       </div>
 

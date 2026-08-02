@@ -8,6 +8,7 @@ import { authOptions } from "@/lib/auth";
 import { sendOrderEmailFromOrder } from "@/lib/email";
 import { sendOrderConfirmedSMS } from "@/lib/sms";
 import { z } from "zod";
+import { inrToUsd } from "@/lib/public-pricing";
 
 const orderSchema = z.object({
   items: z.array(
@@ -70,12 +71,23 @@ export async function POST(request: NextRequest) {
         isActive: true,
       });
 
-      if (coupon && subtotal >= coupon.minOrderAmount) {
+      const convertCouponMoney = (amount: number) =>
+        currency === "USD" ? inrToUsd(amount) : amount;
+      const minOrderAmount = coupon
+        ? convertCouponMoney(coupon.minOrderAmount)
+        : 0;
+
+      if (coupon && subtotal >= minOrderAmount) {
         if (coupon.discountType === "percentage") {
           discount = (subtotal * coupon.discountValue) / 100;
-          if (coupon.maxDiscount) discount = Math.min(discount, coupon.maxDiscount);
+          if (coupon.maxDiscount) {
+            discount = Math.min(
+              discount,
+              convertCouponMoney(coupon.maxDiscount)
+            );
+          }
         } else {
-          discount = coupon.discountValue;
+          discount = convertCouponMoney(coupon.discountValue);
         }
         coupon.usedCount += 1;
         await coupon.save();
@@ -83,8 +95,11 @@ export async function POST(request: NextRequest) {
     }
 
     const shippingCost = subtotal >= freeShippingThreshold ? 0 : shippingCharge;
-    const tax = Math.round((subtotal - discount) * 0.05);
-    const total = subtotal - discount + shippingCost + tax;
+    const tax =
+      currency === "USD"
+        ? Math.round((subtotal - discount) * 0.05 * 100) / 100
+        : Math.round((subtotal - discount) * 0.05);
+    const total = Math.round((subtotal - discount + shippingCost + tax) * 100) / 100;
 
     const order = await Order.create({
       orderNumber: generateOrderNumber(),

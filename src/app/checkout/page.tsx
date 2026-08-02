@@ -43,8 +43,11 @@ export default function CheckoutPage() {
   });
 
   const shipping = subtotal >= freeShippingThreshold ? 0 : shippingCharge;
-  const tax = Math.round((subtotal - discount) * 0.05);
-  const total = subtotal - discount + shipping + tax;
+  const tax =
+    cartCurrency === "USD"
+      ? Math.round((subtotal - discount) * 0.05 * 100) / 100
+      : Math.round((subtotal - discount) * 0.05);
+  const total = Math.round((subtotal - discount + shipping + tax) * 100) / 100;
 
   useEffect(() => {
     if (items.length === 0 && !orderPlaced) {
@@ -73,7 +76,7 @@ export default function CheckoutPage() {
       const res = await fetch("/api/coupons/validate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: couponCode, subtotal }),
+        body: JSON.stringify({ code: couponCode, subtotal, currency: cartCurrency }),
       });
       const data = await res.json();
       if (res.ok) {

@@ -34,10 +34,10 @@ export function ProductCard({
 
   const categoryName =
     typeof product.category === "string"
-      ? product.subcategory || "Artisan textile"
+      ? product.subcategory || "BOHOBLOCKPRINTED"
       : product.category?.name ||
         product.subcategory ||
-        "Artisan textile";
+        "BOHOBLOCKPRINTED";
 
   useEffect(() => {
     setMounted(true);

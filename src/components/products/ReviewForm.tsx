@@ -69,7 +69,7 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
       <div>
         <label className="block text-sm font-medium mb-2">Rating</label>
         <div className="flex flex-wrap gap-2">
-          {[3, 4, 5].map((value) => (
+          {[1, 2, 3, 4, 5].map((value) => (
             <button
               key={value}
               type="button"
@@ -90,7 +90,6 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
             </button>
           ))}
         </div>
-        <p className="mt-1 text-xs text-gray-500">Choose 3, 4, or 5 stars.</p>
       </div>
 
       <div>

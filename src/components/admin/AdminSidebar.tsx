@@ -21,6 +21,7 @@ const NAV = [
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
   { href: "/admin/coupons", label: "Offers", icon: Tag },
   { href: "/admin/reviews", label: "Reviews", icon: MessageSquare },
+  { href: "/admin/inquiries", label: "Inquiries", icon: MessageSquare },
 ];
 
 export function AdminSidebar() {

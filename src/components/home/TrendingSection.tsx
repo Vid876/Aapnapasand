@@ -27,7 +27,7 @@ async function fetchTrendingProducts(): Promise<ProductType[]> {
   }
 }
 
-const getTrendingProducts = unstable_cache(fetchTrendingProducts, ["home-trending-products"], {
+const getTrendingProducts = unstable_cache(fetchTrendingProducts, ["home-trending-products-v2-usd"], {
   revalidate: 300,
   tags: ["products"],
 });

@@ -9,7 +9,10 @@ export function isSMSConfigured(): boolean {
 
 export async function sendSMS({ phone, message }: SMSOptions): Promise<boolean> {
   const cleanPhone = phone.replace(/\D/g, "");
-  const indianPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
+  const internationalPhone =
+    cleanPhone.length <= 10 && !cleanPhone.startsWith("91")
+      ? `91${cleanPhone}`
+      : cleanPhone;
 
   if (process.env.MSG91_AUTH_KEY && process.env.MSG91_TEMPLATE_ID) {
     try {
@@ -21,7 +24,7 @@ export async function sendSMS({ phone, message }: SMSOptions): Promise<boolean> 
         },
         body: JSON.stringify({
           template_id: process.env.MSG91_TEMPLATE_ID,
-          recipients: [{ mobiles: indianPhone, var: message }],
+          recipients: [{ mobiles: internationalPhone, var: message }],
         }),
       });
       return res.ok;
@@ -46,7 +49,7 @@ export async function sendSMS({ phone, message }: SMSOptions): Promise<boolean> 
             "Content-Type": "application/x-www-form-urlencoded",
           },
           body: new URLSearchParams({
-            To: `+${indianPhone}`,
+            To: `+${internationalPhone}`,
             From: process.env.TWILIO_PHONE_NUMBER,
             Body: message,
           }),

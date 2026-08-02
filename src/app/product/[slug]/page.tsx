@@ -680,11 +680,6 @@ export default function ProductDetailPage() {
             <h2 className="mt-2 font-display text-3xl font-bold text-stone-950">
               Reviews for this item
             </h2>
-            <p className="mt-3 text-sm leading-6 text-stone-600">
-              Verified feedback for this product. Reviews below 3 stars are
-              retained for audit but are not published.
-            </p>
-
             {visibleRating > 0 ? (
               <div className="mt-6 flex items-center gap-5 rounded-xl bg-[#fbfaf7] p-5">
                 <span className="font-display text-5xl font-bold text-[#2f2a35]">
@@ -706,7 +701,7 @@ export default function ProductDetailPage() {
                 ))
               ) : (
                 <div className="rounded-xl bg-[#fbfaf7] p-5 text-sm text-stone-600">
-                  Not yet rated. Be the first customer to share a verified review.
+                  No customer reviews for this item yet.
                 </div>
               )}
             </div>

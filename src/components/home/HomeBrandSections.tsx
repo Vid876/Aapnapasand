@@ -19,6 +19,21 @@ import { getRenderableImageSrc } from "@/lib/image-utils";
 import { SectionHeader } from "@/components/marketing/PublicPage";
 import { CustomerReviewsCarousel } from "./CustomerReviewsCarousel";
 
+const WHY_CHOOSE_DESCRIPTIONS: Record<string, string> = {
+  "Handmade by Skilled Artisans":
+    "Textiles are positioned around Jaipur craft rather than generic fashion.",
+  "Traditional Hand Block Printing":
+    "Hand printing gives each piece a human surface and an artisan story.",
+  "Premium Cotton & Linen Fabrics":
+    "Cotton and linen fabrics support breathable home and wardrobe use.",
+  "Custom Sizes Available":
+    "Custom sizing is available for suitable products and production requirements.",
+  "Worldwide Shipping":
+    "The store supports international buyers with worldwide shipping.",
+  "Wholesale Orders Welcome":
+    "Boutiques, retailers, designers, hotels, and brands are welcome.",
+};
+
 export function HeroIntroText() {
   return (
     <section className="relative overflow-hidden border-b border-stone-200/70 bg-white py-11 text-center lg:py-16">
@@ -66,7 +81,7 @@ export function WhyChooseSection() {
         />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {WHY_CHOOSE.map((item, index) => (
+          {WHY_CHOOSE.map((item) => (
             <div
               key={item}
               className="group relative overflow-hidden rounded-xl border border-stone-200 bg-[#fbfaf7] p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#276070]/25 hover:bg-white hover:shadow-xl hover:shadow-stone-950/5"
@@ -82,26 +97,7 @@ export function WhyChooseSection() {
               </h3>
 
               <p className="mt-2 text-sm leading-7 text-stone-600">
-                {index === 0 &&
-                  "Textiles are positioned around Jaipur craft rather than generic fashion."}
-
-                {index === 1 &&
-                  "Hand printing gives each piece a human surface and an artisan story."}
-
-                {index === 2 &&
-                  "Cotton and linen fabrics support breathable home and wardrobe use."}
-
-                {index === 3 &&
-                  "Custom sizing is available for suitable products and production requirements."}
-
-                {index === 4 &&
-                  "Labels, packaging, and branding can be tailored for business buyers."}
-
-                {index === 5 &&
-                  "The store supports international buyers with worldwide shipping."}
-
-                {index === 6 &&
-                  "Boutiques, retailers, designers, hotels, and brands are welcome."}
+                {WHY_CHOOSE_DESCRIPTIONS[item]}
               </p>
             </div>
           ))}

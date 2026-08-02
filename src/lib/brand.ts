@@ -182,7 +182,6 @@ export const WHY_CHOOSE = [
   "Traditional Hand Block Printing",
   "Premium Cotton & Linen Fabrics",
   "Custom Sizes Available",
-  "Private Label & Custom Branding",
   "Worldwide Shipping",
   "Wholesale Orders Welcome",
 ] as const;

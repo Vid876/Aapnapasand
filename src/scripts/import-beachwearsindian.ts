@@ -56,6 +56,11 @@ const PRODUCT_DETAILS_BY_ID = new Map(
 const SOURCE_SHOP = "https://www.etsy.com/shop/Beachwearsindian";
 const DOWNLOAD_CONCURRENCY = 6;
 const BULK_WRITE_SIZE = 100;
+const IMAGE_EXCLUSIONS_BY_SOURCE_ID: Record<string, Set<string>> = {
+  "4512109999": new Set([
+    "https://i.etsystatic.com/60711515/r/il/8a50d9/8076948843/il_794xN.8076948843_1g7x.jpg",
+  ]),
+};
 
 const CATEGORY_META: Record<
   string,
@@ -427,9 +432,20 @@ async function run() {
         0
       );
       const categoryId = categoryIds.get(categorySlug);
-      const galleryImages = sourceDetail?.images?.length
-        ? [localImage, ...sourceDetail.images.slice(1, 5)]
+      const excludedImages = IMAGE_EXCLUSIONS_BY_SOURCE_ID[String(entry.sourceId)];
+      const sourceImages = (sourceDetail?.images || []).filter(
+        (image) => !excludedImages?.has(image)
+      );
+      const galleryImages = sourceImages.length
+        ? [localImage, ...sourceImages.slice(1, 5)]
         : [localImage];
+      const eligibleReviews = (sourceDetail?.reviews || []).filter(
+        (review) => review.rating >= 3 && review.rating <= 5
+      );
+      const eligibleRating = eligibleReviews.length
+        ? eligibleReviews.reduce((sum, review) => sum + review.rating, 0) /
+          eligibleReviews.length
+        : 0;
       const specifications = [
         sourceDetail?.material
           ? `Material: ${sourceDetail.material}`
@@ -462,7 +478,7 @@ async function run() {
               sourceSyncStatus: "description-derived" as const,
               material: sourceDetail?.material || "Cotton / natural textile",
               categoryPath: sourceDetail?.categoryPath || entry.categoryName,
-              sourceReviews: (sourceDetail?.reviews || []).map((review) => ({
+              sourceReviews: eligibleReviews.map((review) => ({
                 ...review,
                 createdAt: review.createdAt
                   ? new Date(review.createdAt)
@@ -471,9 +487,8 @@ async function run() {
               specifications,
               variants,
               totalStock,
-              rating: sourceDetail?.rating || 0,
-              reviewCount:
-                sourceDetail?.reviewCount || sourceDetail?.reviews?.length || 0,
+              rating: Math.round(eligibleRating * 10) / 10,
+              reviewCount: eligibleReviews.length,
               isActive: true,
             },
             $setOnInsert: {

@@ -133,7 +133,7 @@ async function fetchFeaturedProducts(): Promise<ProductType[]> {
 
 const getFeaturedProducts = unstable_cache(
   fetchFeaturedProducts,
-  ["home-featured-products-v2"],
+  ["home-featured-products-v3-usd"],
   {
     revalidate: 300,
     tags: ["products"],

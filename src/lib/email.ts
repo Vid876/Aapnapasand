@@ -38,6 +38,20 @@ function getTransporter() {
   });
 }
 
+function escapeHtml(value: string) {
+  return value.replace(
+    /[&<>'"]/g,
+    (character) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "'": "&#39;",
+        '"': "&quot;",
+      })[character] || character
+  );
+}
+
 function buildOrderEmailHtml(data: OrderEmailData): string {
   const itemsHtml = data.items
     .map(
@@ -145,4 +159,71 @@ export async function sendOrderEmailFromOrder(
     paymentMethod: order.paymentMethod,
     shippingAddress: order.shippingAddress,
   });
+}
+
+export type WholesaleInquiryEmailData = {
+  service: string;
+  businessName: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  country: string;
+  website?: string;
+  productInterest: string;
+  estimatedQuantity?: string;
+  message: string;
+};
+
+export async function sendWholesaleInquiryEmails(
+  data: WholesaleInquiryEmailData
+): Promise<boolean> {
+  const transporter = getTransporter();
+  if (!transporter) {
+    console.log("[Email] SMTP not configured. Wholesale inquiry from:", data.email);
+    return false;
+  }
+
+  const from = process.env.FROM_EMAIL || "noreply@bohoblockprinted.com";
+  const businessEmail =
+    process.env.WHOLESALE_NOTIFICATION_EMAIL ||
+    process.env.SMTP_USER ||
+    "bohoblockprinted@gmail.com";
+  const rows = [
+    ["Service", data.service],
+    ["Business", data.businessName],
+    ["Contact", data.contactName],
+    ["Email", data.email],
+    ["Phone", data.phone],
+    ["Country", data.country],
+    ["Website", data.website || "Not provided"],
+    ["Product interest", data.productInterest],
+    ["Estimated quantity", data.estimatedQuantity || "Not provided"],
+  ]
+    .map(
+      ([label, value]) =>
+        `<tr><th style="padding:8px;text-align:left;border-bottom:1px solid #eee;">${escapeHtml(label)}</th><td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(value)}</td></tr>`
+    )
+    .join("");
+
+  try {
+    await Promise.all([
+      transporter.sendMail({
+        from: `BOHOBLOCKPRINTED <${from}>`,
+        to: businessEmail,
+        replyTo: data.email,
+        subject: `New wholesale inquiry — ${data.businessName}`,
+        html: `<div style="font-family:sans-serif;max-width:680px;margin:auto"><h1>New wholesale inquiry</h1><table style="width:100%;border-collapse:collapse">${rows}</table><h2>Request</h2><p style="white-space:pre-line">${escapeHtml(data.message)}</p></div>`,
+      }),
+      transporter.sendMail({
+        from: `BOHOBLOCKPRINTED <${from}>`,
+        to: data.email,
+        subject: "We received your wholesale inquiry",
+        html: `<div style="font-family:sans-serif;max-width:600px;margin:auto"><h1>BOHOBLOCKPRINTED</h1><p>Hi ${escapeHtml(data.contactName)},</p><p>Thank you for contacting us about ${escapeHtml(data.service)}. Your inquiry has been saved and our team will review the product, quantity, sizing, and branding requirements.</p><p>We will reply to this email with the next steps.</p><p>Regards,<br/>BOHOBLOCKPRINTED</p></div>`,
+      }),
+    ]);
+    return true;
+  } catch (error) {
+    console.error("[Email] Failed to send wholesale inquiry email:", error);
+    return false;
+  }
 }

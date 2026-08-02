@@ -7,6 +7,7 @@ import { Coupon } from "@/models/Coupon";
 import { requireAdmin } from "@/lib/admin";
 import { ensureDefaultCategories } from "@/lib/category-sync";
 import { Category } from "@/models/Category";
+import { WholesaleInquiry } from "@/models/WholesaleInquiry";
 
 export async function GET() {
   const auth = await requireAdmin();
@@ -34,6 +35,9 @@ export async function GET() {
       activeCoupons,
       totalCategories,
       activeCategories,
+      totalInquiries,
+      newInquiries,
+      recentInquiries,
     ] = await Promise.all([
       Order.countDocuments(),
       Product.countDocuments({ isActive: true }),
@@ -91,6 +95,13 @@ export async function GET() {
       Coupon.countDocuments({ isActive: true }),
       Category.countDocuments(),
       Category.countDocuments({ isActive: true }),
+      WholesaleInquiry.countDocuments(),
+      WholesaleInquiry.countDocuments({ status: "new" }),
+      WholesaleInquiry.find()
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .select("businessName contactName email phone productInterest status createdAt")
+        .lean(),
     ]);
 
     const pendingOrders = await Order.countDocuments({
@@ -122,8 +133,11 @@ export async function GET() {
         activeCoupons,
         totalCategories,
         activeCategories,
+        totalInquiries,
+        newInquiries,
       },
       recentOrders,
+      recentInquiries,
       chartData,
       topProducts,
     });
