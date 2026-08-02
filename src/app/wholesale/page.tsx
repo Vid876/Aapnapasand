@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { FileText, Handshake, PackageCheck, PenLine, Ruler, Shirt, Timer, Truck } from "lucide-react";
 import { PageHero, PUBLIC_IMAGES, PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
-import { InquiryHashFocus } from "@/components/wholesale/InquiryHashFocus";
 import { WholesaleInquiryForm } from "@/components/wholesale/WholesaleInquiryForm";
 import { BRAND, WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 
@@ -26,7 +25,6 @@ const wholesaleItems = [
 export default function WholesalePage() {
   return (
     <>
-      <InquiryHashFocus />
       <PageHero
         title="Wholesale & Private Label Services"
         description="We offer custom manufacturing, private labeling, custom packaging, and bulk production services for businesses worldwide."

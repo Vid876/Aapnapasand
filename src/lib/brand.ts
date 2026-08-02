@@ -15,7 +15,7 @@ export const BRAND = {
   etsy: "https://www.etsy.com/shop/Beachwearsindian",
 } as const;
 
-export const WHOLESALE_INQUIRY_HREF = "/wholesale#inquiry-form" as const;
+export const WHOLESALE_INQUIRY_HREF = "/wholesale/inquiry" as const;
 
 export const TOP_BAR_MESSAGES = [
   "Handmade in Jaipur",
@@ -116,7 +116,7 @@ export const PRIMARY_NAV = [
     href: category.href,
     children: category.subcategories.map((item) => ({ label: item.name, href: item.href })),
   })),
-  { label: "Wholesale", href: "/wholesale" },
+  { label: "Wholesale", href: WHOLESALE_INQUIRY_HREF },
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
 ] as const;

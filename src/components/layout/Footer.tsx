@@ -7,7 +7,7 @@ const FOOTER_LINKS = {
   shop: [
     { label: "Shop All", href: "/shop" },
     ...CATEGORY_GROUPS.map((category) => ({ label: category.name, href: category.href })),
-    { label: "Wholesale", href: "/wholesale" },
+    { label: "Wholesale", href: WHOLESALE_INQUIRY_HREF },
   ],
   help: [
     { label: "Contact Us", href: "/contact" },
