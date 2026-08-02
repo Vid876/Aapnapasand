@@ -116,7 +116,7 @@ export const PRIMARY_NAV = [
     href: category.href,
     children: category.subcategories.map((item) => ({ label: item.name, href: item.href })),
   })),
-  { label: "Wholesale", href: WHOLESALE_INQUIRY_HREF },
+  { label: "Wholesale", href: "/wholesale" },
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
 ] as const;
