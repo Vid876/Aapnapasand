@@ -117,6 +117,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <head>
+        <meta
+          name="p:domain_verify"
+          content="600c6894ea7c99538365d1c0fd7432cb"
+        />
         <link rel="image_src" href={PRIMARY_IMAGE_URL} />
       </head>
       <body className="min-h-screen flex flex-col">
@@ -131,4 +135,3 @@ export default function RootLayout({
     </html>
   );
 }
-

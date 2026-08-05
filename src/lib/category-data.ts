@@ -5,6 +5,7 @@ import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import type { Category as CategoryType } from "@/types";
 import { getCanonicalCategorySlug, MERGED_CATEGORY_SLUGS } from "@/lib/category-aliases";
+import { CATEGORY_IMAGE_CARDS } from "@/lib/category-images";
 
 type PublicCategory = Pick<CategoryType, "_id" | "name" | "slug" | "description" | "image" | "gender" | "isActive"> & {
   productCount: number;
@@ -49,7 +50,7 @@ async function fetchPublicCategories(): Promise<PublicCategory[]> {
   }
 }
 
-export const getPublicCategories = unstable_cache(fetchPublicCategories, ["public-categories-v3"], {
+export const getPublicCategories = unstable_cache(fetchPublicCategories, ["public-categories-v4-user-images"], {
   revalidate: 300,
   tags: ["categories"],
 });
@@ -75,13 +76,20 @@ async function fetchHomepageCategories(): Promise<PublicCategory[]> {
     return JSON.parse(JSON.stringify(categories)) as PublicCategory[];
   } catch (error) {
     console.error("Homepage categories fetch error:", error);
-    return [];
+    return CATEGORY_IMAGE_CARDS.map((category) => ({
+      _id: `fallback-${category.slug}`,
+      ...category,
+      description: `Shop ${category.name} from BOHOBLOCKPRINTED handcrafted textile collections.`,
+      gender: "unisex" as const,
+      isActive: true,
+      productCount: 0,
+    }));
   }
 }
 
 export const getHomepageCategories = unstable_cache(
   fetchHomepageCategories,
-  ["homepage-categories-with-products-v3"],
+  ["homepage-categories-with-products-v6-user-images"],
   {
     revalidate: 300,
     tags: ["categories", "products"],

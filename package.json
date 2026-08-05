@@ -12,6 +12,7 @@
     "sync:etsy-inventory": "tsx src/scripts/sync-etsy-inventory.ts",
     "sync:etsy-reviews": "tsx src/scripts/sync-etsy-reviews.ts",
     "sync:stored-etsy-reviews": "tsx src/scripts/sync-stored-etsy-reviews.ts",
+    "sync:category-images": "tsx src/scripts/sync-category-images.ts",
     "db:indexes": "tsx src/scripts/create-indexes.ts"
   },
   "dependencies": {

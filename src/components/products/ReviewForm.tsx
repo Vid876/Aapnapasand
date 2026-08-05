@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Star } from "lucide-react";
@@ -11,14 +11,63 @@ interface ReviewFormProps {
   onSubmitted?: () => void;
 }
 
+type ReviewEligibility = {
+  canReview: boolean;
+  hasPurchased?: boolean;
+  alreadyReviewed?: boolean;
+};
+
 export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [rating, setRating] = useState(5);
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [eligibility, setEligibility] = useState<ReviewEligibility | null>(null);
+  const [checkingEligibility, setCheckingEligibility] = useState(false);
+
+  useEffect(() => {
+    if (status !== "authenticated") {
+      setEligibility(null);
+      setCheckingEligibility(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    setCheckingEligibility(true);
+
+    fetch(`/api/reviews?productId=${encodeURIComponent(productId)}`, {
+      signal: controller.signal,
+      cache: "no-store",
+    })
+      .then(async (response) => {
+        const data = (await response.json()) as ReviewEligibility;
+        if (!response.ok) throw new Error("Unable to verify purchase");
+        setEligibility(data);
+      })
+      .catch((eligibilityError) => {
+        if (eligibilityError instanceof DOMException && eligibilityError.name === "AbortError") {
+          return;
+        }
+        setEligibility({ canReview: false });
+        setError("Unable to verify your purchase right now. Please try again.");
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setCheckingEligibility(false);
+      });
+
+    return () => controller.abort();
+  }, [productId, status]);
+
+  if (status === "loading" || checkingEligibility) {
+    return (
+      <div className="rounded-xl bg-gray-50 p-6 text-center text-sm text-gray-600">
+        Checking purchase eligibility...
+      </div>
+    );
+  }
 
   if (!session) {
     return (
@@ -27,6 +76,31 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
         <Link href="/login">
           <Button size="sm">Sign In</Button>
         </Link>
+      </div>
+    );
+  }
+
+  if (!eligibility?.canReview) {
+    return (
+      <div className="rounded-xl bg-gray-50 p-6 text-center">
+        <p className="font-semibold text-gray-900">
+          {eligibility?.alreadyReviewed
+            ? "You have already reviewed this product."
+            : "Only verified purchasers can review this product."}
+        </p>
+        {!eligibility?.alreadyReviewed ? (
+          <p className="mt-2 text-sm leading-6 text-gray-600">
+            The review form becomes available after a paid or delivered order
+            containing this item is linked to your account.
+          </p>
+        ) : null}
+        <Link
+          href="/account/orders"
+          className="mt-4 inline-flex text-sm font-semibold text-[#173f4f] hover:underline"
+        >
+          View your orders
+        </Link>
+        {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
       </div>
     );
   }
@@ -54,6 +128,11 @@ export function ReviewForm({ productId, onSubmitted }: ReviewFormProps) {
       setTitle("");
       setComment("");
       setRating(5);
+      setEligibility({
+        canReview: false,
+        hasPurchased: true,
+        alreadyReviewed: true,
+      });
       onSubmitted?.();
     } catch {
       setError("Failed to submit review");

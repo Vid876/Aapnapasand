@@ -1,5 +1,5 @@
 export const UPLOADED_IMAGE_PATTERN =
-  "^(\\/uploads\\/|https:\\/\\/(res\\.cloudinary\\.com|i\\.etsystatic\\.com)\\/)";
+  "^(\\/(uploads|category-images)\\/|https:\\/\\/(res\\.cloudinary\\.com|i\\.etsystatic\\.com)\\/)";
 
 export const PRODUCT_IMAGE_FILTER = {
   "images.0": { $regex: UPLOADED_IMAGE_PATTERN },
@@ -11,7 +11,12 @@ export const CATEGORY_IMAGE_FILTER = {
 
 export function isValidStoredImage(value: string): boolean {
   if (!value) return false;
-  if (value.startsWith("/uploads/")) return true;
+  if (
+    value.startsWith("/uploads/") ||
+    value.startsWith("/category-images/")
+  ) {
+    return true;
+  }
 
   try {
     const url = new URL(value);

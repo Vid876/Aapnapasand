@@ -1,4 +1,5 @@
 import { CATEGORY_GROUPS, SHOP_CATEGORY_TILES } from "@/lib/brand";
+import { CATEGORY_IMAGE_BY_SLUG } from "@/lib/category-images";
 import { CATEGORIES } from "@/lib/constants";
 import { Category } from "@/models/Category";
 
@@ -33,7 +34,7 @@ const defaultCategories: DefaultCategory[] = CATEGORIES.map((category) => {
     description:
       group?.description ??
       `Shop ${category.name} from BOHOBLOCKPRINTED hand block printed textile collections.`,
-    image: tile?.image ?? category.image,
+    image: CATEGORY_IMAGE_BY_SLUG[category.slug] ?? tile?.image ?? category.image,
     gender: category.gender,
     isActive: true,
   };
