@@ -180,9 +180,7 @@ export function Footer() {
 
       <div className="relative border-t border-white/10">
         <div className="container-app flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
-          <p className="text-sm text-white/70">
-            &copy; {new Date().getFullYear()} {BRAND.name}. All Rights Reserved.
-          </p>
+          <p className="text-sm text-white/70"> &copy; {new Date().getFullYear()} BOHOBLOCKPRINTED. All rights reserved. <br /> Designed And Developed By{" "} <a href="https://maventratech.com/" target="_blank" rel="noopener noreferrer" className="text-white hover:underline" > Maventratech Solutions </a> . </p>
 
           <div className="flex flex-wrap justify-center gap-6 text-sm">
             <Link href="/shipping" className="text-white/70 transition hover:text-white">
