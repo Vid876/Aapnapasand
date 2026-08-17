@@ -42,7 +42,7 @@ export async function GET(
         ...PRODUCT_IMAGE_FILTER,
       })
         .sort({ reviewCount: -1, rating: -1, createdAt: -1 })
-        .limit(4)
+        .limit(12)
         .lean(),
     ]);
 

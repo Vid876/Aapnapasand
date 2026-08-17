@@ -5,6 +5,7 @@ export type PurchaseChoice = {
   name: string;
   detail?: string;
   price?: number;
+  priceMultiplier?: number;
 };
 
 export type PurchaseOptions = {
@@ -232,6 +233,76 @@ function baseSizeKey(value: string) {
     .trim();
 }
 
+function roundPrice(value: number) {
+  return Math.round(value * 100) / 100;
+}
+
+function getSizePriceFactor(choice: PurchaseChoice, index: number) {
+  const value = choice.name.toLowerCase();
+
+  if (value.includes("fabric sample")) return 1;
+  if (value.includes("pillow")) return 2.1;
+  if (value.includes("custom")) return 8.1;
+  if (value.includes("crib") || value.includes("baby")) return 0.85;
+  if (value.includes("california king")) return 6.2;
+  if (value.includes("super king")) return 6.55;
+  if (value.includes("twin xl")) return 3.95;
+  if (/\btwin\b/.test(value)) return 3.55;
+  if (/\bfull\b|\bdouble\b/.test(value)) return 4.7;
+  if (/\bqueen\b/.test(value)) return 5.4;
+  if (/\bking\b/.test(value)) return 5.8;
+  if (/\bover(?:sized)?\b/.test(value)) return 6.8 + index * 0.12;
+  if (value.includes("pair")) return 1.9;
+  if (value.includes("single panel")) return 1;
+
+  const seater = value.match(/\b(4|6|8|10|12|14|16)\s*(?:seater|seat)\b/);
+  if (seater) return Number(seater[1]) / 4;
+
+  const yards = value.match(/\b(1|2)\s*yards?\b/);
+  if (yards) return Number(yards[1]) === 1 ? 1 : 1.9;
+
+  const apparelFactors: Array<[RegExp, number]> = [
+    [/\bxxxl\b/, 1.38],
+    [/\bxxl\b/, 1.28],
+    [/\bxl\b/, 1.18],
+    [/\bl\b|\blarge\b/, 1.1],
+    [/\bm\b|\bmedium\b/, 1.05],
+    [/\bxs\b|\bs\b|\bsmall\b/, 1],
+  ];
+  const apparelFactor = apparelFactors.find(([pattern]) => pattern.test(value));
+  if (apparelFactor) return apparelFactor[1];
+
+  if (value.includes("one size") || value.trim() === "set") return 1;
+  return 1 + index * 0.18;
+}
+
+function applyFallbackSizePrices(product: Product, choices: PurchaseChoice[]) {
+  if (!choices.length || !Number.isFinite(product.price) || product.price <= 0) {
+    return choices;
+  }
+
+  const factors = choices.map(getSizePriceFactor);
+  const baseline = Math.min(...factors);
+  const explicitPrices = choices
+    .map((choice) => choice.price)
+    .filter((price): price is number => price !== undefined);
+  const hasRealVariantPriceVariation = new Set(
+    explicitPrices.map((price) => roundPrice(price))
+  ).size > 1;
+
+  return choices.map((choice, index) => {
+    if (choice.price !== undefined && hasRealVariantPriceVariation) {
+      return choice;
+    }
+
+    const normalizedFactor = factors[index] / baseline;
+    return {
+      ...choice,
+      price: roundPrice(product.price * normalizedFactor),
+    };
+  });
+}
+
 function mergeSizeChoices(product: Product) {
   const descriptionChoices = getDescriptionSizes(product);
   const variantChoices = getVariantSizes(product);
@@ -250,26 +321,38 @@ function mergeSizeChoices(product: Product) {
         descriptionChoices.push(variant);
       }
     }
-    return descriptionChoices;
+    return applyFallbackSizePrices(product, descriptionChoices);
   }
 
-  return variantChoices.length
+  const choices = variantChoices.length
     ? variantChoices
     : [{ value: "One Size", name: "One Size" }];
+  return applyFallbackSizePrices(product, choices);
 }
 
 function getFabricChoices(product: Product) {
   const values: PurchaseChoice[] = [];
   const seen = new Set<string>();
-  const add = (value?: string, price?: number) => {
+  const add = (value?: string, priceMultiplier = 1) => {
     const name = normalizeText(value || "");
     const normalized = name.toLowerCase();
     if (!name || normalized === "as shown" || seen.has(normalized)) return;
     seen.add(normalized);
-    values.push({ value: name, name, price });
+    values.push({ value: name, name, priceMultiplier });
   };
 
-  for (const variant of product.variants || []) add(variant.fabric, variant.price);
+  const multiplierForFabric = (value?: string) => {
+    const normalized = normalizeText(value || "").toLowerCase();
+    if (normalized.includes("silk")) return 1.35;
+    if (normalized.includes("linen") && normalized.includes("cotton")) return 1.1;
+    if (normalized.includes("linen")) return 1.22;
+    if (normalized.includes("rayon")) return 0.95;
+    return 1;
+  };
+
+  for (const variant of product.variants || []) {
+    add(variant.fabric, multiplierForFabric(variant.fabric));
+  }
 
   const searchable = `${product.material || ""}\n${product.description || ""}`;
   const hasCotton = /\b(?:100%\s*)?cotton\b/i.test(searchable);
@@ -279,12 +362,16 @@ function getFabricChoices(product: Product) {
       searchable
     );
 
-  if (hasBlend) add("Cotton Linen Blend");
-  if (hasCotton) add("Pure 100% Cotton");
-  if (hasLinen) add("Pure 100% Linen");
-  if (/\brayon\b/i.test(searchable)) add("Rayon");
-  if (/\bsilk\b/i.test(searchable)) add("Silk");
-  if (!values.length && product.material) add(product.material);
+  if (hasBlend) add("Cotton Linen Blend", 1.1);
+  if (hasCotton) add("Pure 100% Cotton", 1);
+  if (hasLinen) add("Pure 100% Linen", 1.22);
+  if (/\brayon\b/i.test(searchable)) add("Rayon", 0.95);
+  if (/\bsilk\b/i.test(searchable)) add("Silk", 1.35);
+  if (!values.length && product.material) {
+    add(product.material, multiplierForFabric(product.material));
+  }
+
+  if (values.length === 1) values[0].priceMultiplier = 1;
   return values;
 }
 
@@ -330,7 +417,11 @@ export function getChoicePrice(
   size?: PurchaseChoice,
   fabric?: PurchaseChoice
 ) {
-  return fabric?.price ?? size?.price ?? basePrice;
+  const sizePrice = size?.price ?? basePrice;
+  if (fabric?.priceMultiplier !== undefined) {
+    return roundPrice(sizePrice * fabric.priceMultiplier);
+  }
+  return fabric?.price ?? sizePrice;
 }
 
 export function getChoicePriceRange(
@@ -338,15 +429,26 @@ export function getChoicePriceRange(
   choice: PurchaseChoice,
   otherChoices: PurchaseChoice[]
 ) {
-  if (choice.price !== undefined) {
-    return { min: choice.price, max: choice.price };
+  if (choice.priceMultiplier !== undefined) {
+    const sizePrices = otherChoices.length
+      ? otherChoices.map((otherChoice) => otherChoice.price ?? basePrice)
+      : [basePrice];
+    return {
+      min: roundPrice(Math.min(...sizePrices) * choice.priceMultiplier),
+      max: roundPrice(Math.max(...sizePrices) * choice.priceMultiplier),
+    };
   }
 
-  const knownPrices = otherChoices
-    .map((otherChoice) => otherChoice.price)
-    .filter((price): price is number => price !== undefined);
-  const prices = knownPrices.length ? knownPrices : [basePrice];
-  return { min: Math.min(...prices), max: Math.max(...prices) };
+  const choicePrice = choice.price ?? basePrice;
+  const multipliers = otherChoices
+    .map((otherChoice) => otherChoice.priceMultiplier)
+    .filter((multiplier): multiplier is number => multiplier !== undefined);
+  if (!multipliers.length) return { min: choicePrice, max: choicePrice };
+
+  return {
+    min: roundPrice(choicePrice * Math.min(...multipliers)),
+    max: roundPrice(choicePrice * Math.max(...multipliers)),
+  };
 }
 
 export function getConciseProductDescription(product: Product) {

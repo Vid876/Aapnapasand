@@ -17,18 +17,18 @@ export function Newsletter() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(135deg,#2f1912_0%,#6b241b_42%,#b5743f_100%)] py-16 text-white lg:py-24">
-      <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.08)_0_1px,transparent_1px_38px)]" />
+    <section className="relative overflow-hidden bg-[linear-gradient(135deg,#102a35_0%,#1d4654_48%,#8f7353_100%)] py-16 text-white lg:py-24">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(234,217,185,0.16),transparent_30%),repeating-linear-gradient(90deg,rgba(255,255,255,0.065)_0_1px,transparent_1px_38px)]" />
       <div className="absolute inset-x-0 top-0 h-px bg-white/25" />
       <div className="container-app relative">
         <div className="mx-auto max-w-4xl text-center">
-          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/12 text-brand-100 ring-1 ring-white/20">
+          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/12 text-[#ead9b9] ring-1 ring-white/20">
             <Mail size={28} />
           </div>
           <h2 className="text-4xl font-display font-bold leading-tight lg:text-6xl">
             Get 10% Off Your First Order
           </h2>
-          <p className="mx-auto mt-4 mb-8 max-w-2xl text-sm leading-7 text-brand-50 lg:text-base">
+          <p className="mx-auto mt-4 mb-8 max-w-2xl text-sm leading-7 text-white/78 lg:text-base">
             Subscribe for new block print arrivals, wholesale catalog notes, home textile ideas, and a welcome offer for your first order.
           </p>
 
@@ -46,7 +46,7 @@ export function Newsletter() {
                 required
                 className="min-h-12 flex-1 rounded-xl border border-white/10 bg-white px-4 py-3 text-sm text-brand-950 placeholder:text-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
               />
-              <Button type="submit" className="min-h-12 shrink-0 rounded-xl bg-brand-950 px-7 text-white hover:bg-brand-900">
+              <Button type="submit" className="min-h-12 shrink-0 rounded-xl bg-[#d6b784] px-7 text-[#102a35] hover:bg-[#ead9b9]">
                 Subscribe
               </Button>
             </form>

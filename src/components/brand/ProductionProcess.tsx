@@ -5,27 +5,27 @@ const PROCESS_STEPS = [
   {
     title: "Wooden Block Carving",
     text: "Traditional wooden blocks are carefully handcrafted by skilled artisans.",
-    image: "/Wooden Block.jpeg",
+    image: "/wooden block curving.png",
   },
   {
     title: "Hand Block Printing",
     text: "Each design is hand printed using traditional block printing techniques.",
-    image: "/Printing.jpeg",
+    image: "/hand block printing.png",
   },
   {
     title: "Natural Drying Process",
     text: "Printed fabrics are naturally dried to preserve color and quality.",
-    image: "/Drying Area.jpeg",
+    image: "/natural dying process.png",
   },
   {
     title: "Quality Inspection",
     text: "Every product undergoes careful quality inspection before packing.",
-    image: "/Quality Cheak.jpeg",
+    image: "/quality check.png",
   },
   {
     title: "Packing & Shipping",
     text: "Products are professionally packed with custom labeling options and prepared for worldwide shipping.",
-    image: "/Packing and Shipping.jpeg",
+    image: "/worldwide shipping.png",
   },
 ] as const;
 
@@ -47,13 +47,13 @@ export function ProductionProcess() {
                 index < 3 ? "lg:col-span-2" : "lg:col-span-3"
               }`}
             >
-              <div className="relative aspect-[1402/1122] w-full bg-stone-100">
+              <div className="relative aspect-[4/3] w-full bg-stone-100">
                 <Image
                   src={step.image}
                   alt={step.title}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-contain"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.035]"
                 />
 
                 <span className="absolute left-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-sm font-bold text-[#173f4f] shadow-md">

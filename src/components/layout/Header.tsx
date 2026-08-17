@@ -173,10 +173,10 @@ export function Header() {
       <header className="sticky top-0 z-50 border-b border-stone-200 bg-white/96 shadow-sm backdrop-blur">
       <div className="top-bar-shell overflow-hidden text-white" tabIndex={0} aria-label="Store announcements">
         <div className="top-bar-marquee flex w-max items-center py-2 text-xs font-semibold tracking-wide sm:py-2.5 sm:text-sm">
-          {[false, true].map((duplicate) => (
+          {[0, 1, 2, 3].map((copyIndex) => (
             <div
-              key={String(duplicate)}
-              aria-hidden={duplicate ? true : undefined}
+              key={copyIndex}
+              aria-hidden={copyIndex > 0 ? true : undefined}
               className="flex shrink-0 items-center gap-7 px-3 sm:gap-10 sm:px-5 lg:gap-12"
             >
               {TOP_BAR_MESSAGES.map((message) => (
@@ -250,12 +250,9 @@ export function Header() {
                           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#276070]">
                             {link.label}
                           </p>
-                          <p className="mt-3 max-w-md text-sm leading-7 text-stone-600">
-                            Explore artisan block printed textiles with clear collection paths for shoppers and search engines.
-                          </p>
                           <Link
                             href={link.href}
-                            className="mt-4 inline-flex text-sm font-semibold text-[#173f4f] hover:underline"
+                            className="mt-3 inline-flex text-sm font-semibold text-[#173f4f] hover:underline"
                           >
                             View all {link.label}
                           </Link>

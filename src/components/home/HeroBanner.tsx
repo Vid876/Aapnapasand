@@ -1,7 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, Globe2, Handshake, Sparkles } from "lucide-react";
-import { BRAND, WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
+import {
+  ArrowRight,
+  BadgeCheck,
+  Globe2,
+  Handshake,
+  Sparkles,
+} from "lucide-react";
+import { WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 
 const HIGHLIGHTS = [
   { label: "Handmade in Jaipur", icon: Sparkles },
@@ -12,52 +18,101 @@ const HIGHLIGHTS = [
 
 export function HeroBanner() {
   return (
-    <section className="relative isolate overflow-hidden bg-[#173f4f] text-white">
+    <section className="relative isolate h-[75vh] min-h-[550px] overflow-hidden bg-[#122934] text-white">
+      {/* Banner Image */}
       <Image
-        src="/Banner 2.png"
-        alt="Hand block printed textiles from Jaipur"
+        src="/cover image.png"
+        alt="Jaipur artisan hand block printing beside a hand block printed bedroom collection"
         fill
         priority
         sizes="100vw"
-        className="z-[-2] object-cover"
+        className="z-0 object-cover object-center"
       />
-      <div className="absolute inset-0 z-[-1] bg-[linear-gradient(90deg,rgba(12,43,54,0.72)_0%,rgba(12,43,54,0.54)_50%,rgba(12,43,54,0.72)_100%)]" />
+      <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(5,19,25,0.2)_0%,rgba(9,31,40,0.24)_25%,rgba(8,29,38,0.2)_75%,rgba(5,19,25,0.26)_100%)]" />
+      <div className="absolute inset-y-0 left-1/2 z-[1] w-[72%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(11,36,47,0.68)_0%,rgba(11,36,47,0.45)_46%,transparent_78%)]" />
 
-      <div className="container-app flex min-h-[560px] items-center justify-center py-16 text-center sm:min-h-[620px] lg:min-h-[660px]">
+      <div className="container-app relative z-10 flex h-full items-center justify-center py-10 text-center">
         <div className="mx-auto max-w-4xl">
-          <h1 className="font-display text-4xl font-bold leading-[1.04] text-white sm:text-5xl lg:text-7xl">
-            {BRAND.headline}
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/86 sm:text-lg lg:text-xl">
-            {BRAND.subheadline}
+
+          {/* Brand */}
+          <div className="mx-auto flex w-fit flex-col items-center text-white">
+            <Sparkles size={28} strokeWidth={1.35} />
+
+            <p className="mt-3 text-sm font-semibold uppercase tracking-[0.2em] sm:text-xl">
+              BOHOBLOCKPRINTED
+            </p>
+
+            <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-white/80 sm:text-xs">
+              Handmade in Jaipur
+            </p>
+          </div>
+
+          {/* Heading */}
+          <p className="mt-7 font-display text-2xl italic leading-tight text-[#f3e8d4] sm:text-3xl lg:text-4xl">
+            Bringing India&apos;s Heritage
           </p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <h1 className="mt-1 font-display text-5xl font-semibold leading-[0.98] text-white sm:text-6xl lg:text-7xl">
+            to Your Home
+          </h1>
+
+          {/* Divider */}
+          <div className="mx-auto mt-6 flex max-w-xl items-center gap-4 text-[#ead9b9]">
+            <span className="h-px flex-1 bg-current/55" />
+
+            <Sparkles size={17} strokeWidth={1.4} />
+
+            <span className="h-px flex-1 bg-current/55" />
+          </div>
+
+          {/* Description */}
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white sm:text-base lg:text-lg">
+            Authentic Hand Block Printed Textiles made by skilled artisans of
+            Jaipur.
+
+            <span className="block">Timeless designs. Natural fabrics. Made with love.</span>
+          </p>
+
+          {/* Buttons */}
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+
             <Link
               href="/shop"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-[#173f4f] shadow-lg shadow-black/10 transition-colors hover:bg-[#f5c76b]"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-[#173f4f] px-7 py-3 text-sm font-semibold uppercase tracking-[0.1em] text-white shadow-lg shadow-black/15 transition-colors hover:bg-[#245d70]"
             >
               Shop Collection
               <ArrowRight size={17} />
             </Link>
+
             <Link
               href={WHOLESALE_INQUIRY_HREF}
-              className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/70 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-[#173f4f]"
+              className="inline-flex min-h-12 items-center justify-center rounded-md border border-white/70 bg-transparent px-7 py-3 text-sm font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-white hover:text-[#173f4f]"
             >
               Wholesale Inquiry
             </Link>
+
           </div>
 
-          <div className="mx-auto mt-9 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+          {/* Highlights */}
+          <div className="mx-auto mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
             {HIGHLIGHTS.map((item) => (
-              <div key={item.label} className="flex items-center justify-center gap-2 rounded-lg bg-black/10 px-3 py-3 ring-1 ring-white/16">
-                <item.icon className="shrink-0 text-[#f5c76b]" size={18} />
-                <span className="text-xs font-semibold uppercase leading-5 tracking-[0.12em] text-white/88">
+              <div
+                key={item.label}
+                className="flex flex-col items-center justify-center gap-2 px-3 py-2"
+              >
+                <item.icon
+                  className="shrink-0 text-[#ead9b9]"
+                  size={25}
+                  strokeWidth={1.35}
+                />
+
+                <span className="text-[10px] font-semibold uppercase leading-5 tracking-[0.13em] text-white sm:text-xs">
                   {item.label}
                 </span>
               </div>
             ))}
           </div>
+
         </div>
       </div>
     </section>

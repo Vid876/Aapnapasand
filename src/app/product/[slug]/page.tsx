@@ -62,6 +62,130 @@ function getChoiceLabel(
   return `${choice.name}${detail} (${price})`;
 }
 
+function getChoicePriceLabel(
+  choice: PurchaseChoice,
+  otherChoices: PurchaseChoice[],
+  basePrice: number,
+  currency: Product["currency"]
+) {
+  const range = getChoicePriceRange(basePrice, choice, otherChoices);
+  return range.min === range.max
+    ? formatPrice(range.min, currency)
+    : `${formatPrice(range.min, currency)} - ${formatPrice(range.max, currency)}`;
+}
+
+type PurchaseOptionPickerProps = {
+  label: string;
+  placeholder: string;
+  choices: PurchaseChoice[];
+  otherChoices: PurchaseChoice[];
+  value: string;
+  basePrice: number;
+  currency: Product["currency"];
+  onChange: (value: string) => void;
+};
+
+function PurchaseOptionPicker({
+  label,
+  placeholder,
+  choices,
+  otherChoices,
+  value,
+  basePrice,
+  currency,
+  onChange,
+}: PurchaseOptionPickerProps) {
+  const selectedChoice = choices.find((choice) => choice.value === value);
+  const selectedPrice = selectedChoice
+    ? getChoicePriceLabel(selectedChoice, otherChoices, basePrice, currency)
+    : null;
+
+  return (
+    <div>
+      <span className="mb-2 block text-sm font-semibold text-stone-900">
+        {label}
+      </span>
+      <details className="group relative">
+        <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 rounded-xl border border-stone-400 bg-white px-4 py-3 text-left outline-none transition focus-visible:border-[#173f4f] focus-visible:ring-2 focus-visible:ring-[#173f4f]/15 [&::-webkit-details-marker]:hidden">
+          <span className="min-w-0">
+            <span className="block truncate text-sm font-semibold text-stone-900">
+              {selectedChoice?.name || placeholder}
+            </span>
+            {selectedChoice?.detail ? (
+              <span className="mt-0.5 block line-clamp-2 text-xs leading-5 text-stone-500">
+                {selectedChoice.detail}
+              </span>
+            ) : null}
+          </span>
+          <span className="flex shrink-0 items-center gap-2">
+            {selectedPrice ? (
+              <span className="hidden text-xs font-bold text-[#173f4f] sm:block">
+                {selectedPrice}
+              </span>
+            ) : null}
+            <ChevronDown
+              size={18}
+              className="text-stone-600 transition group-open:rotate-180"
+            />
+          </span>
+        </summary>
+
+        <div
+          role="listbox"
+          aria-label={label}
+          className="absolute inset-x-0 top-full z-40 mt-2 max-h-80 overflow-y-auto rounded-xl border border-stone-200 bg-white p-2 shadow-2xl shadow-stone-950/15"
+        >
+          {choices.map((choice) => {
+            const price = getChoicePriceLabel(
+              choice,
+              otherChoices,
+              basePrice,
+              currency
+            );
+            const isSelected = choice.value === value;
+
+            return (
+              <button
+                key={choice.value}
+                type="button"
+                role="option"
+                aria-label={getChoiceLabel(
+                  choice,
+                  otherChoices,
+                  basePrice,
+                  currency
+                )}
+                aria-selected={isSelected}
+                onClick={(event) => {
+                  onChange(choice.value);
+                  event.currentTarget.closest("details")?.removeAttribute("open");
+                }}
+                className={`flex w-full items-start justify-between gap-4 rounded-lg px-3 py-3 text-left transition hover:bg-[#eef4f0] ${
+                  isSelected ? "bg-[#eef4f0]" : ""
+                }`}
+              >
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold text-stone-900">
+                    {choice.name}
+                  </span>
+                  {choice.detail ? (
+                    <span className="mt-1 block text-xs leading-5 text-stone-500">
+                      {choice.detail}
+                    </span>
+                  ) : null}
+                </span>
+                <span className="shrink-0 text-xs font-bold text-[#173f4f]">
+                  {price}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </details>
+    </div>
+  );
+}
+
 function splitDescription(value: string, previewLength = 1500) {
   if (value.length <= previewLength) return [value, ""] as const;
 
@@ -172,6 +296,7 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
+  const [showMoreRelated, setShowMoreRelated] = useState(false);
 
   const addItem = useCartStore((state) => state.addItem);
   const { toggle, has } = useWishlistStore();
@@ -195,6 +320,7 @@ export default function ProductDetailPage() {
           setSelectedImage(0);
           setSelectedSize("");
           setSelectedFabric("");
+          setShowMoreRelated(false);
         }
       } catch (error) {
         console.error("Product detail fetch failed:", error);
@@ -312,6 +438,9 @@ export default function ProductDetailPage() {
       return searches;
     }, [])
     .slice(0, 10);
+  const visibleRelatedProducts = showMoreRelated
+    ? related
+    : related.slice(0, 4);
 
   function handleAddToCart() {
     if (!product) return;
@@ -478,69 +607,29 @@ export default function ProductDetailPage() {
 
             <div className="mt-7 space-y-5">
               {sizes.length ? (
-                <label className="block">
-                  <span className="mb-2 block text-sm font-semibold text-stone-900">
-                    Size
-                  </span>
-                  <span className="relative block">
-                    <select
-                      value={selectedSize}
-                      onChange={(event) => setSelectedSize(event.target.value)}
-                      className="h-13 w-full appearance-none rounded-xl border border-stone-400 bg-white px-4 pr-11 text-sm font-medium text-stone-900 outline-none transition focus:border-[#173f4f] focus:ring-2 focus:ring-[#173f4f]/15"
-                    >
-                      <option value="" disabled>
-                        Select a size
-                      </option>
-                      {sizes.map((size) => (
-                        <option key={size.value} value={size.value}>
-                          {getChoiceLabel(
-                            size,
-                            fabrics,
-                            product.price,
-                            product.currency
-                          )}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown
-                      size={18}
-                      className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-stone-600"
-                    />
-                  </span>
-                </label>
+                <PurchaseOptionPicker
+                  label="Size"
+                  placeholder="Select a size"
+                  choices={sizes}
+                  otherChoices={fabrics}
+                  value={selectedSize}
+                  basePrice={product.price}
+                  currency={product.currency}
+                  onChange={setSelectedSize}
+                />
               ) : null}
 
               {fabrics.length ? (
-                <label className="block">
-                  <span className="mb-2 block text-sm font-semibold text-stone-900">
-                    Fabric
-                  </span>
-                  <span className="relative block">
-                    <select
-                      value={selectedFabric}
-                      onChange={(event) => setSelectedFabric(event.target.value)}
-                      className="h-13 w-full appearance-none rounded-xl border border-stone-400 bg-white px-4 pr-11 text-sm font-medium text-stone-900 outline-none transition focus:border-[#173f4f] focus:ring-2 focus:ring-[#173f4f]/15"
-                    >
-                      <option value="" disabled>
-                        Select a fabric
-                      </option>
-                      {fabrics.map((fabric) => (
-                        <option key={fabric.value} value={fabric.value}>
-                          {getChoiceLabel(
-                            fabric,
-                            sizes,
-                            product.price,
-                            product.currency
-                          )}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown
-                      size={18}
-                      className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-stone-600"
-                    />
-                  </span>
-                </label>
+                <PurchaseOptionPicker
+                  label="Fabric"
+                  placeholder="Select a fabric"
+                  choices={fabrics}
+                  otherChoices={sizes}
+                  value={selectedFabric}
+                  basePrice={product.price}
+                  currency={product.currency}
+                  onChange={setSelectedFabric}
+                />
               ) : null}
             </div>
 
@@ -730,19 +819,18 @@ export default function ProductDetailPage() {
               <h2 className="font-display text-3xl font-bold text-stone-950">
                 You may also like
               </h2>
-              <Link
-                href={`/shop?category=${encodeURIComponent(
-                  typeof product.category === "string"
-                    ? product.category
-                    : product.category.slug
-                )}`}
-                className="rounded-full border border-stone-700 px-5 py-2.5 text-sm font-semibold text-stone-900 transition hover:bg-[#173f4f] hover:text-white"
-              >
-                See more
-              </Link>
+              {related.length > 4 ? (
+                <button
+                  type="button"
+                  onClick={() => setShowMoreRelated((current) => !current)}
+                  className="rounded-full border border-stone-700 px-5 py-2.5 text-sm font-semibold text-stone-900 transition hover:bg-[#173f4f] hover:text-white"
+                >
+                  {showMoreRelated ? "Show fewer" : "See more"}
+                </button>
+              ) : null}
             </div>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-              {related.map((relatedProduct) => (
+              {visibleRelatedProducts.map((relatedProduct) => (
                 <ProductCard key={relatedProduct._id} product={relatedProduct} />
               ))}
             </div>
