@@ -22,6 +22,7 @@
 .DS_Store
 *.pem
 /tmp/
+/output/pdf/
 
 # debug
 npm-debug.log*
