@@ -24,11 +24,23 @@ interface OrderEmailData {
 }
 
 function getTransporter() {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const configuredUser = process.env.SMTP_USER?.trim() || "";
+  const user = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(configuredUser)
+    ? configuredUser
+    : "bohoblockprinted1@gmail.com";
+  const pass = process.env.SMTP_PASS?.replace(/\s+/g, "") || "";
 
-  if (!host || !user || !pass) return null;
+  if (!pass) return null;
+
+  if (user.toLowerCase().endsWith("@gmail.com")) {
+    return nodemailer.createTransport({
+      service: "gmail",
+      auth: { user, pass },
+    });
+  }
+
+  const host = process.env.SMTP_HOST?.trim();
+  if (!host) return null;
 
   return nodemailer.createTransport({
     host,
@@ -52,23 +64,53 @@ function escapeHtml(value: string) {
   );
 }
 
-export type LoginOtpEmailData = {
+export type AuthOtpEmailData = {
   email: string;
   name?: string;
   otp: string;
   expiresInMinutes: number;
+  purpose: "login" | "register" | "password-reset";
 };
 
-export async function sendLoginOtpEmail(data: LoginOtpEmailData): Promise<boolean> {
+export async function sendAuthOtpEmail(data: AuthOtpEmailData): Promise<boolean> {
   const transporter = getTransporter();
   if (!transporter) {
-    console.error("[Email] SMTP is not configured for login OTP delivery.");
+    console.error("[Email] SMTP is not configured for authentication OTP delivery.");
     return false;
   }
 
-  const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
+  const configuredUser = process.env.SMTP_USER?.trim() || "";
+  const smtpUser = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(configuredUser)
+    ? configuredUser
+    : "bohoblockprinted1@gmail.com";
+  const configuredFrom = process.env.FROM_EMAIL?.trim() || "";
+  const from = smtpUser.toLowerCase().endsWith("@gmail.com")
+    ? smtpUser
+    : /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(configuredFrom)
+      ? configuredFrom
+      : smtpUser;
   if (!from) return false;
   const firstName = escapeHtml(data.name?.trim().split(/\s+/)[0] || "there");
+  const copy = {
+    login: {
+      eyebrow: "SECURE CUSTOMER ACCESS",
+      heading: "Your secure sign-in code",
+      message: "use the code below to securely sign in to your BOHOBLOCKPRINTED account.",
+      subject: "sign-in",
+    },
+    register: {
+      eyebrow: "VERIFY YOUR EMAIL",
+      heading: "Complete your account",
+      message: "use the code below to verify your email and create your BOHOBLOCKPRINTED account.",
+      subject: "email verification",
+    },
+    "password-reset": {
+      eyebrow: "PASSWORD RECOVERY",
+      heading: "Reset your password",
+      message: "use the code below to verify your identity and choose a new password.",
+      subject: "password reset",
+    },
+  }[data.purpose];
   const digits = data.otp
     .split("")
     .map(
@@ -84,12 +126,12 @@ export async function sendLoginOtpEmail(data: LoginOtpEmailData): Promise<boolea
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;overflow:hidden;border:1px solid #d8cbb7;border-radius:22px;background:#fbfaf7;box-shadow:0 20px 55px rgba(40,29,19,.12)">
           <tr><td style="height:8px;background:linear-gradient(90deg,#173f4f,#b87811,#8f3b2f)"></td></tr>
           <tr><td align="center" style="padding:38px 34px 18px">
-            <div style="font-size:12px;font-weight:700;letter-spacing:4px;color:#b87811">HANDMADE IN JAIPUR</div>
+            <div style="font-size:12px;font-weight:700;letter-spacing:4px;color:#b87811">${copy.eyebrow}</div>
             <h1 style="margin:12px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:32px;line-height:1.2;color:#173f4f">BOHOBLOCKPRINTED</h1>
           </td></tr>
           <tr><td style="padding:6px 42px 36px;text-align:center">
-            <h2 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:26px;color:#241d18">Your secure sign-in code</h2>
-            <p style="margin:16px auto 24px;max-width:460px;font-size:15px;line-height:1.7;color:#625950">Hello ${firstName}, use the code below to securely sign in to your BOHOBLOCKPRINTED account.</p>
+            <h2 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:26px;color:#241d18">${copy.heading}</h2>
+            <p style="margin:16px auto 24px;max-width:460px;font-size:15px;line-height:1.7;color:#625950">Hello ${firstName}, ${copy.message}</p>
             <div style="margin:0 auto 24px;white-space:nowrap">${digits}</div>
             <p style="margin:0;font-size:13px;line-height:1.7;color:#756b62">This code expires in <strong>${data.expiresInMinutes} minutes</strong> and can be used only once.</p>
             <div style="margin:28px 0 0;padding:17px;border-radius:14px;background:#eef4f0;color:#3e554c;font-size:13px;line-height:1.6">If you did not request this code, you can safely ignore this email. Never share this code with anyone.</div>
@@ -104,13 +146,13 @@ export async function sendLoginOtpEmail(data: LoginOtpEmailData): Promise<boolea
     await transporter.sendMail({
       from: `BOHOBLOCKPRINTED <${from}>`,
       to: data.email,
-      subject: `${data.otp} is your BOHOBLOCKPRINTED sign-in code`,
-      text: `Your BOHOBLOCKPRINTED sign-in code is ${data.otp}. It expires in ${data.expiresInMinutes} minutes. Do not share this code.`,
+      subject: `${data.otp} is your BOHOBLOCKPRINTED ${copy.subject} code`,
+      text: `Your BOHOBLOCKPRINTED ${copy.subject} code is ${data.otp}. It expires in ${data.expiresInMinutes} minutes. Do not share this code.`,
       html,
     });
     return true;
   } catch (error) {
-    console.error("[Email] Failed to send login OTP:", error);
+    console.error("[Email] Failed to send authentication OTP:", error);
     return false;
   }
 }

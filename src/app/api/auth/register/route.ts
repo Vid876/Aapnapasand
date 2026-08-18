@@ -2,14 +2,19 @@ import { NextRequest } from "next/server";
 import bcrypt from "bcryptjs";
 import { noStoreJson } from "@/lib/api-response";
 import { connectDB } from "@/lib/db";
+import { verifyOtpChallenge } from "@/lib/otp";
 import { User } from "@/models/User";
 import { z } from "zod";
 
 const registerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().trim().toLowerCase().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  phone: z.string().trim().optional(),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(128, "Password is too long"),
+  otp: z
+    .string({ required_error: "Email verification is required before registration." })
+    .regex(/^\d{6}$/, "Enter the six-digit verification code"),
 });
 
 export async function POST(request: NextRequest) {
@@ -24,13 +29,23 @@ export async function POST(request: NextRequest) {
       return noStoreJson({ error: "Email already registered" }, { status: 400 });
     }
 
-    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const challenge = await verifyOtpChallenge(data.email, data.otp, "register");
+    if (!challenge) {
+      return noStoreJson(
+        { error: "The verification code is incorrect or has expired." },
+        { status: 400 }
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(data.password, 12);
 
     const user = await User.create({
-      name: data.name,
+      name: challenge.name?.trim() || data.email.split("@")[0],
       email: data.email,
       password: hashedPassword,
-      phone: data.phone,
+      phone: challenge.phone?.trim() || undefined,
+      emailVerifiedAt: new Date(),
+      signupSource: "password",
     });
 
     return noStoreJson(

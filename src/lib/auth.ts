@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/db";
 import { User } from "@/models/User";
-import { verifyOtpAndGetUser } from "@/lib/otp";
+import { verifyLoginOtpAndGetUser } from "@/lib/otp";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
         await connectDB();
         const email = credentials.email.trim().toLowerCase();
         if (credentials.otp) {
-          const otpUser = await verifyOtpAndGetUser(email, credentials.otp);
+          const otpUser = await verifyLoginOtpAndGetUser(email, credentials.otp);
           if (!otpUser) throw new Error("Invalid or expired verification code");
 
           return {

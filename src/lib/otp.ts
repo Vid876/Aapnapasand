@@ -6,6 +6,8 @@ import { User } from "@/models/User";
 const OTP_TTL_MS = 10 * 60 * 1000;
 const OTP_MAX_ATTEMPTS = 5;
 
+export type OtpPurpose = "login" | "register" | "password-reset";
+
 function otpSecret() {
   const secret = process.env.OTP_SECRET || process.env.NEXTAUTH_SECRET;
   if (!secret) throw new Error("OTP_SECRET or NEXTAUTH_SECRET is required");
@@ -36,12 +38,16 @@ export function otpExpiry() {
   return new Date(Date.now() + OTP_TTL_MS);
 }
 
-export async function verifyOtpAndGetUser(emailValue: string, otp: string) {
+export async function verifyOtpChallenge(
+  emailValue: string,
+  otp: string,
+  purpose: OtpPurpose
+) {
   await connectDB();
   const email = normalizeEmail(emailValue);
   const challenge = await EmailOtp.findOne({
     email,
-    purpose: "login",
+    purpose,
     consumedAt: { $exists: false },
     expiresAt: { $gt: new Date() },
     attempts: { $lt: OTP_MAX_ATTEMPTS },
@@ -61,31 +67,21 @@ export async function verifyOtpAndGetUser(emailValue: string, otp: string) {
     { $set: { consumedAt: new Date() } },
     { new: true }
   );
-  if (!consumed) return null;
+  return consumed;
+}
 
-  let user = await User.findOne({ email });
-  if (!user) {
-    user = await User.create({
-      name: challenge.name?.trim() || email.split("@")[0],
-      email,
-      phone: challenge.phone?.trim() || undefined,
-      role: "customer",
-      emailVerifiedAt: new Date(),
-      lastLoginAt: new Date(),
-      loginCount: 1,
-      signupSource: "email-otp",
-    });
-  } else {
-    if (!user.isActive) return null;
-    user.emailVerifiedAt ||= new Date();
-    user.lastLoginAt = new Date();
-    user.loginCount = (user.loginCount || 0) + 1;
-    if (!user.phone && challenge.phone) user.phone = challenge.phone.trim();
-    if ((!user.name || user.name === email.split("@")[0]) && challenge.name) {
-      user.name = challenge.name.trim();
-    }
-    await user.save();
-  }
+export async function verifyLoginOtpAndGetUser(emailValue: string, otp: string) {
+  const email = normalizeEmail(emailValue);
+  const challenge = await verifyOtpChallenge(email, otp, "login");
+  if (!challenge) return null;
+
+  const user = await User.findOne({ email });
+  if (!user || !user.isActive) return null;
+
+  user.emailVerifiedAt ||= new Date();
+  user.lastLoginAt = new Date();
+  user.loginCount = (user.loginCount || 0) + 1;
+  await user.save();
 
   return user;
 }

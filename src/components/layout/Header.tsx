@@ -4,21 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { ChevronDown, Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { BRAND, PRIMARY_NAV, TOP_BAR_MESSAGES } from "@/lib/brand";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useTranslation } from "@/store/localeStore";
-
-const EMPTY_ACCOUNT_FORM = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  mobile: "",
-  password: "",
-};
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -26,11 +17,6 @@ export function Header() {
   const [openMobileMenu, setOpenMobileMenu] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [accountModalOpen, setAccountModalOpen] = useState(false);
-  const [accountForm, setAccountForm] = useState(EMPTY_ACCOUNT_FORM);
-  const [accountError, setAccountError] = useState("");
-  const [accountSuccess, setAccountSuccess] = useState("");
-  const [accountLoading, setAccountLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const desktopNavRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
@@ -53,7 +39,6 @@ export function Header() {
     setOpenDesktopMenu(null);
     setOpenMobileMenu(null);
     setSearchOpen(false);
-    setAccountModalOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -78,86 +63,11 @@ export function Header() {
     };
   }, [openDesktopMenu]);
 
-  useEffect(() => {
-    if (!accountModalOpen) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setAccountModalOpen(false);
-    };
-    const previousOverflow = document.body.style.overflow;
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [accountModalOpen]);
-
   const closeMobileMenu = () => setMobileOpen(false);
 
-  const openAccountModal = () => {
+  const openAccountPage = () => {
     setMobileOpen(false);
-    setAccountError("");
-    setAccountSuccess("");
-    setAccountModalOpen(true);
-  };
-
-  const handleAccountSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setAccountError("");
-    setAccountSuccess("");
-
-    const firstName = accountForm.firstName.trim();
-    const lastName = accountForm.lastName.trim();
-    const email = accountForm.email.trim();
-    const mobile = accountForm.mobile.trim();
-
-    if (!firstName || !lastName || !email || !mobile || !accountForm.password) {
-      setAccountError("Please fill all registration fields.");
-      return;
-    }
-
-    setAccountLoading(true);
-
-    try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: `${firstName} ${lastName}`,
-          email,
-          phone: mobile,
-          password: accountForm.password,
-        }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setAccountError(data.error || "Registration failed. Please try again.");
-        return;
-      }
-
-      const result = await signIn("credentials", {
-        email,
-        password: accountForm.password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setAccountSuccess("Account created. Please sign in to continue.");
-        setAccountForm(EMPTY_ACCOUNT_FORM);
-        return;
-      }
-
-      setAccountForm(EMPTY_ACCOUNT_FORM);
-      window.location.href = "/account";
-    } catch {
-      setAccountError("Something went wrong. Please try again.");
-    } finally {
-      setAccountLoading(false);
-    }
+    window.location.href = "/register";
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -308,7 +218,7 @@ export function Header() {
               </Link>
             ) : (
               <button
-                onClick={openAccountModal}
+                onClick={openAccountPage}
                 className="rounded-full p-2 transition-colors hover:bg-stone-100"
                 aria-label="Create account"
               >
@@ -416,7 +326,7 @@ export function Header() {
             ) : (
               <button
                 className="block w-full py-3 text-left text-base font-medium text-[#173f4f]"
-                onClick={openAccountModal}
+                onClick={openAccountPage}
               >
                 Create Account
               </button>
@@ -427,142 +337,6 @@ export function Header() {
 
       </header>
 
-      {mounted && accountModalOpen && !session && createPortal(
-        <div className="fixed inset-0 z-[120] grid place-items-center px-4 py-5 sm:px-6">
-          <button
-            type="button"
-            className="absolute inset-0 bg-stone-950/60 backdrop-blur-sm"
-            aria-label="Close account form"
-            onClick={() => setAccountModalOpen(false)}
-          />
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="account-register-title"
-            className="relative max-h-[min(90vh,760px)] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl shadow-stone-950/25 sm:p-7"
-          >
-            <div className="mb-5 flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#276070]">
-                  {BRAND.name}
-                </p>
-                <h2
-                  id="account-register-title"
-                  className="mt-2 font-display text-2xl font-bold text-stone-950"
-                >
-                  Create Account
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setAccountModalOpen(false)}
-                className="rounded-full p-2 text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-900"
-                aria-label="Close account form"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleAccountSubmit} className="space-y-4">
-              {accountError && (
-                <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
-                  {accountError}
-                </div>
-              )}
-              {accountSuccess && (
-                <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
-                  {accountSuccess}
-                </div>
-              )}
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="space-y-1.5 text-sm font-medium text-stone-700">
-                  First Name
-                  <input
-                    value={accountForm.firstName}
-                    onChange={(e) =>
-                      setAccountForm((form) => ({ ...form, firstName: e.target.value }))
-                    }
-                    className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
-                    required
-                  />
-                </label>
-                <label className="space-y-1.5 text-sm font-medium text-stone-700">
-                  Last Name
-                  <input
-                    value={accountForm.lastName}
-                    onChange={(e) =>
-                      setAccountForm((form) => ({ ...form, lastName: e.target.value }))
-                    }
-                    className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
-                    required
-                  />
-                </label>
-              </div>
-
-              <label className="block space-y-1.5 text-sm font-medium text-stone-700">
-                Email
-                <input
-                  type="email"
-                  value={accountForm.email}
-                  onChange={(e) =>
-                    setAccountForm((form) => ({ ...form, email: e.target.value }))
-                  }
-                  className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
-                  required
-                />
-              </label>
-
-              <label className="block space-y-1.5 text-sm font-medium text-stone-700">
-                Mobile Number
-                <input
-                  type="tel"
-                  value={accountForm.mobile}
-                  onChange={(e) =>
-                    setAccountForm((form) => ({ ...form, mobile: e.target.value }))
-                  }
-                  className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
-                  required
-                />
-              </label>
-
-              <label className="block space-y-1.5 text-sm font-medium text-stone-700">
-                Password
-                <input
-                  type="password"
-                  minLength={6}
-                  value={accountForm.password}
-                  onChange={(e) =>
-                    setAccountForm((form) => ({ ...form, password: e.target.value }))
-                  }
-                  className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#276070]"
-                  required
-                />
-              </label>
-
-              <button
-                type="submit"
-                disabled={accountLoading}
-                className="flex min-h-12 w-full items-center justify-center rounded-lg bg-[#173f4f] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#245d70] disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {accountLoading ? "Creating..." : "Register"}
-              </button>
-            </form>
-
-            <p className="mt-5 text-center text-sm text-stone-500">
-              Already registered?{" "}
-              <Link
-                href="/login"
-                onClick={() => setAccountModalOpen(false)}
-                className="font-semibold text-[#173f4f] hover:text-[#245d70]"
-              >
-                Sign in
-              </Link>
-            </p>
-          </div>
-        </div>,
-        document.body
-      )}
     </>
   );
 }

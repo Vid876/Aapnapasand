@@ -5,7 +5,7 @@ export interface IEmailOtp extends Document {
   otpHash: string;
   name?: string;
   phone?: string;
-  purpose: "login";
+  purpose: "login" | "register" | "password-reset";
   requestIp?: string;
   attempts: number;
   expiresAt: Date;
@@ -19,7 +19,12 @@ const EmailOtpSchema = new Schema<IEmailOtp>(
     otpHash: { type: String, required: true },
     name: { type: String, trim: true },
     phone: { type: String, trim: true },
-    purpose: { type: String, enum: ["login"], default: "login" },
+    purpose: {
+      type: String,
+      enum: ["login", "register", "password-reset"],
+      required: true,
+      index: true,
+    },
     requestIp: { type: String },
     attempts: { type: Number, default: 0, min: 0 },
     expiresAt: { type: Date, required: true },
