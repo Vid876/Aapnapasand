@@ -57,7 +57,7 @@ export function ProductCard({
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#e8ece6]">
           <ProductImage
             src={primaryImage}
-            alt={product.name}
+            alt={product.imageAltTexts?.[0] || product.name}
             priority={priority}
             className={`object-cover transition duration-700 ease-out group-hover:scale-105 ${
               alternateImage
@@ -70,7 +70,7 @@ export function ProductCard({
           {alternateImage && (
             <ProductImage
               src={alternateImage}
-              alt={`${product.name} alternate view`}
+              alt={product.imageAltTexts?.[1] || `${product.name} alternate view`}
               className="object-cover opacity-0 transition duration-700 ease-out group-hover:scale-105 group-hover:opacity-100"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />

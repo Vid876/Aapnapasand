@@ -37,10 +37,10 @@ export const CATEGORY_GROUPS = [
       "Block printed bedding and soft furnishings for layered bedrooms, guest rooms, and boutique hospitality spaces.",
     keywords: "hand block printed duvet covers, block print bed sheets, cotton pillow covers, Jaipur curtains",
     subcategories: [
-      { name: "Duvet Covers", slug: "duvet-covers", href: "/shop?category=duvet-covers" },
-      { name: "Bed Sheets", slug: "bed-sheets", href: "/shop?category=bed-sheets" },
-      { name: "Pillow Covers", slug: "pillow-covers", href: "/shop?category=pillow-covers" },
-      { name: "Curtains", slug: "curtains", href: "/shop?category=curtains" },
+      { name: "Duvet Covers", slug: "duvet-covers", href: "/category/duvet-covers" },
+      { name: "Bed Sheets", slug: "bed-sheets", href: "/category/bed-sheets" },
+      { name: "Pillow Covers", slug: "pillow-covers", href: "/category/pillow-covers" },
+      { name: "Curtains", slug: "curtains", href: "/category/curtains" },
     ],
   },
   {
@@ -54,9 +54,9 @@ export const CATEGORY_GROUPS = [
       "Napkins, tablecloths, and runners for restaurants, gifting, weddings, and everyday tables with a handmade textile story.",
     keywords: "hand block printed napkins, block print tablecloths, cotton table runners",
     subcategories: [
-      { name: "Napkins", slug: "napkins", href: "/shop?category=napkins" },
-      { name: "Tablecloths", slug: "tablecloths", href: "/shop?category=tablecloths" },
-      { name: "Table Runners", slug: "table-runners", href: "/shop?category=table-runners" },
+      { name: "Napkins", slug: "napkins", href: "/category/napkins" },
+      { name: "Tablecloths", slug: "tablecloths", href: "/category/tablecloths" },
+      { name: "Table Runners", slug: "table-runners", href: "/category/table-runners" },
     ],
   },
   {
@@ -70,9 +70,9 @@ export const CATEGORY_GROUPS = [
       "Relaxed artisan fashion in breathable prints, including kaftans, sarongs, and beach cover-ups.",
     keywords: "cotton kaftans, block print sarongs, hand block printed beach cover ups",
     subcategories: [
-      { name: "Kaftans", slug: "kaftans", href: "/shop?category=kaftans" },
-      { name: "Sarongs", slug: "sarongs", href: "/shop?category=sarongs" },
-      { name: "Beach Cover-Ups", slug: "beach-cover-ups", href: "/shop?category=beach-cover-ups" },
+      { name: "Kaftans", slug: "kaftans", href: "/category/kaftans" },
+      { name: "Sarongs", slug: "sarongs", href: "/category/sarongs" },
+      { name: "Beach Cover-Ups", slug: "beach-cover-ups", href: "/category/beach-cover-ups" },
     ],
   },
   {
@@ -86,10 +86,10 @@ export const CATEGORY_GROUPS = [
       "Small-batch printed accessories for travel, gifting, boutique shelves, and daily use.",
     keywords: "block print bandanas, quilted tote bags, cosmetic bags, duffle bags",
     subcategories: [
-      { name: "Bandanas", slug: "bandanas", href: "/shop?category=bandanas" },
-      { name: "Quilted Tote Bags", slug: "quilted-tote-bags", href: "/shop?category=quilted-tote-bags" },
-      { name: "Cosmetic Bags", slug: "cosmetic-bags", href: "/shop?category=cosmetic-bags" },
-      { name: "Duffle Bags", slug: "duffle-bags", href: "/shop?category=duffle-bags" },
+      { name: "Bandanas", slug: "bandanas", href: "/category/bandanas" },
+      { name: "Quilted Tote Bags", slug: "quilted-tote-bags", href: "/category/quilted-tote-bags" },
+      { name: "Cosmetic Bags", slug: "cosmetic-bags", href: "/category/cosmetic-bags" },
+      { name: "Duffle Bags", slug: "duffle-bags", href: "/category/duffle-bags" },
     ],
   },
   {
@@ -103,7 +103,7 @@ export const CATEGORY_GROUPS = [
       "Block print fabric by yard for designers, makers, small brands, and custom textile projects.",
     keywords: "block print fabric by yard, Jaipur printed cotton fabric, hand block printed fabric",
     subcategories: [
-      { name: "Block Print Fabric by Yard", slug: "block-print-fabric-by-yard", href: "/shop?category=block-print-fabric-by-yard" },
+      { name: "Block Print Fabric by Yard", slug: "block-print-fabric-by-yard", href: "/category/block-print-fabric-by-yard" },
     ],
   },
 ] as const;

@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { ArrowRight, BadgePercent, ShieldCheck, Truck } from "lucide-react";
 import { PageHero, PUBLIC_IMAGES, SectionHeader } from "@/components/marketing/PublicPage";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Hand Block Printed Textile Offers",
+  description: "Shop selected BOHOBLOCKPRINTED artisan textile offers across bedding, table linen, fashion, accessories and fabric.",
+  alternates: { canonical: "/sale" },
+};
 
 const saleLinks = [
   { title: "Under Rs. 999", href: "/shop?maxPrice=999&sort=price-asc" },

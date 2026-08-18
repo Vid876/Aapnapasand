@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Wholesale Inquiry",
   description:
     "Send BOHOBLOCKPRINTED your wholesale, bulk manufacturing, private label, custom packaging, or catalog requirements.",
+  alternates: { canonical: "/wholesale/inquiry" },
 };
 
 const inquiryBenefits = [

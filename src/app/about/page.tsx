@@ -8,6 +8,7 @@ import { WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "About Us",
   description: "About Bohoblockprinted, a Jaipur-based hand block printed textile manufacturer and exporter.",
+  alternates: { canonical: "/about" },
 };
 
 const products = [

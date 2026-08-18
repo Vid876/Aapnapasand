@@ -38,6 +38,12 @@ export interface ProductFormData {
   subcategory?: string;
   gender: string;
   brand?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  ogImage?: string;
+  seoContent?: string;
+  imageAltTexts?: string[];
+  noIndex: boolean;
   specifications: string[];
   variants: ProductVariantForm[];
   isFeatured: boolean;
@@ -65,6 +71,12 @@ const productFormSchema = z.object({
   subcategory: z.string().optional(),
   gender: z.enum(["men", "women", "kids", "unisex"]),
   brand: z.string().optional(),
+  metaTitle: z.string().max(70, "Keep the SEO title within 70 characters").optional(),
+  metaDescription: z.string().max(180, "Keep the meta description within 180 characters").optional(),
+  ogImage: z.string().optional(),
+  seoContent: z.string().optional(),
+  imageAltTexts: z.array(z.string()).optional(),
+  noIndex: z.boolean(),
   specifications: z.array(z.string().min(1, "Enter a valid specification")).optional(),
   variants: z
     .array(
@@ -131,6 +143,12 @@ export function ProductForm({
       subcategory: initialData?.subcategory || "",
       gender: initialData?.gender || "unisex",
       brand: initialData?.brand || "BOHOBLOCKPRINTED",
+      metaTitle: initialData?.metaTitle || "",
+      metaDescription: initialData?.metaDescription || "",
+      ogImage: initialData?.ogImage || "",
+      seoContent: initialData?.seoContent || "",
+      imageAltTexts: initialData?.imageAltTexts || [],
+      noIndex: initialData?.noIndex ?? false,
       specifications: initialData?.specifications || [],
       variants:
         initialData?.variants?.length
@@ -474,8 +492,48 @@ export function ProductForm({
           </div>
         </section>
 
+        <section className="space-y-4 rounded-xl border border-gray-100 bg-white p-6">
+          <div>
+            <h2 className="text-lg font-semibold">5. SEO & Search Appearance</h2>
+            <p className="mt-1 text-sm text-gray-500">Optional fields used by Google and social sharing. Product details remain the fallback.</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">SEO Title</label>
+            <input {...register("metaTitle")} maxLength={70} placeholder="Hand Block Printed Duvet Cover | BOHOBLOCKPRINTED" className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm" />
+            {errors.metaTitle && <p className="mt-1 text-xs text-red-600">{errors.metaTitle.message}</p>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">Meta Description</label>
+            <textarea {...register("metaDescription")} maxLength={180} rows={3} placeholder="A concise, unique summary for search results." className="w-full resize-y rounded-lg border border-gray-200 px-4 py-3 text-sm" />
+            {errors.metaDescription && <p className="mt-1 text-xs text-red-600">{errors.metaDescription.message}</p>}
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="block text-sm font-medium mb-1.5">Social Sharing Image URL</label>
+              <input {...register("ogImage")} placeholder="Defaults to the first product image" className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1.5">Image Alt Texts</label>
+              <input
+                value={(watch("imageAltTexts") || []).join(" | ")}
+                onChange={(event) => setValue("imageAltTexts", event.target.value.split("|").map((value) => value.trim()).filter(Boolean))}
+                placeholder="Front view | Close-up print | Styled room"
+                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">Additional SEO Content</label>
+            <textarea {...register("seoContent")} rows={5} placeholder="Helpful product-specific material, care, styling and origin information." className="w-full resize-y rounded-lg border border-gray-200 px-4 py-3 text-sm" />
+          </div>
+          <label className="flex items-center gap-2.5 text-sm font-medium text-amber-800">
+            <input type="checkbox" {...register("noIndex")} className="h-4 w-4 accent-amber-600" />
+            Hide this product from search engines
+          </label>
+        </section>
+
         <section className="bg-white rounded-xl border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold mb-4">5. Settings</h2>
+          <h2 className="text-lg font-semibold mb-4">6. Settings</h2>
           <div className="flex flex-wrap gap-6">
             <label className="flex items-center gap-2.5 cursor-pointer">
               <input

@@ -29,7 +29,13 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
   return {
     title: `${category.name} Collection`,
     description: `${category.description} Shop ${category.keywords} from ${BRAND.name}, Jaipur, India.`,
-    keywords: category.keywords,
+    alternates: { canonical: `/${category.slug}` },
+    openGraph: {
+      title: `${category.name} Collection`,
+      description: category.description,
+      url: `/${category.slug}`,
+      images: [{ url: category.image, alt: `${category.name} hand block printed collection` }],
+    },
   };
 }
 
@@ -48,7 +54,7 @@ export default async function CollectionLandingPage({ params }: CollectionPagePr
         description={category.description}
         image={category.image}
         imagePosition={category.imagePosition}
-        primaryHref={`/shop?category=${category.subcategories[0]?.slug ?? category.slug}`}
+        primaryHref={`/category/${category.subcategories[0]?.slug ?? category.slug}`}
         primaryLabel="Shop Collection"
         secondaryHref={WHOLESALE_INQUIRY_HREF}
         secondaryLabel="Wholesale Inquiry"

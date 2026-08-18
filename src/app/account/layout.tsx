@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { AccountSidebar } from "@/components/account/AccountSidebar";
 import { authOptions } from "@/lib/auth";
 
+export const metadata = { title: "My Account", robots: { index: false, follow: false } };
+
 export default async function AccountLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) redirect("/login?callbackUrl=/account");

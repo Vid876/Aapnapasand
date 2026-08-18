@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "FAQ",
   description:
     "Answers about BOHOBLOCKPRINTED shipping, customs, returns, care, wholesale, custom orders, sizing, and payments.",
+  alternates: { canonical: "/faq" },
 };
 
 const faqs = [

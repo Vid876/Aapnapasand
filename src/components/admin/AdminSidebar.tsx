@@ -11,6 +11,8 @@ import {
   MessageSquare,
   Tag,
   FolderTree,
+  Users,
+  Newspaper,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +21,8 @@ const NAV = [
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/admin/customers", label: "Customers", icon: Users },
+  { href: "/admin/blog", label: "Blog & SEO", icon: Newspaper },
   { href: "/admin/coupons", label: "Offers", icon: Tag },
   { href: "/admin/reviews", label: "Reviews", icon: MessageSquare },
   { href: "/admin/inquiries", label: "Inquiries", icon: MessageSquare },

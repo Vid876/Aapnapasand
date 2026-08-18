@@ -23,6 +23,12 @@ const updateSchema = z.object({
   subcategory: z.string().optional(),
   gender: z.enum(["men", "women", "kids", "unisex"]).optional(),
   brand: z.string().optional(),
+  metaTitle: z.string().max(70).optional(),
+  metaDescription: z.string().max(180).optional(),
+  ogImage: z.string().optional(),
+  seoContent: z.string().optional(),
+  imageAltTexts: z.array(z.string()).optional(),
+  noIndex: z.boolean().optional(),
   specifications: z.array(z.string()).optional(),
   tags: z.array(z.string()).optional(),
   variants: z

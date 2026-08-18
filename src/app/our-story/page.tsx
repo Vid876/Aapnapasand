@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Our Story",
   description:
     "The BOHOBLOCKPRINTED story: hand block printed home decor, table linen, fashion, accessories, fabric, custom orders, and wholesale textiles from Jaipur.",
+  alternates: { canonical: "/our-story" },
 };
 
 export default function OurStoryPage() {

@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Hand Block Printing Process",
   description:
     "See the BOHOBLOCKPRINTED hand block printing process from block carving and fabric preparation to printing, washing, stitching, and quality inspection.",
+  alternates: { canonical: "/process" },
 };
 
 export default function ProcessPage() {

@@ -4,6 +4,13 @@ import { CTASection, PageHero, PUBLIC_IMAGES, SectionHeader } from "@/components
 import { getPublicCategories } from "@/lib/category-data";
 import { getRenderableImageSrc } from "@/lib/image-utils";
 import { WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Hand Block Printed Textile Collections",
+  description: "Browse BOHOBLOCKPRINTED bedding, table linen, fashion, accessories, bags, curtains, fabric and artisan collections from Jaipur.",
+  alternates: { canonical: "/collections" },
+};
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +41,7 @@ export default async function CollectionsPage() {
             {categories.map((category) => (
               <Link
                 key={category.slug}
-                href={`/shop?category=${category.slug}`}
+                href={`/category/${category.slug}`}
                 className="group overflow-hidden rounded-xl bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-brand-100">

@@ -3,6 +3,13 @@ import Link from "next/link";
 import { ArrowRight, Clock3, Sparkles } from "lucide-react";
 import { PageHero, PUBLIC_IMAGES, PromiseStrip, SectionHeader } from "@/components/marketing/PublicPage";
 import { WHOLESALE_INQUIRY_HREF } from "@/lib/brand";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "New Hand Block Print Arrivals",
+  description: "Discover the latest BOHOBLOCKPRINTED bedding, table linen, fashion, accessories and fabric handmade in Jaipur.",
+  alternates: { canonical: "/new-arrivals" },
+};
 
 const arrivals = [
   { title: "Fresh home linen", href: "/shop?category=duvet-covers&sort=newest", image: "/uploads/302aaa5c-c270-4c91-bf78-20eb8fa1c274.jpg" },

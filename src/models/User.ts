@@ -14,12 +14,16 @@ export interface IAddress {
 export interface IUser extends Document {
   name: string;
   email: string;
-  password: string;
+  password?: string;
   phone?: string;
   role: "customer" | "admin" | "vendor";
   addresses: IAddress[];
   wishlist: mongoose.Types.ObjectId[];
   isActive: boolean;
+  emailVerifiedAt?: Date;
+  lastLoginAt?: Date;
+  loginCount: number;
+  signupSource: "password" | "email-otp" | "admin";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,7 +46,7 @@ const UserSchema = new Schema<IUser>(
   {
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
-    password: { type: String, required: true },
+    password: { type: String, select: false },
     phone: { type: String },
     role: {
       type: String,
@@ -52,6 +56,14 @@ const UserSchema = new Schema<IUser>(
     addresses: [AddressSchema],
     wishlist: [{ type: Schema.Types.ObjectId, ref: "Product" }],
     isActive: { type: Boolean, default: true },
+    emailVerifiedAt: { type: Date },
+    lastLoginAt: { type: Date },
+    loginCount: { type: Number, default: 0, min: 0 },
+    signupSource: {
+      type: String,
+      enum: ["password", "email-otp", "admin"],
+      default: "password",
+    },
   },
   { timestamps: true }
 );

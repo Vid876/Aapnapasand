@@ -47,7 +47,7 @@ export function CategoryGridClient({
         {visibleCategories.map((category, index) => (
           <Link
             key={category.slug}
-            href={`/shop?category=${category.slug}`}
+            href={`/category/${category.slug}`}
             className="group relative overflow-hidden rounded-2xl border border-[#ded8cc] bg-white shadow-[0_8px_25px_rgba(23,63,79,0.07)] transition duration-300 hover:-translate-y-1 hover:border-[#c9902e]/60 hover:shadow-[0_18px_45px_rgba(23,63,79,0.15)]"
           >
             <div className="relative aspect-[4/5] overflow-hidden bg-[#e8ece6] sm:aspect-[4/3]">

@@ -11,6 +11,12 @@ type CategoryFormState = {
   name: string;
   description: string;
   image: string;
+  imageAlt: string;
+  metaTitle: string;
+  metaDescription: string;
+  ogImage: string;
+  seoContent: string;
+  noIndex: boolean;
   gender: "men" | "women" | "kids" | "unisex";
   isActive: boolean;
 };
@@ -19,6 +25,12 @@ const EMPTY_FORM: CategoryFormState = {
   name: "",
   description: "",
   image: "",
+  imageAlt: "",
+  metaTitle: "",
+  metaDescription: "",
+  ogImage: "",
+  seoContent: "",
+  noIndex: false,
   gender: "unisex",
   isActive: true,
 };
@@ -63,6 +75,12 @@ export default function AdminCategoriesPage() {
       name: category.name,
       description: category.description || "",
       image: category.image || "",
+      imageAlt: category.imageAlt || "",
+      metaTitle: category.metaTitle || "",
+      metaDescription: category.metaDescription || "",
+      ogImage: category.ogImage || "",
+      seoContent: category.seoContent || "",
+      noIndex: category.noIndex || false,
       gender: category.gender,
       isActive: category.isActive,
     });
@@ -84,6 +102,12 @@ export default function AdminCategoriesPage() {
           name: form.name,
           description: form.description,
           image: form.image,
+          imageAlt: form.imageAlt,
+          metaTitle: form.metaTitle,
+          metaDescription: form.metaDescription,
+          ogImage: form.ogImage,
+          seoContent: form.seoContent,
+          noIndex: form.noIndex,
           gender: form.gender,
           isActive: form.isActive,
         }),
@@ -201,6 +225,18 @@ export default function AdminCategoriesPage() {
                 multiple={false}
                 onChange={(images) => setForm((prev) => ({ ...prev, image: images[images.length - 1] || "" }))}
               />
+            </div>
+
+            <div className="border-t border-gray-100 pt-4">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-600">SEO settings</p>
+              <div className="mt-3 space-y-3">
+                <input value={form.metaTitle} maxLength={70} onChange={(event) => setForm((prev) => ({ ...prev, metaTitle: event.target.value }))} placeholder="SEO title (up to 70 characters)" className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm" />
+                <textarea value={form.metaDescription} maxLength={180} onChange={(event) => setForm((prev) => ({ ...prev, metaDescription: event.target.value }))} rows={3} placeholder="Unique meta description" className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm" />
+                <input value={form.imageAlt} onChange={(event) => setForm((prev) => ({ ...prev, imageAlt: event.target.value }))} placeholder="Descriptive category image alt text" className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm" />
+                <input value={form.ogImage} onChange={(event) => setForm((prev) => ({ ...prev, ogImage: event.target.value }))} placeholder="Social sharing image URL (optional)" className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm" />
+                <textarea value={form.seoContent} onChange={(event) => setForm((prev) => ({ ...prev, seoContent: event.target.value }))} rows={5} placeholder="Helpful category buying guide, material and care content" className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm" />
+                <label className="flex items-center gap-2 text-sm font-medium text-amber-800"><input type="checkbox" checked={form.noIndex} onChange={(event) => setForm((prev) => ({ ...prev, noIndex: event.target.checked }))} className="h-4 w-4 accent-amber-600" /> Hide category from search engines</label>
+              </div>
             </div>
 
             <label className="flex items-center gap-2 text-sm font-medium text-gray-700">

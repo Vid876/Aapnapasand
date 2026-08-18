@@ -5,6 +5,12 @@ export interface ICategory extends Document {
   slug: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  ogImage?: string;
+  seoContent?: string;
+  noIndex: boolean;
   gender: "men" | "women" | "kids" | "unisex";
   parent?: mongoose.Types.ObjectId;
   isActive: boolean;
@@ -18,6 +24,12 @@ const CategorySchema = new Schema<ICategory>(
     slug: { type: String, required: true, unique: true, lowercase: true },
     description: { type: String },
     image: { type: String },
+    imageAlt: { type: String, trim: true },
+    metaTitle: { type: String, trim: true, maxlength: 70 },
+    metaDescription: { type: String, trim: true, maxlength: 180 },
+    ogImage: { type: String },
+    seoContent: { type: String },
+    noIndex: { type: Boolean, default: false },
     gender: {
       type: String,
       enum: ["men", "women", "kids", "unisex"],

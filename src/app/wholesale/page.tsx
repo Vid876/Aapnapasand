@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Wholesale & Private Label Services",
   description:
     "Wholesale, custom printing, private label, custom sizing, fabric, and catalog inquiries for BOHOBLOCKPRINTED hand block printed textiles from Jaipur.",
+  alternates: { canonical: "/wholesale" },
 };
 
 const wholesaleItems = [

@@ -31,8 +31,10 @@ loadEnvFile(".env.local");
 async function main() {
   const { connectDB } = await import("../lib/db");
   const { Cart } = await import("../models/Cart");
+  const { BlogPost } = await import("../models/BlogPost");
   const { Category } = await import("../models/Category");
   const { Coupon } = await import("../models/Coupon");
+  const { EmailOtp } = await import("../models/EmailOtp");
   const { Order } = await import("../models/Order");
   const { Product } = await import("../models/Product");
   const { Review } = await import("../models/Review");
@@ -41,9 +43,11 @@ async function main() {
   await connectDB();
 
   await Promise.all([
+    BlogPost.createIndexes(),
     Cart.createIndexes(),
     Category.createIndexes(),
     Coupon.createIndexes(),
+    EmailOtp.createIndexes(),
     Order.createIndexes(),
     Product.createIndexes(),
     Review.createIndexes(),

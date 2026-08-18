@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Shipping Policy",
   description:
     "Worldwide shipping information for BOHOBLOCKPRINTED hand block printed textiles, including processing, customs, tracking, and wholesale dispatch notes.",
+  alternates: { canonical: "/shipping" },
 };
 
 const steps = [

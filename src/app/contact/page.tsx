@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Contact Us",
   description:
     "Contact BOHOBLOCKPRINTED for order support, wholesale inquiries, custom block print textiles, fabric by yard, and Jaipur artisan textile questions.",
+  alternates: { canonical: "/contact" },
 };
 
 const contactCards = [

@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/db";
 import { User } from "@/models/User";
+import { verifyOtpAndGetUser } from "@/lib/otp";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -11,17 +12,34 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        otp: { label: "Email verification code", type: "text" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Email and password are required");
+        if (!credentials?.email) {
+          throw new Error("Email is required");
         }
 
         await connectDB();
         const email = credentials.email.trim().toLowerCase();
-        const user = await User.findOne({ email }).select("name email password role isActive");
+        if (credentials.otp) {
+          const otpUser = await verifyOtpAndGetUser(email, credentials.otp);
+          if (!otpUser) throw new Error("Invalid or expired verification code");
 
-        if (!user || !user.isActive) {
+          return {
+            id: otpUser._id.toString(),
+            name: otpUser.name,
+            email: otpUser.email,
+            role: otpUser.role,
+          };
+        }
+
+        if (!credentials.password) {
+          throw new Error("Password or verification code is required");
+        }
+
+        const user = await User.findOne({ email }).select("+password name email role isActive loginCount");
+
+        if (!user || !user.isActive || !user.password) {
           throw new Error("Invalid email or password");
         }
 
@@ -29,6 +47,10 @@ export const authOptions: NextAuthOptions = {
         if (!isValid) {
           throw new Error("Invalid email or password");
         }
+
+        user.lastLoginAt = new Date();
+        user.loginCount = (user.loginCount || 0) + 1;
+        await user.save();
 
         return {
           id: user._id.toString(),

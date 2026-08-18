@@ -33,6 +33,12 @@ export interface Product {
   category: Category | string;
   gender: "men" | "women" | "kids" | "unisex";
   brand?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  ogImage?: string;
+  seoContent?: string;
+  imageAltTexts?: string[];
+  noIndex?: boolean;
   subcategory?: string;
   specifications?: string[];
   sourceId?: string;
@@ -59,6 +65,12 @@ export interface Category {
   slug: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  ogImage?: string;
+  seoContent?: string;
+  noIndex?: boolean;
   gender: "men" | "women" | "kids" | "unisex";
   isActive: boolean;
   productCount?: number;

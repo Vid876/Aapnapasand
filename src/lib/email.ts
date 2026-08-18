@@ -52,6 +52,69 @@ function escapeHtml(value: string) {
   );
 }
 
+export type LoginOtpEmailData = {
+  email: string;
+  name?: string;
+  otp: string;
+  expiresInMinutes: number;
+};
+
+export async function sendLoginOtpEmail(data: LoginOtpEmailData): Promise<boolean> {
+  const transporter = getTransporter();
+  if (!transporter) {
+    console.error("[Email] SMTP is not configured for login OTP delivery.");
+    return false;
+  }
+
+  const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
+  if (!from) return false;
+  const firstName = escapeHtml(data.name?.trim().split(/\s+/)[0] || "there");
+  const digits = data.otp
+    .split("")
+    .map(
+      (digit) =>
+        `<span style="display:inline-block;width:42px;padding:11px 0;margin:0 3px;border:1px solid #d9c7a8;border-radius:10px;background:#fffdf8;color:#173f4f;font-family:Georgia,serif;font-size:27px;font-weight:700;text-align:center;box-shadow:0 5px 14px rgba(23,63,79,.08)">${digit}</span>`
+    )
+    .join("");
+
+  const html = `<!doctype html>
+  <html><body style="margin:0;padding:0;background:#eee9df;color:#2d2925;font-family:Arial,Helvetica,sans-serif">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eee9df;padding:28px 12px">
+      <tr><td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;overflow:hidden;border:1px solid #d8cbb7;border-radius:22px;background:#fbfaf7;box-shadow:0 20px 55px rgba(40,29,19,.12)">
+          <tr><td style="height:8px;background:linear-gradient(90deg,#173f4f,#b87811,#8f3b2f)"></td></tr>
+          <tr><td align="center" style="padding:38px 34px 18px">
+            <div style="font-size:12px;font-weight:700;letter-spacing:4px;color:#b87811">HANDMADE IN JAIPUR</div>
+            <h1 style="margin:12px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:32px;line-height:1.2;color:#173f4f">BOHOBLOCKPRINTED</h1>
+          </td></tr>
+          <tr><td style="padding:6px 42px 36px;text-align:center">
+            <h2 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:26px;color:#241d18">Your secure sign-in code</h2>
+            <p style="margin:16px auto 24px;max-width:460px;font-size:15px;line-height:1.7;color:#625950">Hello ${firstName}, use the code below to securely sign in to your BOHOBLOCKPRINTED account.</p>
+            <div style="margin:0 auto 24px;white-space:nowrap">${digits}</div>
+            <p style="margin:0;font-size:13px;line-height:1.7;color:#756b62">This code expires in <strong>${data.expiresInMinutes} minutes</strong> and can be used only once.</p>
+            <div style="margin:28px 0 0;padding:17px;border-radius:14px;background:#eef4f0;color:#3e554c;font-size:13px;line-height:1.6">If you did not request this code, you can safely ignore this email. Never share this code with anyone.</div>
+          </td></tr>
+          <tr><td style="padding:20px 34px;background:#173f4f;text-align:center;color:#d9e4df;font-size:12px;line-height:1.6">Authentic hand block printed textiles from Jaipur, India<br><span style="color:#f1cc82">Worldwide shipping - Wholesale welcome</span></td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body></html>`;
+
+  try {
+    await transporter.sendMail({
+      from: `BOHOBLOCKPRINTED <${from}>`,
+      to: data.email,
+      subject: `${data.otp} is your BOHOBLOCKPRINTED sign-in code`,
+      text: `Your BOHOBLOCKPRINTED sign-in code is ${data.otp}. It expires in ${data.expiresInMinutes} minutes. Do not share this code.`,
+      html,
+    });
+    return true;
+  } catch (error) {
+    console.error("[Email] Failed to send login OTP:", error);
+    return false;
+  }
+}
+
 function buildOrderEmailHtml(data: OrderEmailData): string {
   const itemsHtml = data.items
     .map(

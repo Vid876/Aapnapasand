@@ -33,6 +33,12 @@ export interface IProduct extends Document {
   subcategory?: string;
   gender: "men" | "women" | "kids" | "unisex";
   brand?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  ogImage?: string;
+  seoContent?: string;
+  imageAltTexts?: string[];
+  noIndex: boolean;
   specifications?: string[];
   sourceId?: string;
   sourceUrl?: string;
@@ -95,6 +101,12 @@ const ProductSchema = new Schema<IProduct>(
       default: "unisex",
     },
     brand: { type: String, default: "BOHOBLOCKPRINTED" },
+    metaTitle: { type: String, trim: true, maxlength: 70 },
+    metaDescription: { type: String, trim: true, maxlength: 180 },
+    ogImage: { type: String },
+    seoContent: { type: String },
+    imageAltTexts: [{ type: String, trim: true }],
+    noIndex: { type: Boolean, default: false },
     subcategory: { type: String },
     specifications: [{ type: String }],
     sourceId: { type: String, index: true },

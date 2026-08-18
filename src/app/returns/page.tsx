@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Return Policy",
   description:
     "Return and exchange guidance for BOHOBLOCKPRINTED hand block printed textiles, including unused condition, custom orders, wholesale orders, and inspection.",
+  alternates: { canonical: "/returns" },
 };
 
 const rules = [

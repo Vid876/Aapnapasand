@@ -21,6 +21,12 @@ export default function NewProductPage() {
         category: data.category,
         gender: data.gender,
         brand: data.brand,
+        metaTitle: data.metaTitle || undefined,
+        metaDescription: data.metaDescription || undefined,
+        ogImage: data.ogImage || undefined,
+        seoContent: data.seoContent || undefined,
+        imageAltTexts: data.imageAltTexts,
+        noIndex: data.noIndex,
         isFeatured: data.isFeatured,
         isActive: data.isActive,
         variants: data.variants.map((variant) => ({

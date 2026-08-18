@@ -13,6 +13,12 @@ const categorySchema = z.object({
   name: z.string().min(2, "Category name is required"),
   description: z.string().optional(),
   image: z.string().refine((value) => !value || isValidStoredImage(value), "Invalid image URL").optional(),
+  imageAlt: z.string().optional(),
+  metaTitle: z.string().max(70).optional(),
+  metaDescription: z.string().max(180).optional(),
+  ogImage: z.string().optional(),
+  seoContent: z.string().optional(),
+  noIndex: z.boolean().optional(),
   gender: z.enum(["men", "women", "kids", "unisex"]),
   isActive: z.boolean().optional(),
 });

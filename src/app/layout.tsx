@@ -37,15 +37,6 @@ const structuredData = {
       publisher: { "@id": `${BRAND.url}/#organization` },
     },
     {
-      "@type": "WebPage",
-      "@id": `${BRAND.url}/#webpage`,
-      url: BRAND.url,
-      name: "BOHOBLOCKPRINTED | Hand Block Printed Textiles from Jaipur",
-      isPartOf: { "@id": `${BRAND.url}/#website` },
-      primaryImageOfPage: { "@id": `${BRAND.url}/#primaryimage` },
-      image: { "@id": `${BRAND.url}/#primaryimage` },
-    },
-    {
       "@type": "ImageObject",
       "@id": `${BRAND.url}/#primaryimage`,
       url: PRIMARY_IMAGE_URL,
@@ -60,9 +51,6 @@ const structuredData = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.url),
-  alternates: {
-    canonical: BRAND.url,
-  },
   title: {
     default: "BOHOBLOCKPRINTED | Hand Block Printed Textiles from Jaipur",
     template: "%s | BOHOBLOCKPRINTED",
