@@ -18,87 +18,297 @@ const HIGHLIGHTS = [
 
 export function HeroBanner() {
   return (
-    <section className="relative isolate h-[75vh] min-h-[550px] overflow-hidden bg-[#122934] text-white">
-      {/* Banner Image */}
+    <section
+      className="
+        relative isolate
+        h-[250px]
+        w-full
+        overflow-hidden
+        text-white
+        sm:h-[650px]
+        lg:h-[75vh]
+        lg:min-h-[600px]
+      "
+    >
+      {/* ==================================
+          FULL BANNER IMAGE
+      =================================== */}
       <Image
         src="/cover image.png"
-        alt="Jaipur artisan hand block printing beside a hand block printed bedroom collection"
+        alt="Jaipur artisan hand block printed textiles"
         fill
         priority
         sizes="100vw"
-        className="z-0 object-cover object-center"
+        className="
+          z-0
+          object-cover
+          object-center
+        "
       />
-      <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(5,19,25,0.2)_0%,rgba(9,31,40,0.24)_25%,rgba(8,29,38,0.2)_75%,rgba(5,19,25,0.26)_100%)]" />
-      <div className="absolute inset-y-0 left-1/2 z-[1] w-[72%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(11,36,47,0.68)_0%,rgba(11,36,47,0.45)_46%,transparent_78%)]" />
 
-      <div className="container-app relative z-10 flex h-full items-center justify-center py-10 text-center">
-        <div className="mx-auto max-w-4xl">
+      {/* ==================================
+          DARK OVERLAY
+          only for text readability
+      =================================== */}
+      <div
+        className="
+          absolute inset-0 z-[1]
+          bg-black/20
+          sm:bg-[linear-gradient(90deg,rgba(5,19,25,0.28)_0%,rgba(9,31,40,0.28)_50%,rgba(5,19,25,0.28)_100%)]
+        "
+      />
 
-          {/* Brand */}
-          <div className="mx-auto flex w-fit flex-col items-center text-white">
-            <Sparkles size={28} strokeWidth={1.35} />
+      {/* ==================================
+          CONTENT
+      =================================== */}
+      <div
+        className="
+          absolute inset-0 z-10
+          flex
+          h-full
+          w-full
+          items-center
+          justify-center
+          px-3
+          text-center
+          sm:px-6
+        "
+      >
+        <div className="mx-auto w-full max-w-4xl">
 
-            <p className="mt-3 text-sm font-semibold uppercase tracking-[0.2em] sm:text-xl">
+          {/* ==================================
+              BRAND
+              Hidden on mobile
+          =================================== */}
+          <div className="mx-auto hidden w-fit flex-col items-center sm:flex">
+            <Sparkles
+              className="text-[#f3e8d4]"
+              size={25}
+              strokeWidth={1.35}
+            />
+
+            <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] lg:text-xl">
               BOHOBLOCKPRINTED
             </p>
 
-            <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-white/80 sm:text-xs">
+            <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-white/90 lg:text-xs">
               Handmade in Jaipur
             </p>
           </div>
 
-          {/* Heading */}
-          <p className="mt-7 font-display text-2xl italic leading-tight text-[#f3e8d4] sm:text-3xl lg:text-4xl">
+          {/* ==================================
+              MAIN HEADING
+          =================================== */}
+          <p
+            className="
+              font-display
+              text-[18px]
+              italic
+              leading-[1.05]
+              text-[#f3e8d4]
+
+              sm:mt-6
+              sm:text-3xl
+
+              lg:text-4xl
+            "
+          >
             Bringing India&apos;s Heritage
           </p>
 
-          <h1 className="mt-1 font-display text-5xl font-semibold leading-[0.98] text-white sm:text-6xl lg:text-7xl">
+          <h1
+            className="
+              mt-[2px]
+              font-display
+              text-[34px]
+              font-semibold
+              leading-[0.95]
+              text-white
+              drop-shadow-md
+
+              sm:text-6xl
+              lg:text-7xl
+            "
+          >
             to Your Home
           </h1>
 
-          {/* Divider */}
-          <div className="mx-auto mt-6 flex max-w-xl items-center gap-4 text-[#ead9b9]">
-            <span className="h-px flex-1 bg-current/55" />
+          {/* ==================================
+              DIVIDER
+          =================================== */}
+          <div
+            className="
+              mx-auto
+              mt-3
+              flex
+              max-w-[260px]
+              items-center
+              gap-3
+              text-[#ead9b9]
 
-            <Sparkles size={17} strokeWidth={1.4} />
+              sm:mt-6
+              sm:max-w-xl
+              sm:gap-4
+            "
+          >
+            <span className="h-px flex-1 bg-current/70" />
 
-            <span className="h-px flex-1 bg-current/55" />
+            <Sparkles
+              className="h-[13px] w-[13px] sm:h-[17px] sm:w-[17px]"
+              strokeWidth={1.4}
+            />
+
+            <span className="h-px flex-1 bg-current/70" />
           </div>
 
-          {/* Description */}
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white sm:text-base lg:text-lg">
+          {/* ==================================
+              DESCRIPTION
+          =================================== */}
+          <p
+            className="
+              mx-auto
+              mt-3
+              max-w-[390px]
+              text-[9px]
+              font-semibold
+              leading-[14px]
+              text-white
+              drop-shadow-md
+
+              sm:mt-5
+              sm:max-w-2xl
+              sm:text-base
+              sm:font-normal
+              sm:leading-7
+
+              lg:text-lg
+            "
+          >
             Authentic Hand Block Printed Textiles made by skilled artisans of
             Jaipur.
 
-            <span className="block">Timeless designs. Natural fabrics. Made with love.</span>
+            <span className="block">
+              Timeless designs. Natural fabrics. Made with love.
+            </span>
           </p>
 
-          {/* Buttons */}
-          <div className="mt-7 flex flex-wrap justify-center gap-3">
+          {/* ==================================
+              BUTTONS
+          =================================== */}
+          <div
+            className="
+              mx-auto
+              mt-4
+              flex
+              w-full
+              max-w-[370px]
+              items-center
+              justify-center
+              gap-2
 
+              sm:mt-7
+              sm:max-w-none
+              sm:gap-3
+            "
+          >
+            {/* SHOP BUTTON */}
             <Link
               href="/shop"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-[#173f4f] px-7 py-3 text-sm font-semibold uppercase tracking-[0.1em] text-white shadow-lg shadow-black/15 transition-colors hover:bg-[#245d70]"
+              className="
+                inline-flex
+                h-[34px]
+                flex-1
+                items-center
+                justify-center
+                gap-1.5
+                rounded-[4px]
+                bg-[#173f4f]
+                px-2
+                text-[8px]
+                font-bold
+                uppercase
+                tracking-[0.04em]
+                text-white
+                shadow-md
+                transition-colors
+                hover:bg-[#245d70]
+
+                sm:h-12
+                sm:flex-none
+                sm:px-7
+                sm:text-sm
+                sm:tracking-[0.1em]
+              "
             >
               Shop Collection
-              <ArrowRight size={17} />
+
+              <ArrowRight
+                className="h-[11px] w-[11px] sm:h-[17px] sm:w-[17px]"
+              />
             </Link>
 
+            {/* WHOLESALE BUTTON */}
             <Link
               href={WHOLESALE_INQUIRY_HREF}
-              className="inline-flex min-h-12 items-center justify-center rounded-md border border-white/70 bg-transparent px-7 py-3 text-sm font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-white hover:text-[#173f4f]"
+              className="
+                inline-flex
+                h-[34px]
+                flex-1
+                items-center
+                justify-center
+                rounded-[4px]
+                border
+                border-white/90
+                bg-black/15
+                px-2
+                text-[8px]
+                font-bold
+                uppercase
+                tracking-[0.04em]
+                text-white
+                backdrop-blur-[1px]
+                transition-colors
+                hover:bg-white
+                hover:text-[#173f4f]
+
+                sm:h-12
+                sm:flex-none
+                sm:px-7
+                sm:text-sm
+                sm:tracking-[0.1em]
+              "
             >
               Wholesale Inquiry
             </Link>
-
           </div>
 
-          {/* Highlights */}
-          <div className="mx-auto mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+          {/* ==================================
+              HIGHLIGHTS
+              Hidden on mobile
+          =================================== */}
+          <div
+            className="
+              mx-auto
+              mt-8
+              hidden
+              max-w-3xl
+              grid-cols-4
+              gap-3
+              sm:grid
+            "
+          >
             {HIGHLIGHTS.map((item) => (
               <div
                 key={item.label}
-                className="flex flex-col items-center justify-center gap-2 px-3 py-2"
+                className="
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  gap-2
+                  px-3
+                  py-2
+                "
               >
                 <item.icon
                   className="shrink-0 text-[#ead9b9]"
@@ -106,7 +316,17 @@ export function HeroBanner() {
                   strokeWidth={1.35}
                 />
 
-                <span className="text-[10px] font-semibold uppercase leading-5 tracking-[0.13em] text-white sm:text-xs">
+                <span
+                  className="
+                    text-[10px]
+                    font-semibold
+                    uppercase
+                    leading-5
+                    tracking-[0.13em]
+                    text-white
+                    lg:text-xs
+                  "
+                >
                   {item.label}
                 </span>
               </div>
