@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/models/Order";
 import { getRazorpayInstance, isRazorpayConfigured } from "@/lib/razorpay";
+import { authOptions } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
+    }
+
     if (!isRazorpayConfigured()) {
       return NextResponse.json(
         { error: "Razorpay is not configured. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET to .env" },
@@ -23,6 +30,10 @@ export async function POST(request: NextRequest) {
 
     if (!order) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+
+    if (!order.user || order.user.toString() !== session.user.id) {
+      return NextResponse.json({ error: "You cannot access this order." }, { status: 403 });
     }
 
     if (order.paymentStatus === "paid") {
@@ -50,7 +61,7 @@ export async function POST(request: NextRequest) {
       keyId: process.env.RAZORPAY_KEY_ID,
       orderNumber: order.orderNumber,
       customerName: order.shippingAddress.fullName,
-      customerEmail: order.guestEmail || "",
+      customerEmail: session.user.email || "",
       customerPhone: order.shippingAddress.phone,
     });
   } catch (error) {

@@ -34,7 +34,6 @@ const orderSchema = z.object({
     pincode: z.string().length(6),
   }),
   paymentMethod: z.string(),
-  guestEmail: z.string().email().optional(),
   couponCode: z.string().optional(),
 });
 
@@ -47,15 +46,15 @@ function generateOrderNumber(): string {
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    const body = await request.json();
-    const data = orderSchema.parse(body);
-
-    if (!session && !data.guestEmail) {
+    if (!session?.user?.id) {
       return NextResponse.json(
-        { error: "Email required for guest checkout" },
-        { status: 400 }
+        { error: "Please sign in before placing an order." },
+        { status: 401 }
       );
     }
+
+    const body = await request.json();
+    const data = orderSchema.parse(body);
 
     await connectDB();
 
@@ -103,8 +102,7 @@ export async function POST(request: NextRequest) {
 
     const order = await Order.create({
       orderNumber: generateOrderNumber(),
-      user: session?.user?.id,
-      guestEmail: data.guestEmail,
+      user: session.user.id,
       items: data.items.map((item) => ({
         product: item.productId,
         name: item.name,
@@ -130,11 +128,8 @@ export async function POST(request: NextRequest) {
     });
 
     if (data.paymentMethod === "cod") {
-      let userEmail: string | undefined;
-      if (session?.user?.id) {
-        const user = await User.findById(session.user.id).select("email");
-        userEmail = user?.email;
-      }
+      const user = await User.findById(session.user.id).select("email");
+      const userEmail = user?.email;
       sendOrderEmailFromOrder(order.toObject(), userEmail).catch(console.error);
       sendOrderConfirmedSMS(data.shippingAddress.phone, order.orderNumber).catch(console.error);
     }

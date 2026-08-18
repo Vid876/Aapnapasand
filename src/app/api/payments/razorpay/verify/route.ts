@@ -1,12 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import crypto from "crypto";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/models/Order";
 import { User } from "@/models/User";
 import { sendOrderEmailFromOrder } from "@/lib/email";
+import { authOptions } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
+    }
+
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId } =
       await request.json();
 
@@ -34,6 +41,10 @@ export async function POST(request: NextRequest) {
 
     if (!order) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+
+    if (!order.user || order.user.toString() !== session.user.id) {
+      return NextResponse.json({ error: "You cannot access this order." }, { status: 403 });
     }
 
     order.paymentStatus = "paid";

@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { CheckoutAuthModal } from "@/components/auth/CheckoutAuthModal";
 import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import type { CartItem, Product } from "@/types";
@@ -31,7 +34,10 @@ function resolveSelection(product: CartProductOptions, size: string, color: stri
 }
 
 export default function CartPage() {
+  const router = useRouter();
+  const { status: sessionStatus } = useSession();
   const { items, updateQuantity, updateItemOptions, removeItem, getSubtotal } = useCartStore();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [cartProducts, setCartProducts] = useState<Record<string, CartProductOptions>>({});
   const cartCurrency = items[0]?.currency || "INR";
   const subtotal = getSubtotal();
@@ -39,6 +45,17 @@ export default function CartPage() {
   const shippingCharge = cartCurrency === "USD" ? 8 : 99;
   const shipping = subtotal >= freeShippingThreshold ? 0 : shippingCharge;
   const total = subtotal + shipping;
+
+  const handleCheckout = () => {
+    if (sessionStatus === "authenticated") {
+      router.push("/checkout");
+      return;
+    }
+
+    if (sessionStatus === "unauthenticated") {
+      setAuthModalOpen(true);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -267,12 +284,16 @@ export default function CartPage() {
               </div>
             </div>
 
-            <Link href="/checkout" className="block mt-6">
-              <Button size="lg" className="w-full">
-                Proceed to Checkout
-                <ArrowRight size={18} className="ml-2" />
-              </Button>
-            </Link>
+            <Button
+              type="button"
+              size="lg"
+              className="mt-6 w-full"
+              onClick={handleCheckout}
+              isLoading={sessionStatus === "loading"}
+            >
+              Proceed to Checkout
+              <ArrowRight size={18} className="ml-2" />
+            </Button>
 
             <Link
               href="/shop"
@@ -283,6 +304,8 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      <CheckoutAuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
   );
 }

@@ -7,15 +7,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { CheckoutAuthModal } from "@/components/auth/CheckoutAuthModal";
 import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { CheckCircle } from "lucide-react";
 import { openRazorpayCheckout } from "@/lib/razorpay-client";
 
 export default function CheckoutPage() {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const router = useRouter();
-  const { items, getSubtotal, clearCart } = useCartStore();
+  const { items, hasHydrated, getSubtotal, clearCart } = useCartStore();
   const subtotal = getSubtotal();
   const cartCurrency = items[0]?.currency || "INR";
   const freeShippingThreshold = cartCurrency === "USD" ? 75 : 999;
@@ -32,7 +33,6 @@ export default function CheckoutPage() {
 
   const [form, setForm] = useState({
     fullName: session?.user?.name || "",
-    email: session?.user?.email || "",
     phone: "",
     addressLine1: "",
     addressLine2: "",
@@ -50,10 +50,17 @@ export default function CheckoutPage() {
   const total = Math.round((subtotal - discount + shipping + tax) * 100) / 100;
 
   useEffect(() => {
-    if (items.length === 0 && !orderPlaced) {
+    if (hasHydrated && items.length === 0 && !orderPlaced) {
       router.push("/cart");
     }
-  }, [items.length, orderPlaced, router]);
+  }, [hasHydrated, items.length, orderPlaced, router]);
+
+  useEffect(() => {
+    if (!session?.user?.name) return;
+    setForm((current) =>
+      current.fullName ? current : { ...current, fullName: session.user.name || "" }
+    );
+  }, [session?.user?.name]);
 
   useEffect(() => {
     if (cartCurrency !== "INR" && form.paymentMethod === "razorpay") {
@@ -61,7 +68,7 @@ export default function CheckoutPage() {
     }
   }, [cartCurrency, form.paymentMethod]);
 
-  if (items.length === 0 && !orderPlaced) {
+  if (hasHydrated && items.length === 0 && !orderPlaced) {
     return null;
   }
 
@@ -91,6 +98,11 @@ export default function CheckoutPage() {
   };
 
   const handlePlaceOrder = async () => {
+    if (sessionStatus !== "authenticated" || !session?.user?.id) {
+      setPaymentError("Please sign in before placing your order.");
+      return;
+    }
+
     setLoading(true);
     setPaymentError("");
     try {
@@ -119,7 +131,6 @@ export default function CheckoutPage() {
             pincode: form.pincode,
           },
           paymentMethod: form.paymentMethod,
-          guestEmail: !session ? form.email : undefined,
           couponCode: couponCode || undefined,
         }),
       });
@@ -180,12 +191,36 @@ export default function CheckoutPage() {
           <Link href="/shop">
             <Button variant="outline">Continue Shopping</Button>
           </Link>
-          {session && (
-            <Link href="/account/orders">
-              <Button>View Orders</Button>
-            </Link>
-          )}
+          <Link href="/account/orders">
+            <Button>View Orders</Button>
+          </Link>
         </div>
+      </div>
+    );
+  }
+
+  if (!hasHydrated || sessionStatus === "loading") {
+    return (
+      <div className="container-app flex min-h-[55vh] items-center justify-center py-16">
+        <div className="text-center">
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#173f4f]/20 border-t-[#173f4f]" />
+          <p className="mt-4 text-sm font-medium text-stone-600">Preparing secure checkout...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (sessionStatus === "unauthenticated" || !session?.user?.id) {
+    return (
+      <div className="relative min-h-[60vh] overflow-hidden bg-[#f4f0e8]">
+        <div className="container-app py-16 opacity-30 blur-[2px]">
+          <div className="h-10 w-52 rounded-lg bg-stone-300" />
+          <div className="mt-8 grid gap-8 lg:grid-cols-3">
+            <div className="h-80 rounded-2xl bg-white lg:col-span-2" />
+            <div className="h-72 rounded-2xl bg-white" />
+          </div>
+        </div>
+        <CheckoutAuthModal open onClose={() => router.push("/cart")} />
       </div>
     );
   }
@@ -219,17 +254,6 @@ export default function CheckoutPage() {
           {step === 1 && (
             <div className="space-y-4">
               <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
-              {!session && (
-                <Input
-                  label="Email"
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                />
-              )}
               <Input label="Full Name" id="fullName" name="fullName" value={form.fullName} onChange={handleChange} required />
               <Input label="Phone" id="phone" name="phone" type="tel" value={form.phone} onChange={handleChange} required />
               <Input label="Address Line 1" id="addressLine1" name="addressLine1" value={form.addressLine1} onChange={handleChange} required />

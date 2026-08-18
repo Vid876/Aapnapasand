@@ -6,6 +6,8 @@ import type { CartItem } from "@/types";
 
 interface CartState {
   items: CartItem[];
+  hasHydrated: boolean;
+  setHasHydrated: (value: boolean) => void;
   addItem: (item: CartItem) => void;
   removeItem: (productId: string, size: string, color: string, fabric?: string) => void;
   updateQuantity: (productId: string, size: string, color: string, quantity: number, fabric?: string) => void;
@@ -25,6 +27,8 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      hasHydrated: false,
+      setHasHydrated: (value) => set({ hasHydrated: value }),
 
       addItem: (item) => {
         set((state) => {
@@ -136,7 +140,11 @@ export const useCartStore = create<CartState>()(
       getSubtotal: () =>
         get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
     }),
-    { name: "bohoblockprinted-cart" }
+    {
+      name: "bohoblockprinted-cart",
+      partialize: (state) => ({ items: state.items }),
+      onRehydrateStorage: () => (state) => state?.setHasHydrated(true),
+    }
   )
 );
 
