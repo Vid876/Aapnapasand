@@ -20,21 +20,21 @@ export function HeroBanner() {
   return (
     <section
       className="
-        relative isolate
-        h-[250px]
+        relative
+        isolate
         w-full
+        aspect-[1920/850]
         overflow-hidden
-        text-white
-        sm:h-[650px]
-        lg:h-[75vh]
-        lg:min-h-[600px]
+        bg-[#f2e7d8]
       "
     >
       {/* ==================================
-          FULL BANNER IMAGE
+          EXACT FULL BANNER IMAGE
+          1920 x 850
+          NO CROPPING
       =================================== */}
       <Image
-        src="/cover image.png"
+        src="/banner 11.png"
         alt="Jaipur artisan hand block printed textiles"
         fill
         priority
@@ -47,23 +47,13 @@ export function HeroBanner() {
       />
 
       {/* ==================================
-          DARK OVERLAY
-          only for text readability
-      =================================== */}
-      <div
-        className="
-          absolute inset-0 z-[1]
-          bg-black/20
-          sm:bg-[linear-gradient(90deg,rgba(5,19,25,0.28)_0%,rgba(9,31,40,0.28)_50%,rgba(5,19,25,0.28)_100%)]
-        "
-      />
-
-      {/* ==================================
           CONTENT
       =================================== */}
       <div
         className="
-          absolute inset-0 z-10
+          absolute
+          inset-0
+          z-10
           flex
           h-full
           w-full
@@ -78,20 +68,40 @@ export function HeroBanner() {
 
           {/* ==================================
               BRAND
-              Hidden on mobile
+              HIDDEN ON MOBILE
           =================================== */}
           <div className="mx-auto hidden w-fit flex-col items-center sm:flex">
             <Sparkles
-              className="text-[#f3e8d4]"
+              className="text-[#936d48]"
               size={25}
               strokeWidth={1.35}
             />
 
-            <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] lg:text-xl">
+            <p
+              className="
+                mt-2
+                text-sm
+                font-bold
+                uppercase
+                tracking-[0.2em]
+                text-[#173f4f]
+                lg:text-xl
+              "
+            >
               BOHOBLOCKPRINTED
             </p>
 
-            <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-white/90 lg:text-xs">
+            <p
+              className="
+                mt-1
+                text-[10px]
+                font-semibold
+                uppercase
+                tracking-[0.28em]
+                text-[#765c44]
+                lg:text-xs
+              "
+            >
               Handmade in Jaipur
             </p>
           </div>
@@ -102,14 +112,14 @@ export function HeroBanner() {
           <p
             className="
               font-display
-              text-[18px]
+              text-[15px]
+              font-semibold
               italic
               leading-[1.05]
-              text-[#f3e8d4]
+              text-[#8b6542]
 
-              sm:mt-6
+              sm:mt-5
               sm:text-3xl
-
               lg:text-4xl
             "
           >
@@ -120,11 +130,10 @@ export function HeroBanner() {
             className="
               mt-[2px]
               font-display
-              text-[34px]
+              text-[29px]
               font-semibold
               leading-[0.95]
-              text-white
-              drop-shadow-md
+              text-[#173f4f]
 
               sm:text-6xl
               lg:text-7xl
@@ -139,14 +148,14 @@ export function HeroBanner() {
           <div
             className="
               mx-auto
-              mt-3
+              mt-2
               flex
-              max-w-[260px]
+              max-w-[220px]
               items-center
               gap-3
-              text-[#ead9b9]
+              text-[#987149]
 
-              sm:mt-6
+              sm:mt-5
               sm:max-w-xl
               sm:gap-4
             "
@@ -154,7 +163,12 @@ export function HeroBanner() {
             <span className="h-px flex-1 bg-current/70" />
 
             <Sparkles
-              className="h-[13px] w-[13px] sm:h-[17px] sm:w-[17px]"
+              className="
+                h-[12px]
+                w-[12px]
+                sm:h-[17px]
+                sm:w-[17px]
+              "
               strokeWidth={1.4}
             />
 
@@ -167,18 +181,17 @@ export function HeroBanner() {
           <p
             className="
               mx-auto
-              mt-3
-              max-w-[390px]
-              text-[9px]
-              font-semibold
-              leading-[14px]
-              text-white
-              drop-shadow-md
+              mt-2
+              max-w-[330px]
+              text-[8px]
+              font-bold
+              leading-[12px]
+              text-[#294c57]
 
-              sm:mt-5
+              sm:mt-4
               sm:max-w-2xl
               sm:text-base
-              sm:font-normal
+              sm:font-medium
               sm:leading-7
 
               lg:text-lg
@@ -198,25 +211,25 @@ export function HeroBanner() {
           <div
             className="
               mx-auto
-              mt-4
+              mt-3
               flex
               w-full
-              max-w-[370px]
+              max-w-[320px]
               items-center
               justify-center
               gap-2
 
-              sm:mt-7
+              sm:mt-6
               sm:max-w-none
               sm:gap-3
             "
           >
-            {/* SHOP BUTTON */}
+            {/* SHOP COLLECTION */}
             <Link
               href="/shop"
               className="
                 inline-flex
-                h-[34px]
+                h-[30px]
                 flex-1
                 items-center
                 justify-center
@@ -224,14 +237,16 @@ export function HeroBanner() {
                 rounded-[4px]
                 bg-[#173f4f]
                 px-2
-                text-[8px]
+                text-[7px]
                 font-bold
                 uppercase
                 tracking-[0.04em]
                 text-white
                 shadow-md
                 transition-colors
-                hover:bg-[#245d70]
+                duration-300
+
+                hover:bg-[#285b6b]
 
                 sm:h-12
                 sm:flex-none
@@ -243,33 +258,39 @@ export function HeroBanner() {
               Shop Collection
 
               <ArrowRight
-                className="h-[11px] w-[11px] sm:h-[17px] sm:w-[17px]"
+                className="
+                  h-[10px]
+                  w-[10px]
+                  sm:h-[17px]
+                  sm:w-[17px]
+                "
               />
             </Link>
 
-            {/* WHOLESALE BUTTON */}
+            {/* WHOLESALE */}
             <Link
               href={WHOLESALE_INQUIRY_HREF}
               className="
                 inline-flex
-                h-[34px]
+                h-[30px]
                 flex-1
                 items-center
                 justify-center
                 rounded-[4px]
                 border
-                border-white/90
-                bg-black/15
+                border-[#173f4f]
+                bg-[#f5ecdf]/90
                 px-2
-                text-[8px]
+                text-[7px]
                 font-bold
                 uppercase
                 tracking-[0.04em]
-                text-white
-                backdrop-blur-[1px]
+                text-[#173f4f]
                 transition-colors
-                hover:bg-white
-                hover:text-[#173f4f]
+                duration-300
+
+                hover:bg-[#173f4f]
+                hover:text-white
 
                 sm:h-12
                 sm:flex-none
@@ -284,12 +305,12 @@ export function HeroBanner() {
 
           {/* ==================================
               HIGHLIGHTS
-              Hidden on mobile
+              HIDDEN ON MOBILE
           =================================== */}
           <div
             className="
               mx-auto
-              mt-8
+              mt-7
               hidden
               max-w-3xl
               grid-cols-4
@@ -311,7 +332,7 @@ export function HeroBanner() {
                 "
               >
                 <item.icon
-                  className="shrink-0 text-[#ead9b9]"
+                  className="shrink-0 text-[#987149]"
                   size={25}
                   strokeWidth={1.35}
                 />
@@ -319,11 +340,11 @@ export function HeroBanner() {
                 <span
                   className="
                     text-[10px]
-                    font-semibold
+                    font-bold
                     uppercase
                     leading-5
                     tracking-[0.13em]
-                    text-white
+                    text-[#173f4f]
                     lg:text-xs
                   "
                 >
